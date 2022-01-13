@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+</head>
+
+<body>
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+    <div></div>
+    <div></div>
+    <div></div>
+    <script>
+        let nums = [10, 50, 200];
+        let paragraph = d3.select("body")
+            .selectAll("div")
+            .data(nums)
+            .text(function (d, i) {
+                console.log("d: " + d); 
+                console.log("i: " + i); 
+                console.log("this: " + this);
+                return 'cont:' + d; // return value is used to set the 'text' 
+            })
+            .style("color", function (d) { // set color to red if value greater or equal to 100
+                if (d >= 100) {
+                    return "red";
+                } 
+            });
+    </script>
+</body>
+
+</html>
