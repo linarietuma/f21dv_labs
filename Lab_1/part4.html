@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+</head>
+
+<body>
+
+    <!-- <script>
+    var myData = ['a', 4, 1, 'b', 6, 2, 8, 9, 'z' ];
+    var p = d3.select("body") 
+                .selectAll("span") 
+                .data(myData) // iterates through every el in myData
+                .enter() 
+                .append('span')
+                .style("color", d => {
+                    if (typeof d == 'string') {
+                        return "blue";
+                    }  else if (typeof d == 'number') {
+                        return "green";
+                    }
+                }) 
+                .text(function (d, i) {
+                        return d; 
+                    });
+    </script> -->
+
+
+    <p>1</p>
+    <p>2</p>
+    <p>3</p>
+    <script>
+        var myData = [3, 4];
+        var p = d3.select("body").selectAll("p")
+            .data(myData)
+            .text(function (d, i) {
+                return d;
+            })
+            .exit() // deletes unused "p" elements
+            .remove(); </script>
+</body>
+
+</html>
