@@ -2,16 +2,59 @@
 <html lang="en">
 
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
+        rel="stylesheet">
     <script src='https://d3js.org/d3.v7.min.js'></script>
+    <link rel="stylesheet" href="../app.css">
 </head>
 
 <body>
-    <script src='https://d3js.org/d3.v7.min.js'></script>
-    
-    
+    <h1>Part 2: D3 Setup</h1>
+
+    <div id="ex2">
+        <h2>Exercise 2</h2>
+        <p>First paragraph</p>
+        <p>Second paragraph</p>
+    </div>
+
+    <div id="ex3">
+        <h2>Exercise 3</h2>
+    </div>
+
+    <div id="ex4">
+        <h2>Exercise 4</h2>
+    </div>
+
+    <div id="ex5">
+        <h2>Exercise 5</h2>
+    </div>
+
     <script>
+        // Exercise 2
+        d3.select("p") // selects first element of type "p"
+            .style("color", "red")
+            .style("text-transform", "uppercase")
+            .style("text-decoration", "underline");
+
+        // Exercise 3
+        for (let j = 1; j < 11; j++) {
+            let newEl = d3.select("#ex3") // select element with id ex3
+                            .append("div"); // add a div element 
+            newEl.text(j); // set text to j
+
+            // change text color depending on j value
+            if (j < 6) {
+                newEl.style("color", "red")
+            } else {
+                newEl.style("color", "green")
+            };
+        };
+        
+        // Exercise 4
         for (let i = 1; i < 11; i++) {
-            let newEl = d3.select("body").append("div");
+            let newEl = d3.select("#ex4")
+                            .append("div")
+                            .attr("id", "el"+i); // set a unique id for each element
             newEl.text(i);
             if (i < 6) {
                 newEl.style("color", "red")
@@ -20,8 +63,10 @@
             };
         };
 
-        d3.select("div").style("color", "purple").text("start");
-        d3.select("body").append("div").text("Hello World!").style("color", "green");
+        d3.select("#el1").style("color", "purple").text("start"); // change color and text of element with id el1
+
+        // Exercise 5
+        d3.select("#ex5").append("div").text("Hello World!").style("color", "green"); // chain syntax, sets text color to green 
     </script>
 </body>
 
