@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
         rel="stylesheet">
     <script src='https://d3js.org/d3.v7.min.js'></script>
-    <link rel="stylesheet" href="../app.css">
 </head>
 
 <body>
@@ -33,6 +32,8 @@
     </div>
 
     <script>
+        d3.select("body").style("font-family", "Montserrat"); // set font style 
+        
         // Exercise 2
         d3.select("p") // selects first element of type "p"
             .style("color", "red")
