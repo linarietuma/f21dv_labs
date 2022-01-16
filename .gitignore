@@ -1,0 +1,9 @@
+# macOS files
+.DS_Store
+
+# Report files 
+Report.log
+Report.out
+Report.pdf
+Report.pyg
+Report.synctex.gz
