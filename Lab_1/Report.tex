@@ -1,0 +1,109 @@
+\documentclass[11pt]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[margin=2cm]{geometry}
+
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex		
+%\usepackage{amssymb}
+\usepackage{float} % formats figures
+\usepackage{fancyhdr}
+\usepackage{hyperref} % create clickable links
+\pagestyle{fancy}
+ \usepackage{setspace}
+\lhead{Student: Lina Rietuma}
+\cfoot{\thepage}
+\rhead{ID: H00361943}
+
+% No paragraph indentation
+\setlength\parindent{0pt}
+\setlength\parskip{1em}
+\raggedright
+
+\setstretch{1.25}
+
+\begin{document}
+
+\begin{center}
+  \Huge{F21DV Lab 1 Report}
+\end{center}
+Date:  \linebreak
+Demonstrated To: \linebreak
+Repository: \url{https://github.com/linarietuma/linarietuma.github.io} 
+
+\section{Introduction}
+
+This report summarises the reflections and results of exercises for Data Visualisations and Analytics (F21DV) course lab 1.
+
+\section{Part 2: D3 Setup}
+\subsection{Exercise 1: What version number is displayed in the console output window?}
+
+D3 version number displayed is 7.3.0.
+
+\subsection{Exercise 2: Change other style properties of the paragraph tag.}
+
+Use .select("p") to select the first HTML element (e.g., div, p, \#id, .class) of the specified type and .style("color", "red") to format the selected element where the first argument specifies CSS property and the second argument denotes its value.
+
+\subsection{Exercise 3: Write a loop which adds 10 ‘div’ elements and sets the contents to the count value (i.e., 1, 2, 3, ...). Also the colour of the first 5 elements are red and the last 5 elements are green.}
+Both .style() and .attr() methods are used in combination with the .select()/ .selectAll() methods to change the properties of specified element/s. While .style() is used to change CSS styling, . attr() changes an attribute of the selected element (e.g. set class, id etc).
+
+\subsection{Exercise 4: ‘selecting’ and modifying your ‘div’ elements after you’ve created and added them.}
+When creating the elements, give a unique id to each which later allows to specifically target and change the desired elements. 
+
+\subsection{Exercise 5: Exercise: Add to the ‘chain syntax’ version for the ‘hello world’ example above – so it also sets the ‘color’ of the text to green.}
+
+
+\section{Part 3: Data}
+\subsection{Exercise 6: Modify the example above so the ‘otherdata’ contains an additional variable called color (print this color value out in the ‘text’ method.}
+\subsection{Exercise 7: Change the bounds check so the color is red for numbers between 50 and 100.}
+
+\section{Part 4: Data Binding}
+\subsection{Exercise 8: Modify the above code, use the following data:}
+
+\section{Part 5: Loading Data}
+\subsection{Exercise 9: For the example above, to count how many of the names include ‘Mr.’ and ‘Mrs’ (or other). Also print out other details using other column header information, such as, how many passengers are ‘male’ and how many ‘female’.}
+\subsection{Exercise 10: Exercise: Write an update to the example above, so extra elements are added to the window to display information. For instance, display paragraphs for the total patients with heart failure between 1-30, 31-40, 41-60, 61-100. Process the data, store it in an array then pass that array to ‘selectAll()’, ‘data()’ as discussed in previous sections.}
+
+
+\section{Part 6: SVG}
+\subsection{Exercise 11: Exercise: Modify the code so the example draws a ‘square shape’ (4 lines) – each side of the square a different color.}
+\subsection{Exercise 12: Build an SVG scene which is created from an external file. You need to create a csv with the information about the shapes. You should include columns in your csv file for the type of shape (circle, rectangle, ellipse, line), its dimensions and position, and color. Your program reads the data and creates and displays the shapes to the screen.}
+\subsection{ Exercise 13: Extend the example to include the ‘enter’ and ‘exit’ concepts. So that the svg elements are updated, created or removed based on the csv data from your csv file.}
+
+\section{Part 7: Bar Chart}
+\subsection{Exercise 14: Extend the simple bar chart example to display the heart failure data you processed in Part 5 (Part 5 -Loading Data) from the csv file. (i.e., age ranges for people with heart failure).}
+\subsection{Exercise 15: Modify the simple bar chart to use color more (i.e., values over a certain threshold are displayed in ‘red’).}
+
+\section{Part 8: Circle Chart}
+\subsection{Exercise 16: Add additional shapes to the concept (draws both circles and squares based on the data).}
+
+\section{Part 9: Scales, Domain, Range}
+\subsection{Exercise 17: Modify the example above so the bars are green if below 100 and red if above 500.}
+\subsection{Exercise 18: Extend the example, so the ‘bar chart’ data is displayed from an external file (e.g., csv).}
+\subsection{Exercise 19: Put the code in a ‘function’ so the bar chart is only displayed when the function is called. Also if the function is called twice, then it will show the bar chart twice on screen. Extend this function so it takes a ‘csv’ file name as the input argument. Call it twice and it displays two different bar charts using different data on screen.}
+
+\section{Part 10: Axis}
+\subsection{Exercise 20: Update the example so an axis is drawn on all sides (axis on the left, right, top and bottom). Make the top and right axis the color blue (text and lines are blue in color).}
+\subsection{Exercise 21: Add an ‘axis’ to the bar chart example (bottom and left axis for the bar chart).}
+
+\section{Part 12: Line Chart }
+\subsection{ Exercise 22: Modify the code so it’s contained within a function (pass the data to the function, so you’re able to draw sine wave, cosine, or other type).}
+\subsection{Exercise 23: Load in some test data from a csv and plot the line (instead of ‘generating’ the data you load it from an external file).}
+\subsection{ Exercise 24: Exercise: Draw multiple lines on the same chart (e.g., sinewave and a cosine wave). Make one blue and the other green.}
+
+\section{Part 13: Markers}
+\subsection{Exercise 25: Add a ‘circle point’ to the line graph, so that each data point is displayed on the graph as circle.}
+\subsection{ Exercise 26: Plot two lines on the same graph, and mark the data points as circles for the first line and triangles for the second line.}
+\subsection{Exercise 27: Add ‘text’ to certain points on the line plot (e.g., next to the ‘circle’ dot also write the number of the data value). Limit the text information to only a few points so it doesn’t get over crowded.}
+
+\section{Part 14: Colors}
+\subsection{ Exercise 28: Take one of the d3 colour methods and apply it to the bar chart example. }
+\subsection{Exercise 29: Take one of the d3 colour methods and apply it to the line chart example. }
+
+\section{Part 15: Pie Chart }
+\subsection{Exercise 30: Add more data values.}
+\subsection{ Exercise 31: Add a text item to each ‘arc’ (e.g., draw the values for the data on the pie chart).}
+
+\section{Part 16: SVG Graphics}
+\subsection{ Exercise 32: Add a graphical image to the background of one of the graphs. Scale the image to fit the size of the svg bounds (covers background).}
+
+
+\end{document}  
