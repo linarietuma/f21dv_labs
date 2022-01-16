@@ -61,7 +61,10 @@ Use data() method to select data and iterate through them, allows accessing/ mod
 Assumed this includes 50 and 100.
 
 \section{Part 4: Data Binding}
-\subsection{Exercise 8: Modify the above code, use the following data:}
+\subsection{Exercise 8: Modify the above code. Instead of a paragraph ‘p’ use a ‘span’. If the data element is a ‘character’ display it as ‘blue’, if it’s a number ‘display it as green’.}
+Use .data() for data selection, .enter() to bind data to a specific HTML element, if no element of the type specified in .selectAll() is found, .enter() will create the element and .append() will add it to the 'body'. \linebreak
+A lot of D3 methods will accept a function as an argument (e.g. text(), style(), etc).
+
 
 \section{Part 5: Loading Data}
 \subsection{Exercise 9: For the example above, to count how many of the names include ‘Mr.’ and ‘Mrs’ (or other). Also print out other details using other column header information, such as, how many passengers are ‘male’ and how many ‘female’.}
