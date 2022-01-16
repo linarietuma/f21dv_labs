@@ -1,0 +1,31 @@
+<!-- Code By: Lina Rietuma (H00361943) -->
+<!-- Finished On: 16/01/2022 -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+</head>
+
+<body>
+
+    <script>
+        d3.select("body").style("font-family", "Montserrat"); // set font style 
+        
+        //Create SVG element
+        var svg = d3.select("body").append("svg")
+            .attr("width", 400)
+            .attr("height", 400)
+            .style("border", '1px solid green');
+            //Create line element inside SVG 
+            svg.append("line")
+                .attr("x1", 100)
+                .attr("x2", 200)
+                .attr("y1", 50)
+                .attr("y2", 150)
+                .attr("stroke", "blue")
+    </script>
+</body>
+
+</html>

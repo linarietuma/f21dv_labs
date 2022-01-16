@@ -1,3 +1,6 @@
+<!-- Code By: Lina Rietuma (H00361943) -->
+<!-- Finished On: 16/01/2022 -->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,6 +34,9 @@
     <p>2</p>
     <p>3</p>
     <script>
+
+        d3.select("body").style("font-family", "Montserrat"); // set font style 
+        
         var myData = [3, 4];
         var p = d3.select("body").selectAll("p")
             .data(myData)

@@ -1,30 +1,67 @@
+<!-- Code By: Lina Rietuma (H00361943) -->
+<!-- Finished On: 16/01/2022 -->
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
+        rel="stylesheet">
     <script src='https://d3js.org/d3.v7.min.js'></script>
+    <!-- <link rel="stylesheet" href="../app.css"> -->
 </head>
 
 <body>
-    
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
+
+    <h1>Part 3: Data</h1>
+    <p>See console for output.</p>
+
+    <h2>Exercise 6</h2>
+    <div class="ex6"></div>
+    <div class="ex6"></div>
+    <div class="ex6"></div>
+    <div class="ex6"></div>
+
+    <h2>Exercise 7</h2>
+
+    <div class="ex7"></div>
+    <div class="ex7"></div>
+    <div class="ex7"></div>
+    <div class="ex7"></div>
+
+
+
     <script>
+        d3.select("body").style("font-family", "Montserrat"); // set font style 
+
+        //Exercise 6
+        let otherdata = [{ name: 'test', val: 1, color: "red" },
+                            { name: 'other', val: 2, color: "green" },
+                            { name: 'b', val: 3, color: "blue" }];
+        let paragraph1 = d3.select("body").selectAll(".ex6")
+            .data(otherdata)
+            .text(function (d, i) {
+                console.log("d.name: " + d.name);
+                console.log("d.val: " + d.val);
+                console.log("d.color: " + d.color);
+                console.log("i: " + i);
+                console.log("this: " + this);
+                return 'cont: ' + d.name; // return value is used to set the 'text' 
+            });
+
         let num = [10, 50, 100, 200];
-        let paragraph = d3.select("body").selectAll("div")
+        let paragraph2 = d3.select("body").selectAll(".ex7")
             .data(num).text(function (d, i) {
                 return 'cont:' + d; // return value is used to set the 'text' 
             })
             .style("color", function (d, i) {
-                    if (d <= 100 && d >= 50) {
-                        return "red";
-                    } else {
-                        return "yellow";
-                    }
-                    return 'blue';
-                });
+                if (d <= 100 && d >= 50) { // set color to red for values between 50 and 100
+                    return "red";
+                } else {
+                    return "yellow";
+                }
+                return 'blue';
+            });
     </script>
 </body>
 

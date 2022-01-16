@@ -1,64 +1,11 @@
-\documentclass[11pt]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
-\usepackage[margin=2cm]{geometry}
-
-\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
-								% TeX will automatically convert eps --> pdf in pdflatex		
-%\usepackage{amssymb}
-\usepackage{float} % formats figures
-\usepackage{fancyhdr}
-\usepackage{hyperref} % create clickable links
-\pagestyle{fancy}
- \usepackage{setspace}
-\lhead{Student: Lina Rietuma}
-\cfoot{\thepage}
-\rhead{ID: H00361943}
-
-% No paragraph indentation
-\setlength\parindent{0pt}
-\setlength\parskip{1em}
-\raggedright
-
-\setstretch{1.25}
-
-\begin{document}
-
-\begin{center}
-  \Huge{F21DV Lab 1 Report}
-\end{center}
-Date:  \linebreak
-Demonstrated To: \linebreak
-Repository: \url{https://github.com/linarietuma/linarietuma.github.io} 
-
-\section{Introduction}
-
-This report summarises the reflections and results of exercises for Data Visualisations and Analytics (F21DV) course lab 1.
-
-\section{Part 2: D3 Setup}
-\subsection{Exercise 1: What version number is displayed in the console output window?}
-
-D3 version number displayed is 7.3.0.
-
-\subsection{Exercise 2: Change other style properties of the paragraph tag.}
-
-Use .select("p") to select the first HTML element (e.g., div, p, \#id, .class) of the specified type and .style("color", "red") to format the selected element where the first argument specifies CSS property and the second argument denotes its value.
 
 \subsection{Exercise 3: Write a loop which adds 10 ‘div’ elements and sets the contents to the count value (i.e., 1, 2, 3, ...). Also the colour of the first 5 elements are red and the last 5 elements are green.}
-Both .style() and .attr() methods are used in combination with the .select()/ .selectAll() methods to change the properties of specified element/s. While .style() is used to change CSS styling, . attr() changes an attribute of the selected element (e.g. set class, id etc).
-
 \subsection{Exercise 4: ‘selecting’ and modifying your ‘div’ elements after you’ve created and added them.}
-When creating the elements, give a unique id to each which later allows to specifically target and change the desired elements. 
-
 \subsection{Exercise 5: Exercise: Add to the ‘chain syntax’ version for the ‘hello world’ example above – so it also sets the ‘color’ of the text to green.}
-In D3, methods can be chained together to avoid storing intermediary variables that are passed between methods. 
-
-
 
 \section{Part 3: Data}
-\subsection{Exercise 6: Modify the example above so the ‘otherdata’ contains an additional variable called color (print this color value out in the ‘text’ method).}
-Use data() method to select data and iterate through them, allows accessing/ modifying values one by one. Add 'color' variable to each object, retrieve the value of the variable by calling d.color.
-
+\subsection{Exercise 6: Modify the example above so the ‘otherdata’ contains an additional variable called color (print this color value out in the ‘text’ method.}
 \subsection{Exercise 7: Change the bounds check so the color is red for numbers between 50 and 100.}
-Assumed this includes 50 and 100.
 
 \section{Part 4: Data Binding}
 \subsection{Exercise 8: Modify the above code, use the following data:}
@@ -74,7 +21,8 @@ Assumed this includes 50 and 100.
 \subsection{ Exercise 13: Extend the example to include the ‘enter’ and ‘exit’ concepts. So that the svg elements are updated, created or removed based on the csv data from your csv file.}
 
 \section{Part 7: Bar Chart}
-\subsection{Exercise 14: Extend the simple bar chart example to display the heart failure data you processed in Part 5 (Part 5 -Loading Data) from the csv file. (i.e., age ranges for people with heart failure).}
+\subsection{Exercise 14: Extend the simple bar chart example to display the heart failure data you processed in Part 5 (Part 5 -
+Loading Data) from the csv file. (i.e., age ranges for people with heart failure).}
 \subsection{Exercise 15: Modify the simple bar chart to use color more (i.e., values over a certain threshold are displayed in ‘red’).}
 
 \section{Part 8: Circle Chart}
@@ -111,4 +59,4 @@ Assumed this includes 50 and 100.
 \subsection{ Exercise 32: Add a graphical image to the background of one of the graphs. Scale the image to fit the size of the svg bounds (covers background).}
 
 
-\end{document}  
+\end{document}
