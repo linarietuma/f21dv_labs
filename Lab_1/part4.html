@@ -5,46 +5,36 @@
 <html lang="en">
 
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
+        rel="stylesheet">
     <script src='https://d3js.org/d3.v7.min.js'></script>
 </head>
 
 <body>
+    <h1>Part 4: Data Binding</h1>
+    <h2>Exercise 8</h2>
 
-    <!-- <script>
-    var myData = ['a', 4, 1, 'b', 6, 2, 8, 9, 'z' ];
-    var p = d3.select("body") 
-                .selectAll("span") 
-                .data(myData) // iterates through every el in myData
-                .enter() 
-                .append('span')
-                .style("color", d => {
-                    if (typeof d == 'string') {
-                        return "blue";
-                    }  else if (typeof d == 'number') {
-                        return "green";
-                    }
-                }) 
-                .text(function (d, i) {
-                        return d; 
-                    });
-    </script> -->
-
-
-    <p>1</p>
-    <p>2</p>
-    <p>3</p>
     <script>
+        d3.select("body").style("font-family", "Montserrat"); // set font style
 
-        d3.select("body").style("font-family", "Montserrat"); // set font style 
-        
-        var myData = [3, 4];
-        var p = d3.select("body").selectAll("p")
-            .data(myData)
-            .text(function (d, i) {
-                return d;
+        var myData = ['a', 4, 1, 'b', 6, 2, 8, 9, 'z'];
+        var p = d3.select("body")
+            .selectAll("span")
+            .data(myData) // iterates through every el in myData
+            .enter() // search for 'span' element, creates one if none are found
+            .append('span') // adds 'span' element to the body
+            .style("color", d => {
+                if (typeof d == 'string') { // set font color to blue if character
+                    return "blue";
+                } else if (typeof d == 'number') { // set color to green if number
+                    return "green";
+                }
             })
-            .exit() // deletes unused "p" elements
-            .remove(); </script>
+            .text( d => {
+                return d; // set text to the data element value
+            });
+    </script>
+
 </body>
 
 </html>
