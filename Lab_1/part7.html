@@ -1,0 +1,98 @@
+<!-- Code By: Lina Rietuma (H00361943) -->
+<!-- Finished On: 18/01/2022 -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
+        rel="stylesheet">
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+</head>
+
+<body>
+    <h1>Part 7: Bar Chart</h1>
+    <div class="ex14">
+        <h2>Exercise 14</h2>
+        <h4>Patients with Heart Failure by Age Group</h4>
+    </div>
+    <div class="ex15">
+        <h2>Exercise 15</h2>
+    </div>
+
+
+    <style>
+        svg rect {
+            fill: rgb(171, 221, 90);
+            stroke: rgb(8, 8, 8)
+        }
+
+        svg text {
+            fill: black;
+            font: 10px;
+            text-anchor: start;
+        }
+    </style>
+
+    <script>
+        d3.select("body").style("font-family", "Montserrat"); // set font style
+
+        // Exercise 14
+
+        let heartfailurecsv = 'https://raw.githubusercontent.com/akmand/datasets/master/heart_failure.csv';
+        let patients = [['1 - 30', 0], ['31 - 40', 0], ['41 - 60', 0], ['61 - 100', 0]];
+
+        const heartData = d3.csv(heartfailurecsv, (data) => {
+            if (data.age < 31) {
+                patients[0][1]++;
+            } else if (data.age > 30 && 41 > data.age) {
+                patients[1][1]++;
+            } else if (data.age > 40 && 61 > data.age) {
+                patients[2][1]++;
+            } else if (data.age > 60 && 101 > data.age) {
+                patients[3][1]++;
+            }
+        });
+
+        const width = 600;
+        const scaleFactor = 2;
+        const barHeight = 30;
+        const graph14 = d3.select(".ex14").append("svg")
+            .attr("width", width)
+            .attr("height", barHeight * patients.length)
+            
+        heartData.then(() => {
+            // add a container for each bar
+            const bar = graph14.selectAll("g").data(patients)
+                .enter()
+                .append("g")
+                .attr("left", 40)
+                .attr("transform", (d, i) => {
+                    return "translate(0," + i * barHeight + ")";
+                });
+            // add a rectangle to the bar container 
+            bar.append("rect").attr("width", d => {
+                return d[1] * scaleFactor;
+            })
+                .attr("height", barHeight - 1)
+    
+            // add data labels
+            bar.append("text")
+                .attr("x", d => { console.log(d); return (d[1] * scaleFactor); }).attr("y", barHeight / 2)
+                .attr("dy", ".35em") // positions the label (y)
+                .attr("dx", ".35em") // position the label (distance from the bar)
+                .text(d => { return 'Ages ' + d[0] + ': ' + d[1]; });
+        });
+
+        // Exercise 15
+        const graph15 = d3.select(".ex15").append("svg")
+            .attr("width", width)
+            .attr("height", barHeight * patients.length)
+            .style("border", "1px solid black")
+
+
+    </script>
+
+</body>
+
+</html>
