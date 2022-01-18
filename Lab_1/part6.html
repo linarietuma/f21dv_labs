@@ -5,26 +5,118 @@
 <html lang="en">
 
 <head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
+        rel="stylesheet">
     <script src='https://d3js.org/d3.v7.min.js'></script>
 </head>
 
 <body>
+    <h1>Part 6: SVG</h1>
+    <div class="ex11">
+        <h2>Exercise 11</h2>
+    </div>
+    <div class="ex12">
+        <h2>Exercise 12</h2>
+    </div>
 
+    <h2 class="ex13">Exercise 13</h2>
     <script>
         d3.select("body").style("font-family", "Montserrat"); // set font style 
-        
-        //Create SVG element
-        var svg = d3.select("body").append("svg")
+
+        // Exercise 11
+        // create SVG element
+        const svg11 = d3.select(".ex11").append("svg")
             .attr("width", 400)
             .attr("height", 400)
             .style("border", '1px solid green');
-            //Create line element inside SVG 
-            svg.append("line")
-                .attr("x1", 100)
-                .attr("x2", 200)
-                .attr("y1", 50)
-                .attr("y2", 150)
-                .attr("stroke", "blue")
+
+        // create line elements inside SVG 
+        // create a vertical line on the left
+        svg11.append("line")
+            .attr("x1", 100)
+            .attr("x2", 100)
+            .attr("y1", 100)
+            .attr("y2", 300)
+            .attr("stroke", "blue");
+
+        // create the top horizontal line
+        svg11.append("line")
+            .attr("x1", 100)
+            .attr("x2", 300)
+            .attr("y1", 100)
+            .attr("y2", 100)
+            .attr("stroke", "red");
+
+        // create the second vertical line
+        svg11.append("line")
+            .attr("x1", 300)
+            .attr("x2", 300)
+            .attr("y1", 100)
+            .attr("y2", 300)
+            .attr("stroke", "purple");
+
+        // create the bottom horizontal line
+        svg11.append("line")
+            .attr("x1", 100)
+            .attr("x2", 300)
+            .attr("y1", 300)
+            .attr("y2", 300)
+            .attr("stroke", "green");
+
+
+        // Exercise 12
+        //Create SVG element
+        const shapes = "data/shapes.csv"
+        d3.csv(shapes, data => { console.log(data.shape)});
+
+        const svg12 = d3.select(".ex12").append("svg")
+            .attr("width", 400)
+            .attr("height", 400)
+            .style("border", '1px solid #564592');
+
+        d3.csv(shapes, data => {
+            switch (data.figure) {
+                case "line":
+                    // append line objects
+                    svg12.append(data.figure)
+                        .attr("x1", data.x1)
+                        .attr("x2", data.x2)
+                        .attr("y1", data.y1)
+                        .attr("y2", data.y2)
+                        .attr("stroke", data.stroke);
+                    break;
+                case "ellipse":
+                    // appends ellipse objects
+                    svg12.append(data.figure)
+                        .attr("cx", data.cx)
+                        .attr("cy", data.cy)
+                        .attr("rx", data.rx)
+                        .attr("ry", data.ry)
+                        .attr("fill", data.fill)
+                        .attr("stroke", data.stroke);
+                    break;
+                case "circle":
+                    // append circle objects
+                    svg12.append(data.figure)
+                        .attr("cx", data.cx)
+                        .attr("cy", data.cy)
+                        .attr("r", data.r)
+                        .attr("fill", data.fill)
+                        .attr("stroke", data.stroke);
+                    break;
+                case "rect":
+                    // append rectangle objects
+                    svg12.append(data.figure)
+                        .attr("x", data.x)
+                        .attr("y", data.y)
+                        .attr("width", data.width)
+                        .attr("height", data.height)
+                        .attr("fill", data.fill)
+                        .attr("stroke", data.stroke);
+                    break;
+            };
+        });
+
     </script>
 </body>
 
