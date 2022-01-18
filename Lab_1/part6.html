@@ -18,8 +18,10 @@
     <div class="ex12">
         <h2>Exercise 12</h2>
     </div>
+    <div class="ex13">
+        <h2>Exercise 13</h2>
+    </div>
 
-    <h2 class="ex13">Exercise 13</h2>
     <script>
         d3.select("body").style("font-family", "Montserrat"); // set font style 
 
@@ -65,19 +67,18 @@
 
 
         // Exercise 12
-        //Create SVG element
         const shapes = "data/shapes.csv"
-        d3.csv(shapes, data => { console.log(data.shape)});
 
+        // create svg object
         const svg12 = d3.select(".ex12").append("svg")
             .attr("width", 400)
             .attr("height", 400)
             .style("border", '1px solid #564592');
-
-        d3.csv(shapes, data => {
+        let fill = []
+        const csvData = d3.csv(shapes, data => {
+            fill.push(data.fill);
             switch (data.figure) {
                 case "line":
-                    console.log("We're at line");
                     // append line objects
                     svg12.append(data.figure)
                         .attr("x1", data.x1)
@@ -87,7 +88,6 @@
                         .attr("stroke", data.stroke);
                     break;
                 case "ellipse":
-                console.log("We're at ellipse");
                     // appends ellipse objects
                     svg12.append(data.figure)
                         .attr("cx", data.cx)
@@ -117,6 +117,41 @@
                         .attr("stroke", data.stroke);
                     break;
             };
+ 
+        });
+
+        // Exercise 13
+        // create svg object
+        const svg13 = d3.select(".ex13").append("svg")
+            .attr("width", 400)
+            .attr("height", 400)
+            .style("border", '1px solid #564592');
+
+        // append 10 circles
+        for (let i = 0; i < 10; i++) {
+            let randx = Math.random() * 400;
+            let randy = Math.random() * 400;
+            svg13.append("circle")
+            .attr("cx", randx)
+            .attr("cy", randy)
+            .attr("r", 20);
+        }
+        
+        // after the csv data have been read in
+        csvData.then(() => {
+            svg13.selectAll("circle")
+                .data(fill)
+                .join(
+                    enter => {},
+                    update => {
+                        // update the fill color of circle objects
+                        update.attr('fill', d => d);
+                    },
+                    exit => {
+                        // remove any leftover circles 
+                        exit.remove();
+                    }
+                );
         });
 
     </script>
