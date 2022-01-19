@@ -1,0 +1,66 @@
+<!-- Code By: Lina Rietuma (H00361943) -->
+<!-- Finished On: 20/01/2022 -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
+        rel="stylesheet">
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+</head>
+
+<body>
+    <h1>Part 9: Scales, Domain, Range</h1>
+    <div class="ex17">
+        <h2>Exercise 17</h2>
+    </div>
+    <div class="ex18">
+        <h2>Exercise 18</h2>
+    </div>
+    <div class="ex19">
+        <h2>Exercise 19</h2>
+    </div>
+    
+
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+    <script>
+        d3.select("body").style("font-family", "Montserrat"); // set font style 
+
+        var data1 = [0, 400, 300, 900, 850, 1000];
+        var scale = d3.scaleLinear()
+            .domain([d3.min(data1), d3.max(data1)])
+            .range([0, 10]);
+        console.log('scale 0:', scale(0)); // 0 maps to 0 
+        console.log('scale 1000:', scale(1000)); // 1000 maps to 10 
+        console.log('scale 200:', scale(200));
+
+        const data = [50, 400, 300, 900, 250, 1000]
+        const width = 500; const barHeight = 20; const margin = 1;
+        var scale = d3.scaleLinear()
+            .domain([d3.min(data), d3.max(data)]).range([50, 500]);
+        var svg = d3.select(".ex17").append("svg")
+            .attr("width", width)
+            .attr("height", barHeight * data.length);
+        var g = svg.selectAll("g").data(data)
+            .enter()
+            .append("g")
+            .attr("transform", function (d, i) {
+                return "translate(0," + i * barHeight + ")";
+            });
+        g.append("rect").attr("width", function (d) {
+            return scale(d);
+        })
+            .attr('fill', 'blue')
+            .attr("height", barHeight - margin)
+        g.append("text")
+            .attr("x", function (d) { return (scale(d)); }).attr("y", barHeight / 2)
+            .attr("dy", ".35em")
+            .attr("fill", "white")
+            .style('text-anchor', 'end')
+            .text(function (d) { return d; });
+
+    </script>
+</body>
+
+</html>
