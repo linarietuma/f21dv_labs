@@ -1,0 +1,95 @@
+<!-- Code By: Lina Rietuma (H00361943) -->
+<!-- Finished On: 19/01/2022 -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
+        rel="stylesheet">
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+</head>
+
+<body>
+    <h1>Part 8: Circle Chart</h1>
+    <h2>Exercise 16</h2>
+
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+    <script>
+        d3.select("body").style("font-family", "Montserrat"); // set font style 
+
+        const width = 500;
+        const height = 600;
+        const data = [10, 15, 20, 25, 30];
+        // Note different valid ways of specifying color
+        const colors = ['#ffcccc', 'red', 'rgb(0,255,0)', '#31a354', '#006837'];
+        // create a svg element
+        const svg = d3.select("body")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        // create a container for each data point 
+        const g = svg.selectAll("g")
+            .data(data)
+            .enter()
+            .append("g") 
+
+        // add circle objects
+        g.append("circle")
+            .attr("cx", (d, i) => {
+                return i * 100 + 50;
+            })
+            .attr("cy", function (d, i) {
+                return 100;
+            })
+            .attr("r", function (d) {
+                return d * 1.5;
+            })
+            .attr("fill", (d, i) => {
+                return colors[i];
+            })
+            .attr("transform", "translate(0, -55)");
+        // add rectangle objects
+        g.append("rect")
+            .attr("x", (i, d) => {
+                return i * d
+            })
+            .attr("y", (d, i) => {
+                return i * 35;
+            })
+            .attr("width", d => d)
+            .attr("height", d => {
+                if (d < 20) {
+                    return 100 - d;
+                } else {
+                    return d;
+                }
+            })
+            .attr("fill", (d, i) => {
+                if (d == 30) {
+                    return "purple";
+                }
+                n = colors.length
+                return colors[n - i - 1] // reverse the color list
+            })
+            .attr("stroke", "black");
+        
+        // add text based on the data values
+        g.append("text")
+            .attr("x", (d, i) => {
+                return i * 100 + 40;
+            })
+            .attr("y", 50)
+            .attr("stroke", "white")
+            .attr("font-size", "15px")
+            .text(d => {
+                return d;
+            });
+
+
+
+    </script>
+</body>
+
+</html>
