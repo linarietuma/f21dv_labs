@@ -42,7 +42,7 @@
         let heartfailurecsv = 'https://raw.githubusercontent.com/akmand/datasets/master/heart_failure.csv';
         let patients = [['1 - 30', 0], ['31 - 40', 0], ['41 - 60', 0], ['61 - 100', 0]];
 
-        const heartData = d3.csv(heartfailurecsv, (data) => {
+        const heartData = d3.csv(heartfailurecsv, data => {
             if (data.age < 31) {
                 patients[0][1]++;
             } else if (data.age > 30 && 41 > data.age) {
