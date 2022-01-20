@@ -1,0 +1,164 @@
+<!-- Code By: Lina Rietuma (H00361943) -->
+<!-- Finished On: 20/01/2022 -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
+        rel="stylesheet">
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+</head>
+
+<body>
+    <h1>Part 10: Axis</h1>
+    <div class="ex20">
+        <h2>Exercise 20</h2>
+    </div>
+    <div class="ex21">
+        <h2>Exercise 21</h2>
+        <h4>Bar Chart with Axis</h4>
+    </div>
+
+    <script>
+        d3.select("body").style("font-family", "Montserrat"); // set font style 
+
+        // Exercise 20
+        const width = 400;
+        const height = 300;
+        const data = [10, 15, 20, 25, 30];
+        const svg = d3.select(".ex20")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+        // set scale for x axis
+        const xscale = d3.scaleLinear()
+            .domain([0, d3.max(data)])
+            .range([0, width - 100]);
+        // set scale for y axis
+        const yscale = d3.scaleLinear()
+            .domain([0, d3.max(data)])
+            .range([height / 2, 0]);
+
+        // add x axis
+        const x_axis = d3.axisBottom()
+            .scale(xscale);
+
+        // add y axis
+        const y_axis = d3.axisLeft()
+            .scale(yscale);
+
+        // add top x axis
+        const x_axis_top = d3.axisTop()
+            .scale(xscale);
+
+        // add right y axis 
+        const y_axis_right = d3.axisRight()
+            .scale(yscale)
+
+        // append container and add y axis
+        svg.append("g")
+            .attr("transform", "translate(50, 20)")
+            .call(y_axis);
+
+        const xAxisTranslate = height / 2 + 20;
+
+        // append group and add x axis
+        svg.append("g")
+            .attr("transform", "translate(50, " + xAxisTranslate + ")")
+            .call(x_axis)
+
+        // add right y axis
+        svg.append("g")
+            .attr("transform", "translate(350, 20)")
+            .attr("color", "blue")
+            .call(y_axis_right);
+
+        // add top x axis 
+        svg.append("g")
+            .attr("transform", "translate(50, 20)")
+            .attr("color", "blue")
+            .call(x_axis_top);
+
+
+        // Exercise 21
+        const data21 = [50, 400, 300, 900, 250, 1000]
+        const width21 = 600;
+        const barHeight21 = 20;
+        const margin21 = 1;
+
+        // create a scale for the x axis
+        const scale21 = d3.scaleLinear()
+            .domain([d3.min(data21), d3.max(data21)])
+            .range([0, 500]);
+
+        // create an ordinal scale for th ey axis 
+        const scale21_y = d3.scaleOrdinal()
+            .domain(['a', 'b', 'c', 'd', 'e'])
+            .range([0, barHeight21, barHeight21*2, barHeight21*3, barHeight21*4]);
+
+        // create svg 
+        const svg21 = d3.select(".ex21").append("svg")
+            .attr("width", width21)
+            .attr("height", barHeight21 * (data21.length + 2));
+
+        // create g container for each data value 
+        const g21 = svg21.selectAll("g")
+            .data(data21)
+            .enter()
+            .append("g")
+            .attr("transform", (d, i) => { // displaces each bar below the previous bar
+                return "translate(30," + i * barHeight21 + ")";
+            });
+            
+        // add bars    
+        g21.append("rect")
+            .attr("width", d => {
+                return scale21(d);
+            })
+            .attr('fill', d => {
+                if (d < 301) {
+                    return "green";
+                } else if (d > 700) {
+                    return "red";
+                } else {
+                    return "blue";
+                };
+            })
+            .attr("height", barHeight21 - margin21);
+
+        // add data labels 
+        g21.append("text")
+            .attr("x", d => { return (scale21(d)); })
+            .attr("y", barHeight21 / 2)
+            .attr("dy", ".35em")
+            .attr("fill", "white")
+            .style('text-anchor', 'end')
+            .text(d => { return d; });
+
+        // create y axis
+        const y_axis21 = d3.axisLeft()
+            .scale(scale21_y);
+
+        // create x axis 
+        const x_axis21 = d3.axisBottom()
+            .scale(scale21);
+
+        // add the container and y axis to the graph
+        svg21.append("g")
+            .style("font-size", "14")
+            .attr("transform", "translate(30, 30)")
+            .style("font-family", "Montserrat")
+            .call(y_axis21)
+        
+         // add the container and x axis to the graph
+        svg21.append("g")
+            .attr("transform", "translate(30, " + (barHeight21 * data21.length + 2) + ")")
+            .style("font-size", "14")
+            .style("font-family", "Montserrat")
+            .call(x_axis21)
+
+    </script>
+</body>
+
+</html>
