@@ -21,44 +21,169 @@
     <div class="ex19">
         <h2>Exercise 19</h2>
     </div>
-    
 
-    <script src='https://d3js.org/d3.v7.min.js'></script>
     <script>
         d3.select("body").style("font-family", "Montserrat"); // set font style 
 
-        var data1 = [0, 400, 300, 900, 850, 1000];
-        var scale = d3.scaleLinear()
-            .domain([d3.min(data1), d3.max(data1)])
-            .range([0, 10]);
-        console.log('scale 0:', scale(0)); // 0 maps to 0 
-        console.log('scale 1000:', scale(1000)); // 1000 maps to 10 
-        console.log('scale 200:', scale(200));
-
-        const data = [50, 400, 300, 900, 250, 1000]
-        const width = 500; const barHeight = 20; const margin = 1;
-        var scale = d3.scaleLinear()
-            .domain([d3.min(data), d3.max(data)]).range([50, 500]);
-        var svg = d3.select(".ex17").append("svg")
+        // Exercise 17
+        const data17 = [50, 400, 300, 900, 250, 1000]
+        const width = 500;
+        const barHeight = 20;
+        const margin = 1;
+        const scale17 = d3.scaleLinear()
+            .domain([d3.min(data17), d3.max(data17)])
+            .range([50, 500]);
+        const svg = d3.select(".ex17").append("svg")
             .attr("width", width)
-            .attr("height", barHeight * data.length);
-        var g = svg.selectAll("g").data(data)
+            .attr("height", barHeight * data17.length);
+        const g = svg.selectAll("g").data(data17)
             .enter()
             .append("g")
-            .attr("transform", function (d, i) {
+            .attr("transform", (d, i) => {
                 return "translate(0," + i * barHeight + ")";
             });
-        g.append("rect").attr("width", function (d) {
-            return scale(d);
-        })
-            .attr('fill', 'blue')
-            .attr("height", barHeight - margin)
+        g.append("rect")
+            .attr("width", d => {
+                return scale17(d);
+            })
+            .attr('fill', d => {
+                if (d < 100) {
+                    return "green";
+                } else if (d > 500) {
+                    return "red";
+                } else {
+                    return "blue";
+                };
+            })
+            .attr("height", barHeight - margin);
+            
         g.append("text")
-            .attr("x", function (d) { return (scale(d)); }).attr("y", barHeight / 2)
+            .attr("x", d => { return (scale17(d)); })
+            .attr("y", barHeight / 2)
             .attr("dy", ".35em")
             .attr("fill", "white")
             .style('text-anchor', 'end')
-            .text(function (d) { return d; });
+            .text(d => { return d; });
+
+        // Exercise 18
+        let data18 = [];
+        const csv18 = d3.csv("data/barChart.csv", data => {
+            data18.push(parseInt(data.data));
+
+        });
+
+        csv18.then(() => {
+            const scale18 = d3.scaleLinear()
+                .domain([d3.min(data18), d3.max(data18)])
+                .range([10, 500]);
+
+            const svg18 = d3.select(".ex18")
+                .append("svg")
+                .attr("height", data18.length * barHeight)
+                .attr("width", "500");
+
+            const g18 = svg18.selectAll("g").data(data18)
+                .enter()
+                .append("g")
+                .attr("transform", (d, i) => {
+                    return "translate(0," + i * barHeight + ")";
+                });
+
+            g18.append("rect")
+                .attr("width", d => {
+                    return scale18(d);
+                })
+                .attr('fill', d => {
+                    if (d < 500) {
+                        return "green";
+                    } else if (d > 5000) {
+                        return "red";
+                    } else {
+                        return "blue";
+                    };
+                })
+                .attr("height", barHeight - margin)
+
+            g18.append("text")
+                .attr("x", d => { return (scale18(d)); })
+                .attr("y", barHeight / 2)
+                .attr("dy", ".35em")
+                .attr("dx", "0.35em")
+                .attr("fill", "black")
+                .style('text-anchor', 'start')
+                .text(d => { return d; });
+        });
+
+        // Exercise 19
+        // creates a bar chart, takes a path to a csv file as an optional argument 
+        function createChart(path = null) {
+            let data18 = [];
+            if (path != null) {
+                try {
+                    const csv18 = d3.csv(path, d => {
+                        data18.push(parseInt(d.data));
+                    });
+                    csv18.then(() => {
+                        createBarChart(data18);
+                    })
+                } catch (error) {
+                    console.error(error);
+                };
+            } else {
+                data18 = [50, 400, 300, 900, 250, 1000]
+                createBarChart(data18);
+            }
+        }
+        // creates a bar chart from the input data 
+        function createBarChart(data) {
+            const width = 600;
+            const barHeight = 20;
+            const margin = 1;
+            const scale19 = d3.scaleLinear()
+                .domain([d3.min(data), d3.max(data)])
+                .range([50, 500]);
+            
+            const title = d3.select(".ex19")
+                .append("h4")
+                .text("Bar Chart"); 
+
+            const svg = d3.select(".ex19").append("svg")
+                .attr("width", width)
+                .attr("height", barHeight * data.length);
+            const g = svg.selectAll("g").data(data)
+                .enter()
+                .append("g")
+                .attr("transform", (d, i) => {
+                    return "translate(0," + i * barHeight + ")";
+                });
+            g.append("rect")
+                .attr("width", d => {
+                    return scale19(d);
+                })
+                .attr('fill', d => {
+                    if (d < d3.max(data)*0.25) { // data point is smaller than 1/4 of the max data value
+                        return "green";
+                    } else if (d > d3.max(data)*0.75) { // data point is larger than 3/4 of the max data value
+                        return "red";
+                    } else {
+                        return "blue";
+                    };
+                })
+                .attr("height", barHeight - margin)
+
+            g.append("text")
+                .attr("x", d => { return (scale19(d)); })
+                .attr("y", barHeight / 2)
+                .attr("dy", ".35em")
+                .attr("dx", ".35em")
+                .attr("fill", "black")
+                .style('text-anchor', 'start')
+                .text(d => { return d; });
+        };
+
+        createChart();
+        createChart();
+        createChart("data/barChart.csv");
 
     </script>
 </body>
