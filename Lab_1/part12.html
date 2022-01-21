@@ -87,7 +87,7 @@
         // Exercise 23
         let data23 = [];
         // get data
-        const csv23 = d3.csv("http://127.0.0.1:5500/Lab_1/data/lineChart.csv", d => {
+        const csv23 = d3.csv("data/lineChart.csv", d => {
             data23.push({ x: parseFloat(d.x), y: parseFloat(d.y) });
         });
 
@@ -141,7 +141,7 @@
                     .domain([extent1[0], extent1[1]]).range([0, xMax]);
             };
         };
-        
+
         // x axis
         const x = findExtent(xExtent1, xExtent2, xMax);
         // y axis
