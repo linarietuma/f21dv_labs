@@ -1,0 +1,182 @@
+<!-- Code By: Lina Rietuma (H00361943) -->
+<!-- Finished On: 21/01/2022 -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
+        rel="stylesheet">
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+</head>
+
+<body>
+    <h1>Part 12: Line Charts</h1>
+    <div class="ex22">
+        <h2>Exercise 22</h2>
+    </div>
+    <div class="ex23">
+        <h2>Exercise 23</h2>
+    </div>
+    <div class="ex24">
+        <h2>Exercise 24</h2>
+    </div>
+
+    <script>
+        d3.select("body").style("font-family", "Montserrat"); // set font style 
+
+        // Exercise 22
+        // Create Random Points
+        const numPoints = 100;
+        const data22 = [];
+        for (let i = 0; i < numPoints; i++) {
+            data22.push({ x: i / 100, y: Math.sin(6.2 * i / 100) });
+        }
+
+        function createGraph(data, htmlEl = "body") {
+            // Set Dimensions
+            const xSize = 600;
+            const ySize = 600;
+            const margin = 40;
+            const xMax = xSize - margin * 2;
+            const yMax = ySize - margin * 2;
+
+
+            // Get the 'limits' of the data - the full extent (mins and max) // so the plotted data fits perfectly
+            const xExtent = d3.extent(data, d => { return d.x });
+            const yExtent = d3.extent(data, d => { return d.y });
+
+            // Append SVG Object to the Page 
+            const svg = d3.select(htmlEl)
+                .append("svg")
+                .attr('width', xSize)
+                .attr('height', ySize)
+                .append("g")
+                .attr("transform", "translate(" + margin + "," + margin + ")");
+            // X Axis
+            const x = d3.scaleLinear()
+                .domain([xExtent[0], xExtent[1]]).range([0, xMax]);
+            // bottom 
+            svg.append("g")
+                .attr("transform", "translate(0," + yMax + ")").call(d3.axisBottom(x))
+                .attr('color', 'green'); // make bottom axis green
+            // top \
+            svg.append("g")
+                .call(d3.axisTop(x));
+            // Y Axis
+            const y = d3.scaleLinear()
+                .domain([yExtent[0], yExtent[1]]).range([yMax, 0]);
+            // left y axis 
+            svg.append("g")
+                .call(d3.axisLeft(y));
+            // right y axis 
+            svg.append("g")
+                .attr("transform", `translate(${yMax},0)`).call(d3.axisRight(y));
+            // Add the line
+            svg.append("path")
+                .datum(data)
+                .attr("fill", "none").attr("stroke", "steelblue").attr("stroke-width", 1.5).attr("d", d3.line()
+                    .x(d => { return x(d.x) })
+                    .y(d => { return y(d.y) }));
+
+        };
+
+        // call the create graph function
+        createGraph(data22, ".ex22");
+
+        // Exercise 23
+        let data23 = [];
+        // get data
+        const csv23 = d3.csv("http://127.0.0.1:5500/Lab_1/data/lineChart.csv", d => {
+            data23.push({ x: parseFloat(d.x), y: parseFloat(d.y) });
+        });
+
+        // create a line graph once the data are read in
+        csv23.then(() => {
+            createGraph(data23, ".ex23");
+        });
+
+
+        // Exercise 24
+        // Create Random Points
+        const data241 = [];
+        const data242 = [];
+        for (let i = 0; i < numPoints; i++) {
+            data241.push({ x: i / 100, y: Math.cos(6.2 * i / 100) });
+            data242.push({ x: i / 100, y: Math.tanh(6.2 * i / 100) })
+        };
+
+        const xSize = 600;
+        const ySize = 600;
+        const margin = 40;
+        const xMax = xSize - margin * 2;
+        const yMax = ySize - margin * 2;
+
+        const svg24 = d3.select(".ex24").append("svg")
+            .attr('width', xSize)
+            .attr('height', ySize)
+            .append("g")
+            .attr("transform", "translate(" + margin + "," + margin + ")");
+
+        const xExtent1 = d3.extent(data241, d => { return d.x });
+        const xExtent2 = d3.extent(data242, d => { return d.x });
+
+        const yExtent1 = d3.extent(data241, d => { return d.y });
+        const yExtent2 = d3.extent(data242, d => { return d.y });
+
+        // find the scale based on the smallest and largest value between the two datasets
+        function findExtent(extent1, extent2, xMax) {
+            if (extent1[0] > extent2[0] && extent1[1] > extent2[1]) {
+                return d3.scaleLinear()
+                    .domain([extent2[0], extent1[1]]).range([0, xMax]);
+            } else if (extent1[0] > extent2[0] && extent1[1] < extent2[1]) {
+                return d3.scaleLinear()
+                    .domain([extent2[0], extent2[1]]).range([0, xMax]);
+
+            } else if (extent1[0] < extent2[0] && extent1[1] < extent2[1]) {
+                return d3.scaleLinear()
+                    .domain([extent1[0], extent2[1]]).range([0, xMax]);
+            } else {
+                return d3.scaleLinear()
+                    .domain([extent1[0], extent1[1]]).range([0, xMax]);
+            };
+        };
+        
+        // x axis
+        const x = findExtent(xExtent1, xExtent2, xMax);
+        // y axis
+        const y = findExtent(yExtent1, yExtent2, xMax);
+
+        // bottom 
+        svg24.append("g")
+            .attr("transform", "translate(0," + yMax + ")").call(d3.axisBottom(x))
+            .attr('color', 'green'); // make bottom axis green
+        // top \
+        svg24.append("g")
+            .call(d3.axisTop(x));
+
+        // left y axis 
+        svg24.append("g")
+            .call(d3.axisLeft(y));
+        // right y axis 
+        svg24.append("g")
+            .attr("transform", `translate(${yMax},0)`).call(d3.axisRight(y));
+
+        // Add the first line
+        svg24.append("path")
+            .datum(data241)
+            .attr("fill", "none").attr("stroke", "blue").attr("stroke-width", 1.5).attr("d", d3.line()
+                .x(d => { return x(d.x) })
+                .y(d => { return y(d.y) }));
+        
+        // Add the second line
+        svg24.append("path")
+            .datum(data242)
+            .attr("fill", "none").attr("stroke", "red").attr("stroke-width", 1.5).attr("d", d3.line()
+                .x(d => { return x(d.x) })
+                .y(d => { return y(d.y) }));
+
+    </script>
+</body>
+
+</html>
