@@ -1,0 +1,187 @@
+<!-- Code By: Lina Rietuma (H00361943) -->
+<!-- Finished On: 21/01/2022 -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
+        rel="stylesheet">
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+</head>
+
+<body>
+    <h1>Part 13: Markers</h1>
+    <div class="ex25">
+        <h2>Exercise 25</h2>
+    </div>
+    <div class="ex26">
+        <h2>Exercise 26</h2>
+    </div>
+    <div class="ex27">
+        <h2>Exercise 27</h2>
+    </div>
+
+    <script>
+        d3.select("body").style("font-family", "Montserrat"); // set font style 
+
+        // Exercise 25
+        // Set Dimensions
+        const xSize = 600;
+        const ySize = 600;
+        const margin = 40;
+        const xMax = xSize - margin * 2;
+        const yMax = ySize - margin * 2;
+
+        // Create Random Points
+        const numPoints = 75;
+        const data25 = [];
+        for (let i = 0; i < numPoints; i++) {
+            data25.push({ x: i / 100, y: Math.cos(6.2 * i / 100) });
+        }
+
+
+        // Get the 'limits' of the data - the full extent (mins and max) // so the plotted data fits perfectly
+        const xExtent = d3.extent(data25, d => { return d.x });
+        const yExtent = d3.extent(data25, d => { return d.y });
+
+        // Append SVG Object to the Page 
+        const svg = d3.select(".ex25")
+            .append("svg")
+            .attr('width', xSize)
+            .attr('height', ySize)
+            .append("g")
+            .attr("transform", "translate(" + margin + "," + margin + ")");
+        // X Axis
+        const x = d3.scaleLinear()
+            .domain([xExtent[0], xExtent[1]]).range([0, xMax]);
+        // bottom 
+        svg.append("g")
+            .attr("transform", "translate(0," + yMax + ")").call(d3.axisBottom(x))
+            .attr('color', 'green'); // make bottom axis green
+        // top \
+        svg.append("g")
+            .call(d3.axisTop(x));
+        // Y Axis
+        const y = d3.scaleLinear()
+            .domain([yExtent[0], yExtent[1]]).range([yMax, 0]);
+        // left y axis 
+        svg.append("g")
+            .call(d3.axisLeft(y));
+        // right y axis 
+        svg.append("g")
+            .attr("transform", `translate(${yMax},0)`).call(d3.axisRight(y));
+
+        // data markers 
+        svg.selectAll("dot")
+            .data(data25)
+            .enter()
+            .append("circle")
+            .attr("cx", function (d) { return x(d.x) }).attr("cy", function (d) { return y(d.y) }).attr("r", 3)
+            .style("fill", "red");
+
+        // Add the line
+        svg.append("path")
+            .datum(data25)
+            .attr("fill", "none").attr("stroke", "royalblue").attr("stroke-width", 1.5).attr("d", d3.line()
+                .x(d => { return x(d.x) })
+                .y(d => { return y(d.y) }));
+
+
+        // Exercise 26
+        // Create Random Points
+        const data261 = [];
+        const data262 = [];
+        for (let i = 0; i < numPoints; i++) {
+            data261.push({ x: i / 100, y: Math.sin(6.2 * i / 100) });
+            data262.push({ x: i / 100, y: Math.cos(6.2 * i / 100) })
+        };
+
+        const svg26 = d3.select(".ex26").append("svg")
+            .attr('width', xSize)
+            .attr('height', ySize)
+            .append("g")
+            .attr("transform", "translate(" + margin + "," + margin + ")");
+
+        const xExtent1 = d3.extent(data261, d => { return d.x });
+        const xExtent2 = d3.extent(data262, d => { return d.x });
+
+        const yExtent1 = d3.extent(data261, d => { return d.y });
+        const yExtent2 = d3.extent(data262, d => { return d.y });
+
+        // find the scale based on the smallest and largest value between the two datasets
+        function findExtent(extent1, extent2, xMax) {
+            if (extent1[0] > extent2[0] && extent1[1] > extent2[1]) {
+                return d3.scaleLinear()
+                    .domain([extent2[0], extent1[1]]).range([0, xMax]);
+            } else if (extent1[0] > extent2[0] && extent1[1] < extent2[1]) {
+                return d3.scaleLinear()
+                    .domain([extent2[0], extent2[1]]).range([0, xMax]);
+
+            } else if (extent1[0] < extent2[0] && extent1[1] < extent2[1]) {
+                return d3.scaleLinear()
+                    .domain([extent1[0], extent2[1]]).range([0, xMax]);
+            } else {
+                return d3.scaleLinear()
+                    .domain([extent1[0], extent1[1]]).range([0, xMax]);
+            };
+        };
+
+        // x axis
+        const x26 = findExtent(xExtent1, xExtent2, xMax);
+        // y axis
+        const y26 = findExtent(yExtent1, yExtent2, xMax);
+
+        // bottom 
+        svg26.append("g")
+            .attr("transform", "translate(0," + yMax + ")").call(d3.axisBottom(x26))
+            .attr('color', 'green'); // make bottom axis green
+        // top \
+        svg26.append("g")
+            .call(d3.axisTop(x26));
+
+        // left y axis 
+        svg26.append("g")
+            .call(d3.axisLeft(y26));
+        // right y axis 
+        svg26.append("g")
+            .attr("transform", `translate(${yMax},0)`).call(d3.axisRight(y26));
+
+        // Add the first line
+        svg26.append("path")
+            .datum(data261)
+            .attr("fill", "none").attr("stroke", "blue").attr("stroke-width", 1.5).attr("d", d3.line()
+                .x(d => { return x(d.x) })
+                .y(d => { return y(d.y) }));
+
+        // Add the second line
+        svg26.append("path")
+            .datum(data262)
+            .attr("fill", "none").attr("stroke", "red").attr("stroke-width", 1.5).attr("d", d3.line()
+                .x(d => { return x(d.x) })
+                .y(d => { return y(d.y) }));
+
+        // data markers 
+        svg26.selectAll(".dot261")
+            .data(data261)
+            .enter()
+            .append("circle")
+            .attr("class", "dot261")
+            .attr("cx", d => { return x(d.x) }).attr("cy", d => { return y(d.y) }).attr("r", 3)
+            .style("fill", "red");
+
+        let triangle = d3.symbol().type(d3.symbolTriangle).size(40);
+        
+        // data triangle markers 
+        svg26.selectAll(".dot262")
+            .data(data262)
+            .enter()
+            .append("polygon")
+            .attr("class", "dot262")
+            .attr("points",  d => { return  (x(d.x) - 3) + ',' + (y(d.y) + 3) + ',' + (x(d.x) + 3) + ',' + (y(d.y) + 3) + ',' + (x(d.x)) + ',' + (y(d.y) - 3) + ',' })
+            .style("fill", "blue");
+
+    </script>
+</body>
+
+</html>
