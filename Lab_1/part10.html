@@ -110,7 +110,7 @@
             .attr("transform", (d, i) => { // displaces each bar below the previous bar
                 return "translate(30," + i * barHeight21 + ")";
             });
-            
+
         // add bars    
         g21.append("rect")
             .attr("width", d => {
@@ -149,14 +149,14 @@
             .style("font-size", "14")
             .attr("transform", "translate(30, 30)")
             .style("font-family", "Montserrat")
-            .call(y_axis21)
+            .call(y_axis21);
         
          // add the container and x axis to the graph
         svg21.append("g")
             .attr("transform", "translate(30, " + (barHeight21 * data21.length + 2) + ")")
             .style("font-size", "14")
             .style("font-family", "Montserrat")
-            .call(x_axis21)
+            .call(x_axis21);
 
     </script>
 </body>
