@@ -1,0 +1,111 @@
+<!-- Code By: Lina Rietuma (H00361943) -->
+<!-- Finished On: 21/01/2022 -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
+        rel="stylesheet">
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+</head>
+
+<body>
+    <h1>Part 14: Colours</h1>
+    <div class="ex28">
+        <h2>Exercise 28</h2>
+        <h4>The bar colour is related to its value</h4>
+    </div>
+    <div class="ex29">
+        <h2>Exercise 29</h2>
+    </div>
+
+    <script>
+
+        d3.select("body").style("font-family", "Montserrat"); // set font style 
+
+        // Exercise 28
+        let heartfailurecsv = 'https://raw.githubusercontent.com/akmand/datasets/master/heart_failure.csv';
+        const data28 = [ 400, 300, 900, 250, 1000, 350, 290, 690, 847, 121, 80]
+        const width28 = 600;
+        const barHeight28 = 20;
+        const margin28 = 1;
+
+        // create a scale for the x axis
+        const scale28 = d3.scaleLinear()
+            .domain([0, d3.max(data28)])
+            .range([0, 500]);
+
+        // create svg 
+        const svg28 = d3.select(".ex28").append("svg")
+            .attr("width", width28)
+            .attr("height", barHeight28 * (data28.length + 2));
+
+        // create g container for each data value 
+        const g28 = svg28.selectAll("g")
+            .data(data28)
+            .enter()
+            .append("g")
+            .attr("transform", (d, i) => { // displaces each bar below the previous bar
+                return "translate(30," + i * barHeight28 + ")";
+            });
+
+        // create a color palette    
+        const colorScheme = d3.scaleSequential().domain([d3.min(data28), d3.max(data28)]).interpolator(d3.interpolatePlasma);
+
+        // add bars    
+        g28.append("rect")
+            .attr("width", d => {
+                return scale28(d);
+            })
+            // set the bar color based on the data value
+            .attr('fill', d => { return colorScheme(d)})
+            .attr("height", barHeight28 - margin28);
+
+        // add data labels 
+        g28.append("text")
+            .attr("x", d => { return (scale28(d)); })
+            .attr("y", barHeight28 / 2)
+            .attr("dy", ".35em")
+            .attr("fill", "white")
+            .style('text-anchor', 'end')
+            .text(d => { return d; });
+
+
+        // create x axis 
+        const x_axis28 = d3.axisBottom()
+            .scale(scale28);
+
+        
+         // add the container and x axis to the graph
+        svg28.append("g")
+            .attr("transform", "translate(30, " + (barHeight28 * data28.length + 2) + ")")
+            .style("font-size", "14")
+            .style("font-family", "Montserrat")
+            .call(x_axis28);
+
+
+        var body = d3.select('body');
+        var myColor0 = d3.scaleLinear().domain([1, 10]).range(["white", "red"]);
+        var myColor1 = d3.scaleSequential().domain([1, 10]).interpolator(d3.interpolatePuRd);
+        var myColor2 = d3.scaleSequential().domain([1, 10]).interpolator(d3.interpolatePlasma);
+        /* d3.range(5)
+        [0, 1, 2, 3, 4]
+        */
+        var data = d3.range(6);
+        var myColor3 = d3.scaleOrdinal().domain(data).range(["gold", "blue", "green", "yellow", "black", "red"]);
+        var myColor4 = d3.scaleOrdinal().domain(data).range(d3.schemeSet3); // returns an array of 12 categorical colors in rgb
+        var cols = [myColor0, myColor1,
+            myColor2, myColor3, myColor4];
+        for (let k = 0; k < cols.length; k++) {
+            for (let i = 0; i < 20; i++) {
+                body.append('div').style('background-color', cols[k](i));
+            }
+            body.append('br');
+        }
+        console.log('ready..');
+
+    </script>
+</body>
+
+</html>
