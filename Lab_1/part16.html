@@ -1,0 +1,36 @@
+<!-- Code By: Lina Rietuma (H00361943) -->
+<!-- Finished On: 21/01/2022 -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
+        rel="stylesheet">
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+</head>
+
+<body>
+    <h1>Part 16: SVG Graphics</h1>
+    <div class="ex32">
+        <h2>Exercise 32</h2>
+    </div>
+
+
+    <script>
+        d3.select("body").style("font-family", "Montserrat"); // set font style 
+
+        d3.select(".ex32")
+            .append("img")
+            .attr("src", "data/stars.jpg")
+            .attr("width", 400)
+            .attr("height", 400)
+            .attr("x", 228)
+            .attr("y", 53)
+            .style("opacity", 0.5);
+
+
+    </script>
+</body>
+
+</html>

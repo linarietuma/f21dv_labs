@@ -1,0 +1,63 @@
+<!-- Code By: Lina Rietuma (H00361943) -->
+<!-- Finished On: 26/01/2022 -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
+        rel="stylesheet">
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+</head>
+
+<body>
+    <h1>Part 15: Pie Chart</h1>
+    <div class="ex30">
+        <h2>Exercise 30</h2>
+    </div>
+    <div class="ex31">
+        <h2>Exercise 31</h2>
+    </div>
+
+    <script>
+
+        d3.select("body").style("font-family", "Montserrat"); // set font style
+        
+        // Exercise 30
+
+        const data = [3, 4, 8, 12, 23, 5, 12, 22, 11];
+        const xSize = 400; const ySize = 400; const margin = 40;
+        const xMax = xSize - margin * 2;
+        const yMax = ySize - margin * 2;
+        // Append SVG Object to the Page const 
+        svg = d3.select(".ex30")
+            .append("svg")
+            .attr('width', xSize)
+            .attr('height', ySize)
+            .append("g")
+            .attr("transform", "translate(" + xSize / 2 + "," + ySize / 2 + ")");
+        const radius = Math.min(xSize, ySize) / 2;
+        const color = d3.scaleOrdinal(['#4daf4a', '#377eb8', '#ff7f00', '#984ea3', '#e41a1c', '#8a2be2', '#5f9ea0', '#008000', '#ff1493']);
+        // Generate the pie 
+        const pie = d3.pie();
+        // Generate the arcs 
+        const arc = d3.arc()
+            .innerRadius(0).outerRadius(radius);
+        //Generate groups
+        const arcs = svg.selectAll("arc")
+            .data(pie(data)).enter()
+            .append("g").attr("class", "arc")
+        //Draw arc paths 
+        arcs.append("path")
+            .attr("fill", function (d, i) {
+                return color(i);
+            })
+            .attr("d", arc);
+
+
+        // Exercise 31
+
+    </script>
+</body>
+
+</html>
