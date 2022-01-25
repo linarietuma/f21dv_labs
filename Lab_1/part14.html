@@ -1,5 +1,5 @@
 <!-- Code By: Lina Rietuma (H00361943) -->
-<!-- Finished On: 21/01/2022 -->
+<!-- Finished On: 25/01/2022 -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -85,25 +85,70 @@
             .call(x_axis28);
 
 
-        var body = d3.select('body');
-        var myColor0 = d3.scaleLinear().domain([1, 10]).range(["white", "red"]);
-        var myColor1 = d3.scaleSequential().domain([1, 10]).interpolator(d3.interpolatePuRd);
-        var myColor2 = d3.scaleSequential().domain([1, 10]).interpolator(d3.interpolatePlasma);
-        /* d3.range(5)
-        [0, 1, 2, 3, 4]
-        */
-        var data = d3.range(6);
-        var myColor3 = d3.scaleOrdinal().domain(data).range(["gold", "blue", "green", "yellow", "black", "red"]);
-        var myColor4 = d3.scaleOrdinal().domain(data).range(d3.schemeSet3); // returns an array of 12 categorical colors in rgb
-        var cols = [myColor0, myColor1,
-            myColor2, myColor3, myColor4];
-        for (let k = 0; k < cols.length; k++) {
-            for (let i = 0; i < 20; i++) {
-                body.append('div').style('background-color', cols[k](i));
-            }
-            body.append('br');
+        // Exercise 29
+   
+        // Create Random Points
+        const numPoints = 100;
+        const data29 = [];
+        for (let i = 0; i < numPoints; i++) {
+            data29.push({ x: i / 100, y: Math.sin(6.2 * i / 100) });
         }
-        console.log('ready..');
+
+        function createGraph(data, htmlEl = "body") {
+            // Set Dimensions
+            const xSize = 600;
+            const ySize = 600;
+            const margin = 40;
+            const xMax = xSize - margin * 2;
+            const yMax = ySize - margin * 2;
+
+
+            // Get the 'limits' of the data - the full extent (mins and max) // so the plotted data fits perfectly
+            const xExtent = d3.extent(data, d => { return d.x });
+            const yExtent = d3.extent(data, d => { return d.y });
+
+            // Append SVG Object to the Page 
+            const svg = d3.select(htmlEl)
+                .append("svg")
+                .attr('width', xSize)
+                .attr('height', ySize)
+                .append("g")
+                .attr("transform", "translate(" + margin + "," + margin + ")");
+            // X Axis
+            const x = d3.scaleLinear()
+                .domain([xExtent[0], xExtent[1]]).range([0, xMax]);
+            // bottom 
+            svg.append("g")
+                .attr("transform", "translate(0," + yMax + ")").call(d3.axisBottom(x))
+                .attr('color', 'green'); // make bottom axis green
+            // top \
+            svg.append("g")
+                .call(d3.axisTop(x));
+            // Y Axis
+            const y = d3.scaleLinear()
+                .domain([yExtent[0], yExtent[1]]).range([yMax, 0]);
+            // left y axis 
+            svg.append("g")
+                .call(d3.axisLeft(y));
+            // right y axis 
+            svg.append("g")
+                .attr("transform", `translate(${yMax},0)`).call(d3.axisRight(y));
+            
+            // generate color palette 
+            const colorPalette29 = d3.scaleLinear().domain([xExtent[0], xExtent[1]]).range(["green", "violet"]);
+
+            // Add the line
+            svg.append("path")
+                .datum(data)
+                .attr("fill", "none")
+                .attr("stroke", d => colorPalette29(d))
+                .attr("stroke-width", 1.5)
+                .attr("d", d3.line()
+                    .x(d => { return x(d.x) })
+                    .y(d => { return y(d.y) }));
+        };
+
+        createGraph(data29, '.ex29');
 
     </script>
 </body>
