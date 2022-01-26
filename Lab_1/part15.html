@@ -14,21 +14,26 @@
     <h1>Part 15: Pie Chart</h1>
     <div class="ex30">
         <h2>Exercise 30</h2>
+        <h4>Donut Chart with Multiple Data Points</h4>
     </div>
     <div class="ex31">
         <h2>Exercise 31</h2>
+        <h4>Donut Chart with Labels</h4>
     </div>
 
     <script>
 
         d3.select("body").style("font-family", "Montserrat"); // set font style
-        
-        // Exercise 30
 
-        const data = [3, 4, 8, 12, 23, 5, 12, 22, 11];
-        const xSize = 400; const ySize = 400; const margin = 40;
+        // Exercise 30
+        const data = [ 4, 8, 12, 23, 5, 12, 22, 11, 7, 16];
+        const xSize = 400;
+        const ySize = 400;
+        const margin = 40;
+
         const xMax = xSize - margin * 2;
         const yMax = ySize - margin * 2;
+
         // Append SVG Object to the Page const 
         svg = d3.select(".ex30")
             .append("svg")
@@ -36,17 +41,24 @@
             .attr('height', ySize)
             .append("g")
             .attr("transform", "translate(" + xSize / 2 + "," + ySize / 2 + ")");
+
         const radius = Math.min(xSize, ySize) / 2;
         const color = d3.scaleOrdinal(['#4daf4a', '#377eb8', '#ff7f00', '#984ea3', '#e41a1c', '#8a2be2', '#5f9ea0', '#008000', '#ff1493']);
+
         // Generate the pie 
         const pie = d3.pie();
-        // Generate the arcs 
+
+        // Generate the arcs (paths for pie chart's wedges)
         const arc = d3.arc()
-            .innerRadius(0).outerRadius(radius);
+            .innerRadius(100)
+            .outerRadius(radius);
+
         //Generate groups
         const arcs = svg.selectAll("arc")
-            .data(pie(data)).enter()
-            .append("g").attr("class", "arc")
+            .data(pie(data)) // pie() calculates the start and end angle of each wedge (sorting values from largest to smallest)
+            .enter()
+            .append("g")
+            .attr("class", "arc")
         //Draw arc paths 
         arcs.append("path")
             .attr("fill", function (d, i) {
@@ -56,6 +68,52 @@
 
 
         // Exercise 31
+        // Append SVG Object to the Page const 
+        svg31 = d3.select(".ex31")
+            .append("svg")
+            .attr('width', xSize)
+            .attr('height', ySize)
+            .append("g")
+            .attr("transform", "translate(" + xSize / 2 + "," + ySize / 2 + ")");
+
+        const radius31 = Math.min(xSize, ySize) / 2;
+        const color31 = d3.scaleOrdinal().domain(data).range(d3.schemeSet2);
+
+        // Generate the pie 
+        const pie31 = d3.pie();
+
+        // Generate the arcs (paths for pie chart's wedges)
+        const arc31 = d3.arc()
+            .innerRadius(50)
+            .outerRadius(radius31);
+
+        //Generate groups
+        const arcs31 = svg31.selectAll("arc")
+            .data(pie31(data)) // pie() calculates the start and end angle of each wedge (sorting values from largest to smallest)
+            .enter()
+            .append("g")
+            .attr("class", "arc31")
+
+        //Draw arc paths 
+        arcs31.append("path")
+            .attr("fill", (d, i) => {
+                return color31(i);
+            })
+            .attr("stroke", "white")
+            .attr("d", arc31);
+
+        svg31.selectAll(".arc31")
+            .data(pie31(data))
+            .append("text")
+            .text(d => {
+                return d.data
+            })
+            .attr("transform", d => {
+                // find the midpoint of the arc's central line 
+                return "translate(" + arc31.centroid(d) + ")";
+            })
+            .attr("stroke", "black")
+            .style("font-size", 20)
 
     </script>
 </body>
