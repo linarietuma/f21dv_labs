@@ -26,7 +26,7 @@
 
         // Exercise 28
         let heartfailurecsv = 'https://raw.githubusercontent.com/akmand/datasets/master/heart_failure.csv';
-        const data28 = [ 400, 300, 900, 250, 1000, 350, 290, 690, 847, 121, 80]
+        const data28 = [400, 300, 900, 250, 1000, 350, 290, 690, 847, 121, 80]
         const width28 = 600;
         const barHeight28 = 20;
         const margin28 = 1;
@@ -59,7 +59,7 @@
                 return scale28(d);
             })
             // set the bar color based on the data value
-            .attr('fill', d => { return colorScheme(d)})
+            .attr('fill', d => { return colorScheme(d) })
             .attr("height", barHeight28 - margin28);
 
         // add data labels 
@@ -76,8 +76,8 @@
         const x_axis28 = d3.axisBottom()
             .scale(scale28);
 
-        
-         // add the container and x axis to the graph
+
+        // add the container and x axis to the graph
         svg28.append("g")
             .attr("transform", "translate(30, " + (barHeight28 * data28.length + 2) + ")")
             .style("font-size", "14")
@@ -86,7 +86,7 @@
 
 
         // Exercise 29
-   
+
         // Create Random Points
         const numPoints = 100;
         const data29 = [];
@@ -133,19 +133,39 @@
             // right y axis 
             svg.append("g")
                 .attr("transform", `translate(${yMax},0)`).call(d3.axisRight(y));
-            
+
             // generate color palette 
             const colorPalette29 = d3.scaleLinear().domain([xExtent[0], xExtent[1]]).range(["green", "violet"]);
+
+
+            // Set the gradient
+            svg.append("linearGradient")
+                .attr("id", "line-gradient")
+                .attr("gradientUnits", "userSpaceOnUse")
+                .attr("x1", 0)
+                .attr("y1", y(yExtent[0]))
+                .attr("x2", 0)
+                .attr("y2", y(yExtent[1]))
+                .selectAll("stop")
+                .data([
+                    { offset: "0%", color: "blue" },
+                    { offset: "100%", color: "red" }
+                ])
+                .enter().append("stop")
+                .attr("offset", d => { return d.offset; })
+                .attr("stop-color", d => { return d.color; });
+
 
             // Add the line
             svg.append("path")
                 .datum(data)
                 .attr("fill", "none")
-                .attr("stroke", d => colorPalette29(d))
-                .attr("stroke-width", 1.5)
+                .attr("stroke", "url(#line-gradient)")
+                .attr("stroke-width", 3)
                 .attr("d", d3.line()
                     .x(d => { return x(d.x) })
                     .y(d => { return y(d.y) }));
+
         };
 
         createGraph(data29, '.ex29');
