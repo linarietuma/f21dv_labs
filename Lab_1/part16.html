@@ -14,21 +14,82 @@
     <h1>Part 16: SVG Graphics</h1>
     <div class="ex32">
         <h2>Exercise 32</h2>
+        <h4>Graph with a Background Image</h4>
     </div>
 
 
     <script>
         d3.select("body").style("font-family", "Montserrat"); // set font style 
 
-        d3.select(".ex32")
-            .append("img")
-            .attr("src", "data/stars.jpg")
-            .attr("width", 400)
-            .attr("height", 400)
-            .attr("x", 228)
-            .attr("y", 53)
-            .style("opacity", 0.5);
+        // Create Random Points
+        const numPoints = 100;
+        const data32 = [];
+        for (let i = 0; i < numPoints; i++) {
+            data32.push({ x: i / 100, y: Math.sin(6.2 * i / 100) });
+        }
 
+        function createGraph(data, htmlEl = "body") {
+            // Set Dimensions
+            const xSize = 600;
+            const ySize = 600;
+            const margin = 40;
+            const xMax = xSize - margin * 2;
+            const yMax = ySize - margin * 2;
+
+
+            // Get the 'limits' of the data - the full extent (mins and max) // so the plotted data fits perfectly
+            const xExtent = d3.extent(data, d => { return d.x });
+            const yExtent = d3.extent(data, d => { return d.y });
+
+            // Append SVG Object to the Page 
+            const svg = d3.select(htmlEl)
+                .append("svg")
+                .attr('width', xSize)
+                .attr('height', ySize)
+                .append("g")
+                .attr("transform", "translate(" + margin + "," + margin + ")");
+            // X Axis
+            const x = d3.scaleLinear()
+                .domain([xExtent[0], xExtent[1]]).range([0, xMax]);
+            // bottom 
+            svg.append("g")
+                .attr("transform", "translate(0," + yMax + ")").call(d3.axisBottom(x))
+                .attr('color', 'green'); // make bottom axis green
+            // top \
+            svg.append("g")
+                .call(d3.axisTop(x));
+            // Y Axis
+            const y = d3.scaleLinear()
+                .domain([yExtent[0], yExtent[1]]).range([yMax, 0]);
+            // left y axis 
+            svg.append("g")
+                .call(d3.axisLeft(y));
+            // right y axis 
+            svg.append("g")
+                .attr("transform", `translate(${yMax},0)`).call(d3.axisRight(y));
+
+
+            // Add the line
+            svg.append("path")
+                .datum(data)
+                .attr("fill", "none")
+                .attr("stroke", "royalBlue")
+                .attr("stroke-width", 5)
+                .attr("d", d3.line()
+                    .x(d => { return x(d.x) })
+                    .y(d => { return y(d.y) }));
+            
+            // Add PNG background image to the graph        
+            svg.append("svg:image")
+                .attr("xlink:href", "data/world.png")
+                .attr("width", xSize - 2 * margin)
+                .attr("height", ySize - 2 * margin)
+                .attr("x", 0)
+                .attr("y", 0)
+                .style("opacity", 0.2);
+            };
+
+        createGraph(data32, '.ex32');
 
     </script>
 </body>
