@@ -68,16 +68,21 @@ A lot of D3 methods will accept a function as an argument (e.g. text(), style(),
 
 \section{Part 5: Loading Data}
 \subsection{Exercise 9: For the example above, to count how many of the names include ‘Mr.’ and ‘Mrs’ (or other). Also print out other details using other column header information, such as, how many passengers are ‘male’ and how many ‘female’.}
+csv() method is asynchronous (prevents the page from freezing up while data are being processed), use promises..
+
 \subsection{Exercise 10: Exercise: Write an update to the example above, so extra elements are added to the window to display information. For instance, display paragraphs for the total patients with heart failure between 1-30, 31-40, 41-60, 61-100. Process the data, store it in an array then pass that array to ‘selectAll()’, ‘data()’ as discussed in previous sections.}
 
 
 \section{Part 6: SVG}
 \subsection{Exercise 11: Exercise: Modify the code so the example draws a ‘square shape’ (4 lines) – each side of the square a different color.}
+Each subsequent lines starts were the previous line left off.
+
 \subsection{Exercise 12: Build an SVG scene which is created from an external file. You need to create a csv with the information about the shapes. You should include columns in your csv file for the type of shape (circle, rectangle, ellipse, line), its dimensions and position, and color. Your program reads the data and creates and displays the shapes to the screen.}
 \subsection{ Exercise 13: Extend the example to include the ‘enter’ and ‘exit’ concepts. So that the svg elements are updated, created or removed based on the csv data from your csv file.}
 
 \section{Part 7: Bar Chart}
-\subsection{Exercise 14: Extend the simple bar chart example to display the heart failure data you processed in Part 5 (Part 5 -Loading Data) from the csv file. (i.e., age ranges for people with heart failure).}
+\subsection{Exercise 14: Extend the simple bar chart example to display the heart failure data you processed in Part 5 (Part 5 -
+Loading Data) from the csv file. (i.e., age ranges for people with heart failure).}
 \subsection{Exercise 15: Modify the simple bar chart to use color more (i.e., values over a certain threshold are displayed in ‘red’).}
 
 \section{Part 8: Circle Chart}
@@ -90,28 +95,53 @@ A lot of D3 methods will accept a function as an argument (e.g. text(), style(),
 
 \section{Part 10: Axis}
 \subsection{Exercise 20: Update the example so an axis is drawn on all sides (axis on the left, right, top and bottom). Make the top and right axis the color blue (text and lines are blue in color).}
-\subsection{Exercise 21: Add an ‘axis’ to the bar chart example (bottom and left axis for the bar chart).}
+Exercise 20
+
+\subsection{Exercise 21 }
+Exercise 21 required adding and x and y axis to a bar chart ...
+
 
 \section{Part 12: Line Chart }
-\subsection{ Exercise 22: Modify the code so it’s contained within a function (pass the data to the function, so you’re able to draw sine wave, cosine, or other type).}
-\subsection{Exercise 23: Load in some test data from a csv and plot the line (instead of ‘generating’ the data you load it from an external file).}
-\subsection{ Exercise 24: Exercise: Draw multiple lines on the same chart (e.g., sinewave and a cosine wave). Make one blue and the other green.}
+\subsection{ Exercise 22 }
+Exercise 22 required encapsulating the sample line chart code within a function.
+
+\subsection{Exercise 23 }
+Exercise 23 required loading data from an external source and plotting the data on a line chart.
+
+\subsection{ Exercise 24 }
+Exercise 24 required adding multiple differently coloured lines to the same chart. One's blue, the other's green. 
 
 \section{Part 13: Markers}
-\subsection{Exercise 25: Add a ‘circle point’ to the line graph, so that each data point is displayed on the graph as circle.}
-\subsection{ Exercise 26: Plot two lines on the same graph, and mark the data points as circles for the first line and triangles for the second line.}
+\subsection{Exercise 25 }
+Exercise 25 requires adding a circle marker to each data point on a line chart. In essence, adding tiny circle shapes, the position of which is dependant on the data values 
+
+
+\subsection{ Exercise 26 }
+Exercise 26 requires plotting two lines on a single chart and for each line display the datapoints with different markers - circles and triangles respectively. Triangles are not one of the basic shapes in D3, therefore ...
+
+
 \subsection{Exercise 27: Add ‘text’ to certain points on the line plot (e.g., next to the ‘circle’ dot also write the number of the data value). Limit the text information to only a few points so it doesn’t get over crowded.}
 
-\section{Part 14: Colors}
-\subsection{ Exercise 28: Take one of the d3 colour methods and apply it to the bar chart example. }
-\subsection{Exercise 29: Take one of the d3 colour methods and apply it to the line chart example. }
+
+\section{Part 14: Colorus}
+\subsection{ Exercise 28 }
+Exercise 28 requires to use a method to generate colour collections to colour a bar chart based on its data values.
+
+\subsection{Exercise 29 }
+Exercise 28 requires to use a method to generate colour collections to colour a line chart.
+
 
 \section{Part 15: Pie Chart }
-\subsection{Exercise 30: Add more data values.}
-\subsection{ Exercise 31: Add a text item to each ‘arc’ (e.g., draw the values for the data on the pie chart).}
+\subsection{Exercise 30}
+Exercise 30 requires expanding the example pie chart code given to include additional data values. A pie chart is constructed from data given in an array format therefore this simply the case of adding additional datapoints to the data array. Creating a pie or donut chart requires the use of pie() and arc() functions. First, pie() is used to generate the start and end angle of each data value in order from largest to smallest value. Second, arc() generates an arc path with a specified inner (donut charts) and outer radius.  
+
+\subsection{ Exercise 31}
+Exercise 31 requires adding text labels to the pie chart from exercise 30.
+
 
 \section{Part 16: SVG Graphics}
-\subsection{ Exercise 32: Add a graphical image to the background of one of the graphs. Scale the image to fit the size of the svg bounds (covers background).}
+\subsection{ Exercise 32}
 
+Exercise 32 requires to add a background image to a graph from one of the previous exercises. For this purpose a simple line graph with a sine function display is chosen. An SVG object is created and appended to the page which functions as container to the different graph elements, including the background image. Height, width and position of the SVG object are specified using pre-defined variables, the same variables are later used to determine the size and placement of the background image. In order for the background to only cover the main are of the graph, SVG's margins are excluded from the image's size and taken into consideration when repositioning the image. The image is appended as an "svg:image" element to the SVG object and the location of the image in the local repository is specified using the "xlink:href" attribute.     
 
 \end{document}  
