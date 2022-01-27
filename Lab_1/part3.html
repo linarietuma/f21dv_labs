@@ -37,7 +37,7 @@
                             { name: 'b', val: 3, color: "blue" }];
         let paragraph1 = d3.select("body").selectAll(".ex6")
             .data(otherdata)
-            .text(function (d, i) {
+            .text((d, i) => {
                 console.log("d.name: " + d.name);
                 console.log("d.val: " + d.val);
                 console.log("d.color: " + d.color);
@@ -48,10 +48,10 @@
 
         let num = [10, 50, 100, 200];
         let paragraph2 = d3.select("body").selectAll(".ex7")
-            .data(num).text(function (d, i) {
+            .data(num).text((d, i) => {
                 return 'cont:' + d; // return value is used to set the 'text' 
             })
-            .style("color", function (d, i) {
+            .style("color", (d, i) => {
                 if (d <= 100 && d >= 50) { // set color to red for values between 50 and 100
                     return "red";
                 } else {
