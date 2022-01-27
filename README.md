@@ -8,6 +8,5 @@ This repository aims to demonstrate an understanding of JavaScript, D3 library i
 ## Lab 1
 The first lab is aimed at providing an introduction to D3 Visualization Concept.
 
-## Built With
 
 
