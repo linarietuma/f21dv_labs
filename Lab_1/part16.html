@@ -1,5 +1,5 @@
 <!-- Code By: Lina Rietuma (H00361943) -->
-<!-- Finished On: 21/01/2022 -->
+<!-- Finished On: 26/01/2022 -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -68,7 +68,6 @@
             svg.append("g")
                 .attr("transform", `translate(${yMax},0)`).call(d3.axisRight(y));
 
-
             // Add the line
             svg.append("path")
                 .datum(data)
@@ -89,6 +88,7 @@
                 .style("opacity", 0.2);
             };
 
+        // call the function 
         createGraph(data32, '.ex32');
 
     </script>
