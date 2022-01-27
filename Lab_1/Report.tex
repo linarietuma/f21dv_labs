@@ -31,71 +31,94 @@ Repository: \url{https://github.com/linarietuma/linarietuma.github.io}
 
 \section{Introduction}
 
-This report summarises the reflections and results of exercises for Data Visualisations and Analytics (F21DV) course lab 1.
+This report summarises the reflections and results of exercises for Data Visualisations and Analytics (F21DV) course Lab 1. The code is organised in parts each part corresponding to a separate HTML file which can be accessed from the main index.html. The code is maintained in a GitHub repository.
 
 \section{Part 2: D3 Setup}
 \subsection{Exercise 1: What version number is displayed in the console output window?}
 
 D3 version number displayed is 7.3.0.
 
-\subsection{Exercise 2: Change other style properties of the paragraph tag.}
+\subsection{Exercise 2 }
 
-Use .select("p") to select the first HTML element (e.g., div, p, \#id, .class) of the specified type and .style("color", "red") to format the selected element where the first argument specifies CSS property and the second argument denotes its value.
+Exercise 2 required changing the style properties of the paragraph tag. Function .select("p") is used to select the first HTML element (e.g., div, p, \#id, .class) of the specified type and .style("color", "red") to format the selected element where the first argument specifies CSS property and the second argument denotes its value. Additional style properties added include transforming text to uppercase and add underline text decoration
 
-\subsection{Exercise 3: Write a loop which adds 10 ‘div’ elements and sets the contents to the count value (i.e., 1, 2, 3, ...). Also the colour of the first 5 elements are red and the last 5 elements are green.}
+\subsection{Exercise 3 }
+
+Exercise 3 required adding 10 'div' elements containing values from 1 to 10 in a loop and colouring each element based on its index. 
 Both .style() and .attr() methods are used in combination with the .select()/ .selectAll() methods to change the properties of specified element/s. While .style() is used to change CSS styling, . attr() changes an attribute of the selected element (e.g. set class, id etc).
 
-\subsection{Exercise 4: ‘selecting’ and modifying your ‘div’ elements after you’ve created and added them.}
-When creating the elements, give a unique id to each which later allows to specifically target and change the desired elements. 
+\subsection{Exercise 4 }
+Exercise 4 builds on exercise 3 and requires selecting and modifying the 'div' elements after they've been created. When creating the elements, each is given a unique id which later allows to specifically target and change the desired elements. 
 
-\subsection{Exercise 5: Exercise: Add to the ‘chain syntax’ version for the ‘hello world’ example above – so it also sets the ‘color’ of the text to green.}
+\subsection{Exercise 5 }
+Exercise 5 required modifying the sample code to demonstrate the 'chain syntax' by changing the text colour.
 In D3, methods can be chained together to avoid storing intermediary variables that are passed between methods. 
 
 
 
 \section{Part 3: Data}
-\subsection{Exercise 6: Modify the example above so the ‘otherdata’ contains an additional variable called color (print this color value out in the ‘text’ method).}
+\subsection{Exercise 6 }
+Exercise 6 build on the sample code to additional 'color' variable to the data and display it on the screen.
+
 Use data() method to select data and iterate through them, allows accessing/ modifying values one by one. Add 'color' variable to each object, retrieve the value of the variable by calling d.color.
 
-\subsection{Exercise 7: Change the bounds check so the color is red for numbers between 50 and 100.}
+\subsection{Exercise 7 }
+Exercise 7 build on the sample code to change the colour of a data point based on its value - red for numbers between 50 and 100.
 Assumed this includes 50 and 100.
 
 \section{Part 4: Data Binding}
-\subsection{Exercise 8: Modify the above code. Instead of a paragraph ‘p’ use a ‘span’. If the data element is a ‘character’ display it as ‘blue’, if it’s a number ‘display it as green’.}
+\subsection{Exercise 8 }
+Exercise 8 builds on the sample code to set the colour of a data point based on its type - blue if it's a character, green if it's a number.
+
 Use .data() for data selection, .enter() to bind data to a specific HTML element, if no element of the type specified in .selectAll() is found, .enter() will create the element and .append() will add it to the 'body'. \linebreak
 A lot of D3 methods will accept a function as an argument (e.g. text(), style(), etc).
 
 
 \section{Part 5: Loading Data}
-\subsection{Exercise 9: For the example above, to count how many of the names include ‘Mr.’ and ‘Mrs’ (or other). Also print out other details using other column header information, such as, how many passengers are ‘male’ and how many ‘female’.}
-csv() method is asynchronous (prevents the page from freezing up while data are being processed), use promises..
+\subsection{Exercise 9 }
+Exercise 9 required processing the Titanic sample data to determine the number of names that include 'Mr.' and 'Mrs' (or other) and additional information from the data. csv() method is asynchronous (prevents the page from freezing up while data are being processed), use promises..
 
-\subsection{Exercise 10: Exercise: Write an update to the example above, so extra elements are added to the window to display information. For instance, display paragraphs for the total patients with heart failure between 1-30, 31-40, 41-60, 61-100. Process the data, store it in an array then pass that array to ‘selectAll()’, ‘data()’ as discussed in previous sections.}
+\subsection{Exercise 10 }
+Exercise 10 builds on the sample code provided and required additional pre-processing of the heart failure data to display heart failures in the range 1-30, 31-40, 41-60 and 61-100.
 
 
 \section{Part 6: SVG}
-\subsection{Exercise 11: Exercise: Modify the code so the example draws a ‘square shape’ (4 lines) – each side of the square a different color.}
-Each subsequent lines starts were the previous line left off.
+\subsection{Exercise 11 }
+Exercise 11 required drawing a square from four separate line objects. Each subsequent lines starts were the previous line left off.
 
-\subsection{Exercise 12: Build an SVG scene which is created from an external file. You need to create a csv with the information about the shapes. You should include columns in your csv file for the type of shape (circle, rectangle, ellipse, line), its dimensions and position, and color. Your program reads the data and creates and displays the shapes to the screen.}
-\subsection{ Exercise 13: Extend the example to include the ‘enter’ and ‘exit’ concepts. So that the svg elements are updated, created or removed based on the csv data from your csv file.}
+\subsection{Exercise 12 }
+Exercise 12 required adding different shapes to the page based on the data from a CSV, these include information about the shape type, size, location and colour.
+
+\subsection{ Exercise 13 }
+Exercise 13 required adding  enter() and exit() concepts to the code from exercise 12.
+
 
 \section{Part 7: Bar Chart}
-\subsection{Exercise 14: Extend the simple bar chart example to display the heart failure data you processed in Part 5 (Part 5 -
-Loading Data) from the csv file. (i.e., age ranges for people with heart failure).}
-\subsection{Exercise 15: Modify the simple bar chart to use color more (i.e., values over a certain threshold are displayed in ‘red’).}
+\subsection{Exercise 14 }
+Exercise 14 required displaying a bar chart with data processed from a CSV (from Part 5).
+
+\subsection{Exercise 15 }
+Exercise 15 required modifying the bar chart from exercise 14 to include additional colour elements.  
 
 \section{Part 8: Circle Chart}
-\subsection{Exercise 16: Add additional shapes to the concept (draws both circles and squares based on the data).}
+\subsection{Exercise 16 }
+Exercise 16 required adding additional shapes (e.g. circles and rectangles) to the sample code. 
 
-\section{Part 9: Scales, Domain, Range}
-\subsection{Exercise 17: Modify the example above so the bars are green if below 100 and red if above 500.}
-\subsection{Exercise 18: Extend the example, so the ‘bar chart’ data is displayed from an external file (e.g., csv).}
-\subsection{Exercise 19: Put the code in a ‘function’ so the bar chart is only displayed when the function is called. Also if the function is called twice, then it will show the bar chart twice on screen. Extend this function so it takes a ‘csv’ file name as the input argument. Call it twice and it displays two different bar charts using different data on screen.}
+
+\section{ Part 9: Scales, Domain, Range }
+\subsection{Exercise 17 }
+Exercise 17 required modifying the sample bar chart code to set a bar colour to green if a data value is below 100 and red if it's above 500.
+
+\subsection{ Exercise 18 }
+Exercise 18 required displaying a bar chart with data read in from a CSV file. 
+
+
+\subsection{ Exercise 19 }
+Exercise 19 required to encapsulate the bar chart sample code in a function which appends a bar chart to the page from the data provided.
 
 \section{Part 10: Axis}
-\subsection{Exercise 20: Update the example so an axis is drawn on all sides (axis on the left, right, top and bottom). Make the top and right axis the color blue (text and lines are blue in color).}
-Exercise 20
+\subsection{Exercise 20 }
+Exercise 20 required updating the sample code given to add a blue axis at the top and on the right.
 
 \subsection{Exercise 21 }
 Exercise 21 required adding and x and y axis to a bar chart ...
@@ -113,35 +136,41 @@ Exercise 24 required adding multiple differently coloured lines to the same char
 
 \section{Part 13: Markers}
 \subsection{Exercise 25 }
-Exercise 25 requires adding a circle marker to each data point on a line chart. In essence, adding tiny circle shapes, the position of which is dependant on the data values 
+Exercise 25 required adding a circle marker to each data point on a line chart. In essence, adding tiny circle shapes, the position of which is dependant on the data values 
 
 
 \subsection{ Exercise 26 }
-Exercise 26 requires plotting two lines on a single chart and for each line display the datapoints with different markers - circles and triangles respectively. Triangles are not one of the basic shapes in D3, therefore ...
+Exercise 26 required plotting two lines on a single chart and for each line display the datapoints with different markers - circles and triangles respectively. Triangles are not one of the basic shapes in D3, therefore ...
 
 
-\subsection{Exercise 27: Add ‘text’ to certain points on the line plot (e.g., next to the ‘circle’ dot also write the number of the data value). Limit the text information to only a few points so it doesn’t get over crowded.}
+\subsection{Exercise 27 }
+Exercise 27 required adding a few data labels to the markers on a line chart.
 
 
 \section{Part 14: Colorus}
 \subsection{ Exercise 28 }
-Exercise 28 requires to use a method to generate colour collections to colour a bar chart based on its data values.
+Exercise 28 required to use a method to generate colour collections to colour a bar chart based on its data values. A colour scheme was generated using the scaleSequential(), domain() and interpolator() functions. scaleSequential() generates a sequential scale to map continues values to an output, domain() specifies the accepted values (typically between the min and max value of the data provided) and the interpolator() 
+
+
 
 \subsection{Exercise 29 }
-Exercise 28 requires to use a method to generate colour collections to colour a line chart.
+Exercise 28 required to generate a colour collection and use it to colour a line chart. A colour scheme was generated using the scaleLinear(), domain() and range() functions. scaleLinear() specifies a linear relationship between values in the domain and values in the range() species the range of the scale, and accepts colour as input variables, thus creating a colour scale, mapping each input value to a colour within this range. \linebreak
+
+Using colour scales is useful in line charts with multiple lines to distinguish between the lines.
 
 
 \section{Part 15: Pie Chart }
 \subsection{Exercise 30}
-Exercise 30 requires expanding the example pie chart code given to include additional data values. A pie chart is constructed from data given in an array format therefore this simply the case of adding additional datapoints to the data array. Creating a pie or donut chart requires the use of pie() and arc() functions. First, pie() is used to generate the start and end angle of each data value in order from largest to smallest value. Second, arc() generates an arc path with a specified inner (donut charts) and outer radius.  
+Exercise 30 required expanding the example pie chart code given to include additional data values. A pie chart is constructed from data given in an array format therefore this simply the case of adding additional datapoints to the data array. Creating a pie or donut chart requires the use of pie() and arc() functions. First, pie() is used which generates a JSON object per datapoint that contains the data value, its starting and ending angle of each data value and index (in order from largest to smallest value). Second, arc() generates an arcs for each datapoint using starting/ ending angles from the pie() function, in addition inner (donut charts) and outer radius is specified.
 
 \subsection{ Exercise 31}
-Exercise 31 requires adding text labels to the pie chart from exercise 30.
-
+Exercise 31 required adding text labels to the pie chart from exercise 30. Text labels are associated with each <g> container contained an arc for the given datapoint. First, all <g> elements for the given pie chart are selected and data() function is used to associate data to the selected DOM elements. An array of JSON objects is provided as an argument to data() in the form of pie31(data) function. The text of the label is the data value itself, accessed via d.value, while the starting and ending angles are used to determine the location of the label via the centroid() function. 
 
 \section{Part 16: SVG Graphics}
 \subsection{ Exercise 32}
 
-Exercise 32 requires to add a background image to a graph from one of the previous exercises. For this purpose a simple line graph with a sine function display is chosen. An SVG object is created and appended to the page which functions as container to the different graph elements, including the background image. Height, width and position of the SVG object are specified using pre-defined variables, the same variables are later used to determine the size and placement of the background image. In order for the background to only cover the main are of the graph, SVG's margins are excluded from the image's size and taken into consideration when repositioning the image. The image is appended as an "svg:image" element to the SVG object and the location of the image in the local repository is specified using the "xlink:href" attribute.     
+Exercise 32 required adding a background image to a graph from one of the previous exercises. For this purpose a simple line graph with a sine function display is chosen. An SVG object is created and appended to the page which functions as container to the different graph elements, including the background image. Height, width and position of the SVG object are specified using pre-defined variables, the same variables are later used to determine the size and placement of the background image. In order for the background to only cover the main are of the graph, SVG's margins are excluded from the image's size and taken into consideration when repositioning the image. The image is appended as an "svg:image" element to the SVG object and the location of the image in the local repository is specified using the "xlink:href" attribute.     
+
+\section{Conclusions}
 
 \end{document}  
