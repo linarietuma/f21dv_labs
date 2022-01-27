@@ -51,7 +51,7 @@
             });
 
         // create a color palette    
-        const colorScheme = d3.scaleSequential().domain([d3.min(data28), d3.max(data28)]).interpolator(d3.interpolatePlasma);
+        const colorScheme = d3.scaleSequential().domain([d3.min(data28), d3.max(data28)]).interpolator(d3.interpolateRainbow);
 
         // add bars    
         g28.append("rect")
