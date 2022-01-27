@@ -50,7 +50,28 @@
                 return colors[i];
             })
             .attr("transform", "translate(0, -55)");
-        // add rectangle objects
+        
+        // add additional circle objects
+        g.append("circle")
+            .attr("cx", (d, i) => {    
+                return d * (data.length - i) * (2) 
+            })
+            .attr("cy", (d, i) => {
+                return d * 10 + 50;
+            })
+            .attr("r", (d, i) => {
+                if (d > 20) {
+                    return i * 5;
+                } else {
+                    return 0;
+                }
+            })
+            .attr("fill", (d, i) => {
+                return colors[colors.length - i];
+            })
+            .attr("transform", "translate(0, -55)");
+        
+            // add rectangle objects
         g.append("rect")
             .attr("x", (i, d) => {
                 return i * d
