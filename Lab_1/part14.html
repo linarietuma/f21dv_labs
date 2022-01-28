@@ -135,37 +135,27 @@
                 .attr("transform", `translate(${yMax},0)`).call(d3.axisRight(y));
 
             // generate color palette 
-            const colorPalette29 = d3.scaleLinear().domain([xExtent[0], xExtent[1]]).range(["green", "violet"]);
-
-
-            // Set the gradient
-            svg.append("linearGradient")
-                .attr("id", "line-gradient")
-                .attr("gradientUnits", "userSpaceOnUse")
-                .attr("x1", 0)
-                .attr("y1", y(yExtent[0]))
-                .attr("x2", 0)
-                .attr("y2", y(yExtent[1]))
-                .selectAll("stop")
-                .data([
-                    { offset: "0%", color: "blue" },
-                    { offset: "100%", color: "red" }
-                ])
-                .enter().append("stop")
-                .attr("offset", d => { return d.offset; })
-                .attr("stop-color", d => { return d.color; });
-
+            const colorPalette29 = d3.scaleLinear().domain([xExtent[0], xExtent[1]]).range(["green", "purple"]);
 
             // Add the line
             svg.append("path")
                 .datum(data)
                 .attr("fill", "none")
-                .attr("stroke", "url(#line-gradient)")
+                .attr("stroke", "black")
                 .attr("stroke-width", 3)
                 .attr("d", d3.line()
                     .x(d => { return x(d.x) })
                     .y(d => { return y(d.y) }));
 
+            // data markers 
+            svg.selectAll(".dot")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("class", "dot")
+                .attr("cx", d => { return x(d.x) }).attr("cy", d => { return y(d.y) }).attr("r", 5)
+                .style("fill", d => colorPalette29(d.y));
+            
         };
 
         createGraph(data29, '.ex29');
