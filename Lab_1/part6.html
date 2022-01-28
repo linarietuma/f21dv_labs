@@ -74,9 +74,20 @@
             .attr("width", 400)
             .attr("height", 400)
             .style("border", '1px solid #564592');
-        let fill = []
+
+        // append 10 circles
+        for (let i = 0; i < 10; i++) {
+             // randomly set the position of the circles 
+            let randx = Math.random() * 400;
+            let randy = Math.random() * 400;
+            svg12.append("circle")
+                .attr("cx", randx)
+                .attr("cy", randy)
+                .attr("r", 20);
+        }
+
         const csvData = d3.csv(shapes, data => {
-            fill.push(data.fill);
+            // sort the figures by type
             switch (data.figure) {
                 case "line":
                     // append line objects
@@ -117,11 +128,11 @@
                         .attr("stroke", data.stroke);
                     break;
             };
- 
+
         });
 
         // Exercise 13
-        // create svg object
+        // create a svg object
         const svg13 = d3.select(".ex13").append("svg")
             .attr("width", 400)
             .attr("height", 400)
@@ -129,22 +140,70 @@
 
         // append 10 circles
         for (let i = 0; i < 10; i++) {
+            // randomly set the position of the circles 
             let randx = Math.random() * 400;
             let randy = Math.random() * 400;
             svg13.append("circle")
-            .attr("cx", randx)
-            .attr("cy", randy)
-            .attr("r", 20);
+                .attr("cx", randx)
+                .attr("cy", randy)
+                .attr("r", 20);
         }
-        
+
+        let fill = [] // fill colours of each shape in the CSV will go here 
+        const csvData13 = d3.csv(shapes, data => {
+            fill.push(data.fill); // save the fille colour in an array
+            
+            switch (data.figure) {
+                case "line":
+                    // append line objects
+                    svg13.append(data.figure)
+                        .attr("x1", data.x1)
+                        .attr("x2", data.x2)
+                        .attr("y1", data.y1)
+                        .attr("y2", data.y2)
+                        .attr("stroke", data.stroke);
+                    break;
+                case "ellipse":
+                    // appends ellipse objects
+                    svg13.append(data.figure)
+                        .attr("cx", data.cx)
+                        .attr("cy", data.cy)
+                        .attr("rx", data.rx)
+                        .attr("ry", data.ry)
+                        .attr("fill", data.fill)
+                        .attr("stroke", data.stroke);
+                    break;
+                case "circle":
+                    // append circle objects
+                    svg13.append(data.figure)
+                        .attr("cx", data.cx)
+                        .attr("cy", data.cy)
+                        .attr("r", data.r)
+                        .attr("fill", data.fill)
+                        .attr("stroke", data.stroke);
+                    break;
+                case "rect":
+                    // append rectangle objects
+                    svg13.append(data.figure)
+                        .attr("x", data.x)
+                        .attr("y", data.y)
+                        .attr("width", data.width)
+                        .attr("height", data.height)
+                        .attr("fill", data.fill)
+                        .attr("stroke", data.stroke);
+                    break;
+            };
+
+        });
+
         // after the csv data have been read in
-        csvData.then(() => {
+        csvData13.then(() => {
             svg13.selectAll("circle")
-                .data(fill)
+                .data(fill) // an array of colors
                 .join(
-                    enter => {},
+                    enter => { },
                     update => {
-                        // update the fill color of circle objects
+                        // update the fill color of the circle objects
                         update.attr('fill', d => d);
                     },
                     exit => {
