@@ -24,7 +24,7 @@
             .enter() // search for 'span' element, creates one if none are found
             .append('span') // adds 'span' element to the body
             .style("color", d => {
-                if (typeof d == 'string') { // set font color to blue if character
+                if (typeof d == 'string') { // set font color to blue if character (js does not have a char type so use string instead)
                     return "blue";
                 } else if (typeof d == 'number') { // set color to green if number
                     return "green";
