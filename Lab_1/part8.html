@@ -98,7 +98,7 @@
         
         // add text based on the data values
         g.append("text")
-            .attr("x", (d, i) => {
+            .attr("x", (d, i) => { // position the labels in the middle of each circle
                 return i * 100 + 40;
             })
             .attr("y", 50)
