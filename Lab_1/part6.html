@@ -75,17 +75,7 @@
             .attr("height", 400)
             .style("border", '1px solid #564592');
 
-        // append 10 circles
-        for (let i = 0; i < 10; i++) {
-             // randomly set the position of the circles 
-            let randx = Math.random() * 400;
-            let randy = Math.random() * 400;
-            svg12.append("circle")
-                .attr("cx", randx)
-                .attr("cy", randy)
-                .attr("r", 20);
-        }
-
+        // load data
         const csvData = d3.csv(shapes, data => {
             // sort the figures by type
             switch (data.figure) {
@@ -150,6 +140,7 @@
         }
 
         let fill = [] // fill colours of each shape in the CSV will go here 
+        // load data 
         const csvData13 = d3.csv(shapes, data => {
             fill.push(data.fill); // save the fille colour in an array
             
