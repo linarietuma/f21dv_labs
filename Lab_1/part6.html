@@ -67,7 +67,7 @@
 
 
         // Exercise 12
-        const shapes = "data/shapes.csv"
+        const shapes = "http://127.0.0.1:5500/Lab_1/data/shapes.csv"
 
         // create svg object
         const svg12 = d3.select(".ex12").append("svg")
@@ -209,8 +209,8 @@
                     // creates rectangle for missing elements
                     enter => {
                         enter.append("rect")
-                            .attr("x", (i, d) => { return 40 * i })
-                            .attr("y", (i, d) => { return 50 * i - 20 })
+                            .attr("x", (d, i) => { return 40 * i })
+                            .attr("y", (d, i) => { return 50 * i - 20 })
                             .attr("width", 30)
                             .attr("height", 30)
                             .attr("fill", d => d);
