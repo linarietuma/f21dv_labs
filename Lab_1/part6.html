@@ -143,7 +143,7 @@
         // load data 
         const csvData13 = d3.csv(shapes, data => {
             fill.push(data.fill); // save the fille colour in an array
-            
+
             switch (data.figure) {
                 case "line":
                     // append line objects
@@ -201,6 +201,25 @@
                         // remove any leftover circles 
                         exit.remove();
                     }
+                );
+
+            svg13.svg13.selectAll("rect")
+                .data(fill) // an array of colors
+                .join(
+                    // creates rectangle for missing elements
+                    enter => {
+                        enter.append("rect")
+                            .attr("x", (i, d) => { return 40 * i })
+                            .attr("y", (i, d) => { return 50 * i - 20 })
+                            .attr("width", 30)
+                            .attr("height", 30)
+                            .attr("fill", d => d);
+                    },
+                    update => {
+                        // update the fill color of the circle objects
+                        update.attr('fill', d => d);
+                    },
+                    exit => { }
                 );
         });
 
