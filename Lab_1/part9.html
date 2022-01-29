@@ -30,22 +30,33 @@
         const width = 600;
         const barHeight = 20;
         const margin = 1;
+        // create a scale with domain as the min and max values of the data
         const scale17 = d3.scaleLinear()
             .domain([d3.min(data17), d3.max(data17)])
+            // range is within the bounds of the SVG object
             .range([50, 500]);
+
+        // create an SVG object 
         const svg = d3.select(".ex17").append("svg")
             .attr("width", width)
+            // height of the SVG dependant on the number of data points 
             .attr("height", barHeight * data17.length);
+
+        // create a container for each data value 
         const g = svg.selectAll("g").data(data17)
             .enter()
             .append("g")
+            // reposition based on the index of a data point 
             .attr("transform", (d, i) => {
                 return "translate(0," + i * barHeight + ")";
             });
+
+        // add bars 
         g.append("rect")
             .attr("width", d => {
                 return scale17(d);
             })
+            // bar colour is dependant on the data value 
             .attr('fill', d => {
                 if (d < 100) {
                     return "green";
@@ -56,7 +67,8 @@
                 };
             })
             .attr("height", barHeight - margin);
-            
+        
+        // add data labels 
         g.append("text")
             .attr("x", d => { return (scale17(d)); })
             .attr("y", barHeight / 2)
@@ -66,29 +78,32 @@
             .text(d => { return d; });
 
         // Exercise 18
-        let data18 = [];
+        let data18 = []; // data will go here
+        // load data from file 
         const csv18 = d3.csv("data/barChart.csv", data => {
             data18.push(parseInt(data.data));
 
         });
-
+        // once the data is loaded
         csv18.then(() => {
             const scale18 = d3.scaleLinear()
                 .domain([d3.min(data18), d3.max(data18)])
                 .range([10, 500]);
-
+            // create an SVG object 
             const svg18 = d3.select(".ex18")
                 .append("svg")
                 .attr("height", data18.length * barHeight)
                 .attr("width", width);
-
-            const g18 = svg18.selectAll("g").data(data18)
+            // add a container for each data value
+            const g18 = svg18.selectAll("g")
+                .data(data18)
                 .enter()
                 .append("g")
                 .attr("transform", (d, i) => {
                     return "translate(0," + i * barHeight + ")";
                 });
 
+            // add bars
             g18.append("rect")
                 .attr("width", d => {
                     return scale18(d);
@@ -103,7 +118,7 @@
                     };
                 })
                 .attr("height", barHeight - margin)
-
+            // add data labels
             g18.append("text")
                 .attr("x", d => { return (scale18(d)); })
                 .attr("y", barHeight / 2)
@@ -120,21 +135,24 @@
             let data18 = [];
             if (path != null) {
                 try {
+                    // read in data from a CSV
                     const csv18 = d3.csv(path, d => {
                         data18.push(parseInt(d.data));
                     });
                     csv18.then(() => {
+                        // append a bar chart to page 
                         createBarChart(data18);
                     })
                 } catch (error) {
                     console.error(error);
                 };
+            // path is null 
             } else {
                 data18 = [50, 400, 300, 900, 250, 1000]
                 createBarChart(data18);
             }
         }
-        // creates a bar chart from the input data 
+        // creates a bar chart from the input data array
         function createBarChart(data) {
             const width = 600;
             const barHeight = 20;
@@ -147,10 +165,12 @@
                 .append("h4")
                 .text("Bar Chart"); 
 
-            const svg = d3.select(".ex19").append("svg")
+            const svg = d3.select(".ex19")
+                .append("svg")
                 .attr("width", width)
                 .attr("height", barHeight * data.length);
-            const g = svg.selectAll("g").data(data)
+            const g = svg.selectAll("g")
+                .data(data)
                 .enter()
                 .append("g")
                 .attr("transform", (d, i) => {
@@ -172,7 +192,7 @@
                 .attr("height", barHeight - margin)
 
             g.append("text")
-                .attr("x", d => { return (scale19(d)); })
+                .attr("x", d => { return (scale19(d)); }) // scale the data values
                 .attr("y", barHeight / 2)
                 .attr("dy", ".35em")
                 .attr("dx", ".35em")
