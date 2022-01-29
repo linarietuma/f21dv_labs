@@ -27,6 +27,7 @@
         const width = 400;
         const height = 300;
         const data = [10, 15, 20, 25, 30];
+        // add SVG object 
         const svg = d3.select(".ex20")
             .append("svg")
             .attr("width", width)
@@ -58,14 +59,15 @@
 
         // append container and add y axis
         svg.append("g")
+            // set the position of the element 
             .attr("transform", "translate(50, 20)")
             .call(y_axis);
-
+ 
         const xAxisTranslate = height / 2 + 20;
 
         // append group and add x axis
         svg.append("g")
-            .attr("transform", "translate(50, " + xAxisTranslate + ")")
+            .attr("transform", "translate(50, " + xAxisTranslate + ")") 
             .call(x_axis)
 
         // add right y axis

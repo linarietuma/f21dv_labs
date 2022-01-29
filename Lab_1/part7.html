@@ -57,13 +57,16 @@
         const width = 600;
         const scaleFactor = 2;
         const barHeight = 30;
-        const graph14 = d3.select(".ex14").append("svg")
+        // append SVG object 
+        const graph14 = d3.select(".ex14")
+            .append("svg")
             .attr("width", width)
             .attr("height", barHeight * patients.length)
 
         heartData.then(() => {
             // add a container for each bar
-            const bar = graph14.selectAll("g").data(patients)
+            const bar = graph14.selectAll("g")
+                .data(patients)
                 .enter()
                 .append("g")
                 .attr("transform", (d, i) => {
@@ -74,25 +77,27 @@
                 return d[1] * scaleFactor;
             })
                 .attr("height", barHeight - 1)
-                .attr("fill", "green")
-                
+                .attr("fill", "green") 
 
             // add data labels
             bar.append("text")
-                .attr("x", d => { console.log(d); return (d[1] * scaleFactor); }).attr("y", barHeight / 2)
+                .attr("x", d => { return (d[1] * scaleFactor); })
+                .attr("y", barHeight / 2)
                 .attr("dy", ".35em") // positions the label (y)
                 .attr("dx", ".35em") // position the label (distance from the bar)
                 .text(d => { return 'Ages ' + d[0] + ': ' + d[1]; });
         });
 
         // Exercise 15
-        const graph15 = d3.select(".ex15").append("svg")
+        const graph15 = d3.select(".ex15")
+            .append("svg")
             .attr("width", width)
             .attr("height", barHeight * patients.length)
 
         heartData.then(() => {
             // add a container for each bar
-            const bar = graph15.selectAll("g").data(patients)
+            const bar = graph15.selectAll("g")
+                .data(patients)
                 .enter()
                 .append("g")
                 .attr("left", 40)
@@ -124,7 +129,6 @@
                 .attr("dx", ".35em") // position the label (distance from the bar)
                 .text(d => { return 'Ages ' + d[0] + ': ' + d[1]; });
         });
-
 
     </script>
 

@@ -117,15 +117,18 @@
             data262.push({ x: i / 100, y: Math.cos(6.2 * i / 100) })
         };
 
+        // create SVG object 
         const svg26 = d3.select(".ex26").append("svg")
             .attr('width', xSize)
             .attr('height', ySize)
             .append("g")
             .attr("transform", "translate(" + margin + "," + margin + ")");
 
+        // x extent of the two data arrays
         const xExtent1 = d3.extent(data261, d => { return d.x });
         const xExtent2 = d3.extent(data262, d => { return d.x });
 
+        // y extent of the two data arrays 
         const yExtent1 = d3.extent(data261, d => { return d.y });
         const yExtent2 = d3.extent(data262, d => { return d.y });
 
@@ -190,8 +193,6 @@
             .attr("cx", d => { return x26(d.x) }).attr("cy", d => { return y26(d.y) }).attr("r", 3)
             .style("fill", "red");
 
-        let triangle = d3.symbol().type(d3.symbolTriangle).size(40);
-
         // data triangle markers 
         svg26.selectAll(".dot262")
             .data(data262)
@@ -204,6 +205,7 @@
 
         // Exercise 27
         const data27 = [];
+        // generate data
         for (let i = 0; i < numPoints; i++) {
             data27.push({ x: i / 100, y: Math.cosh(6.2 * i / 100) });
         }

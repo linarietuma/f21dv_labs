@@ -32,7 +32,8 @@
         for (let i = 0; i < numPoints; i++) {
             data22.push({ x: i / 100, y: Math.sin(6.2 * i / 100) });
         }
-
+        // function to create a line graph 
+        // data argument takes a data array as argument, htmlEl is optional and accepts HTML elements as argument 
         function createGraph(data, htmlEl = "body") {
             // Set Dimensions
             const xSize = 600;
@@ -60,7 +61,7 @@
             svg.append("g")
                 .attr("transform", "translate(0," + yMax + ")").call(d3.axisBottom(x))
                 .attr('color', 'green'); // make bottom axis green
-            // top \
+            // top axis 
             svg.append("g")
                 .call(d3.axisTop(x));
             // Y Axis
@@ -78,7 +79,6 @@
                 .attr("fill", "none").attr("stroke", "steelblue").attr("stroke-width", 1.5).attr("d", d3.line()
                     .x(d => { return x(d.x) })
                     .y(d => { return y(d.y) }));
-
         };
 
         // call the create graph function

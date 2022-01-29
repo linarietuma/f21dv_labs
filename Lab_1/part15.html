@@ -42,7 +42,9 @@
             .append("g")
             .attr("transform", "translate(" + xSize / 2 + "," + ySize / 2 + ")");
 
+        // set the radius value     
         const radius = Math.min(xSize, ySize) / 2;
+        // generate a colour scale 
         const color = d3.scaleOrdinal(['#4daf4a', '#377eb8', '#ff7f00', '#984ea3', '#e41a1c', '#8a2be2', '#5f9ea0', '#008000', '#ff1493']);
 
         // Generate the pie 
@@ -59,6 +61,7 @@
             .enter()
             .append("g")
             .attr("class", "arc")
+
         //Draw arc paths 
         arcs.append("path")
             .attr("fill", function (d, i) {
@@ -77,6 +80,7 @@
             .attr("transform", "translate(" + xSize / 2 + "," + ySize / 2 + ")");
 
         const radius31 = Math.min(xSize, ySize) / 2;
+        // generate a colour scale 
         const color31 = d3.scaleOrdinal().domain(data).range(d3.schemeSet2);
 
         // Generate the pie 
@@ -102,6 +106,7 @@
             .attr("stroke", "white")
             .attr("d", arc31);
 
+        // add data labels 
         svg31.selectAll(".arc31")
             .data(pie31(data))
             .append("text")
