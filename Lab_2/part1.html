@@ -1,0 +1,148 @@
+<!-- Code By: Lina Rietuma (H00361943) -->
+<!-- Finished On: 15/02/2022 -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
+        rel="stylesheet">
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+</head>
+
+<body>
+    <h1>Part 1: CSS Effects & Animations</h1>
+    <div class="ex1">
+        <h2>Exercise 1</h2>
+        <h3>Graph with pulsing data points.</h3>
+
+    </div>
+    <div class="ex2">
+        <h2>Exercise 2</h2>
+        <div>
+            Exercise 2:
+            <a href="ex2.html" title="Exercise 2">Dynamic Webpage</a>.
+        </div>
+    </div>
+
+    <script>
+        d3.select("body").style("font-family", "Montserrat"); // set font style 
+        // Exercise 1
+        // Set Dimensions
+        const xSize = 600;
+        const ySize = 600;
+        const margin = 40;
+        const xMax = xSize - margin * 2;
+        const yMax = ySize - margin * 2;
+        const containerSize = 30;
+        const radius = 5;
+
+        // Create Random Points
+        const numPoints = 100;
+        const data1 = [];
+        for (let i = 0; i < numPoints; i++) {
+            data1.push({ x: i / 100, y: Math.cos(6.2 * i / 100) });
+        }
+
+        // function to draw a graph from input data and append to user-defined HTML element 
+        function createGraph(data, htmlEl) {
+            // Get the 'limits' of the data - the full extent (mins and max) // so the plotted data fits perfectly
+            const xExtent = d3.extent(data, d => { return d.x });
+            const yExtent = d3.extent(data, d => { return d.y });
+
+            // Append SVG Object to the Page 
+            const svg = d3.select(htmlEl)
+                .append("svg")
+                .attr('width', xSize)
+                .attr('height', ySize)
+                .append("g")
+                .attr("transform", "translate(" + margin + "," + margin + ")");
+            // X Axis
+            const x = d3.scaleLinear()
+                .domain([xExtent[0], xExtent[1]]).range([0, xMax]);
+            // bottom 
+            svg.append("g")
+                .attr("transform", "translate(0," + yMax + ")").call(d3.axisBottom(x))
+                .attr('color', 'green'); // make bottom axis green
+            // top \
+            svg.append("g")
+                .call(d3.axisTop(x));
+            // Y Axis
+            const y = d3.scaleLinear()
+                .domain([yExtent[0], yExtent[1]]).range([yMax, 0]);
+            // left y axis 
+            svg.append("g")
+                .call(d3.axisLeft(y));
+            // right y axis 
+            svg.append("g")
+                .attr("transform", `translate(${yMax},0)`).call(d3.axisRight(y));
+
+            // Add the line
+            svg.append("path")
+                .datum(data)
+                .attr("fill", "none").attr("stroke", "royalblue").attr("stroke-width", 1.5).attr("d", d3.line()
+                    .x(d => { return x(d.x) })
+                    .y(d => { return y(d.y) }));
+
+            // data markers 
+            svg.selectAll("labels")
+                .data(data)
+                .enter()
+                .append("svg") // 
+                .attr("height", containerSize)
+                .attr("widht", containerSize)
+                // center the SVG container on the line
+                .attr("y", d => {return y(d.y) - containerSize/2})
+                .attr("x", d => {return x(d.x) - containerSize/2})
+                // add a circle to the svg container 
+                .append("circle")
+                // position the circle in the middle of the container
+                .attr("cx", containerSize/2)
+                .attr("cy", containerSize/2)
+                // display every 5th data marker
+                .attr("r", (d, i) => {
+                    if (i % 5 == 0) {
+                        return radius;
+                    } else {
+                        return 0;
+                    }
+                })
+                .style("fill", "red")
+                .style("stroke", "blue")
+                .attr("class", "labels");
+        };
+
+        // call the method
+        createGraph(data1, ".ex1");
+
+
+    </script>
+
+    <style>
+        .labels:hover {
+            /* shorthand syntax for animations */
+            animation: 0.3s infinite alternate pulsar;
+            /* transforms the marker to the center of the svg container */
+            transform-origin: 15px 15px;
+        }
+
+        @keyframes pulsar {
+            /* start of the animation */
+            0% { 
+                transform: scale(1.5);
+                fill: red;
+            }
+            50% {
+                fill: rgba(255, 0, 0, 0.575);
+            }
+            /* end of the animation */
+            100% {
+                fill: rgba(255, 0, 0, 0.315);
+                transform: scale(1.9);
+            }
+        }
+    </style>
+
+</body>
+
+</html>

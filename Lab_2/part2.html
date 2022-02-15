@@ -1,0 +1,139 @@
+<!-- Code By: Lina Rietuma (H00361943) -->
+<!-- Finished On: 06/02/2022 -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
+        rel="stylesheet">
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+</head>
+
+<body>
+    <h1>Part 2: Events</h1>
+    <div id="ex3">
+        <h2>Exercise 3</h2>
+        <p>Example of using click events - mouseover, mouseout, click.</p>
+    </div>
+    <div id="ex4">
+        <h2>Exercise 4</h2>
+    </div>
+    <div id="ex5">
+        <h2>Exercise 5</h2>
+    </div>
+
+
+    <script>
+        d3.select("body").style("font-family", "Montserrat"); // set font style
+
+
+        // Exercise 3
+        d3.select('#ex3')
+            .append('div')
+            .style('width', '100px')
+            .style('height', '20px')
+            .style('background-color', 'green')
+            .attr("class", "square");
+
+        d3.selectAll(".square")
+            // change element colour and size on mouseover event
+            .on("mouseover", function (event) {
+                d3.select(this)
+                    .style("background-color", "orange")
+                    .style('width', '150px')
+                    .style('height', '50px');
+
+            })
+            // change element colour and size on mouseover event
+            .on("mouseout", function () {
+                d3.select(this)
+                    .style("background-color", "steelblue")
+                    .style('width', '100px')
+                    .style('height', '20px')
+                // remove a svg element 
+                d3.select(".svg")
+                    .remove()
+            })
+            // add an svg element on click
+            .on("click", function () {
+                d3.select(this)
+                    .append("svg")
+                    .attr("class", "svg")
+                    .attr("height", 10)
+                    .attr("width", 10)
+                    .style("background", "red")
+            });
+
+
+        // Exercise 4
+        // Set Dimensions
+        const xSize = 300;
+        const ySize = 300;
+        const margin = 20;
+        // add a svg element
+        const svg4 = d3.select('#ex4')
+            .append("svg")
+            .attr('width', xSize)
+            .attr('height', ySize)
+            .append("g")
+            .attr("transform", "translate(" + margin + "," + margin + ")");
+
+        // append a circle to the centre of the svg
+        svg4.append("circle")
+            .attr("cx", xSize / 2 - margin)
+            .attr("cy", ySize / 2 - margin)
+            // display every 5th data marker
+            .attr("r", 2 * margin);
+
+
+        svg4.selectAll("circle")
+            // change circle's radius and color on hover
+            .on("mouseover", function () {
+                d3.select(this)
+                    .attr("r", margin * 2.5)
+                    .attr("fill", "blue")
+
+            })
+            // change circle's radius and colour on hover
+            .on("mouseout", function () {
+                d3.select(this)
+                    .attr("r", 2 * margin)
+                    .attr("fill", "black")
+            });
+
+
+        // Exercise 5
+        // add a svg element
+        const svg5 = d3.select('#ex5')
+            .append("svg")
+            .attr('width', xSize)
+            .attr('height', ySize)
+            .style("border", '1px solid black')
+            .attr("class", "ex5");
+
+        // Add event listener
+        d3.select(".ex5")
+            .on("mouseover", function (event) {
+                // remove the previous text element
+                svg5.select("text")
+                    .remove();
+
+                // add a new text element in the new location
+                svg5.append("text")
+                    .text("O")
+                    .style("font-size", 20)
+                    .attr("transform", "translate(" + d3.pointer(event) + ")")
+
+            })
+            .on("mouseout", function () {
+                d3.selectAll("text")
+                    .remove();
+
+            })
+
+
+    </script>
+</body>
+
+</html>

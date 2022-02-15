@@ -1,0 +1,128 @@
+<!-- Code By: Lina Rietuma (H00361943) -->
+<!-- Finished On: 15/02/2022 -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
+        rel="stylesheet">
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+</head>
+
+<body>
+    <h1>Exercise 2</h1>
+    <h2>Dynamic Pie Chart</h2>
+    <p>Hover over the pie chart.</p>
+
+
+    <script>
+        d3.select("body").style("font-family", "Montserrat"); // set font style 
+
+        const data = [44, 15, 10, 16, 7, 8];
+        const labels = ["Rent", "Transport", "Bills", "Food", "Gym", "Other"]
+        const xSize = 600;
+        const ySize = 600;
+        const margin = 40;
+
+        const xMax = xSize - margin * 2;
+        const yMax = ySize - margin * 2;
+
+        // Append SVG Object to the Page const 
+        svg2 = d3.select("body")
+            .append("svg")
+            .attr('width', xSize)
+            .attr('height', ySize)
+            .append("g")
+            .attr("transform", "translate(" + xSize / 2 + "," + ySize / 2 + ")");
+
+        svg2.append("text")
+            .text("Weekly Expenses")
+            .style("font-size", 20)
+            .attr("transform", "translate(-80, -240)")
+
+
+        const radius2 = (Math.min(xSize, ySize) / 2) * 0.7;
+        // generate a colour scale 
+        const color2 = d3.scaleOrdinal().domain(data).range(d3.schemeSet2);
+
+        // Generate the pie 
+        const pie2 = d3.pie();
+
+        // Generate the arcs (paths for pie chart's wedges)
+        const arc2 = d3.arc()
+            .innerRadius(50)
+            .outerRadius(radius2);
+
+        //Generate groups
+        const arcs2 = svg2.selectAll("arc")
+            .data(pie2(data)) // pie() calculates the start and end angle of each wedge (sorting values from largest to smallest)
+            .enter()
+            .append("g")
+            .attr("class", "arc2")
+
+        //Draw arc paths 
+        arcs2.append("path")
+            .attr("fill", (d, i) => {
+                return color2(i);
+            })
+            .attr("stroke", "white")
+            .attr("d", arc2)
+            .attr("class", "arcs");
+
+        // add data labels 
+        svg2.selectAll(".arc2")
+            .data(pie2(data))
+            .append("text")
+            .text(d => {
+                return d.data + "%"
+            })
+            .attr("transform", d => {
+                // find the midpoint of the arc's central line 
+                console.log(d)
+                return "translate(" + arc2.centroid(d) + ")";
+
+            })
+            .attr("fill", "white")
+            .style("font-size", 20)
+
+        // add text labels 
+        svg2.selectAll(".arc2")
+            .data(pie2(data))
+            .append("text")
+            .text(d => {
+                return ": " + d.data + "% " + labels[d.index];
+            })
+            .attr("transform", "translate(95, -239)")
+            .style("font-size", 20)
+            .attr("class", "labels")
+
+
+
+
+    </script>
+
+    <style>
+        .labels {
+            /* display text labels only on hover */
+            display: none;
+            fill:black 
+        }
+
+        /* show a text label on hover over the arcs */
+        .arcs:hover~.labels {
+            display: block;
+            
+        }
+        /* enlarge an arc on hover */
+        .arcs:hover {
+            transform: scale(1.1);
+        }
+
+
+    </style>
+
+
+</body>
+
+</html>
