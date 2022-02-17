@@ -12,11 +12,411 @@
 
 <body>
     <h1>Part 3: D3 Transitions</h1>
+    <div class="wrapper">
+        <div id="ex6">
+            <h2>Exercise 6</h2>
+        </div>
+        <div id="ex7">
+            <h2>Exercise 7</h2>
+        </div>
+        <div id="ex8">
+            <h2>Exercise 8</h2>
+        </div>
+        <div id="ex9">
+            <h2>Exercise 9</h2>
+        </div>
+        <div id="ex10">
+            <h2>Exercise 10</h2>
+        </div>
+        <div id="ex11">
+            <h2>Exercise 11</h2>
+        </div>
+        <div id="ex12">
+            <h2>Exercise 12</h2>
+        </div>
+        <div id="ex13">
+            <h2>Exercise 13</h2>
+        </div>
+        <div id="ex14">
+            <h2>Exercise 14</h2>
+        </div>
+    </div>
 
 
     <script>
         d3.select("body").style("font-family", "Montserrat"); // set font style 
+
+        // Exercise 6
+
+        // append a div element 
+        d3.select('#ex6')
+            .append("div")
+            .style('width', '10em')
+            .style('height', '10em')
+            .style('background-color', 'blue')
+            // first transition to red
+            .transition()
+            .duration(1000) // in miliseconds
+            .style("background-color", "red")
+            // second transition to green
+            .transition()
+            .duration(2000)
+            .style("background-color", "green");
+
+
+        // Exercise 7
+        d3.select('#ex7')
+            .append("div")
+            .style('width', '10em')
+            .style('height', '10em')
+            .style('background-color', 'blue')
+            // first transition to red
+            .transition()
+            .duration(1000) // in miliseconds
+            .style("background-color", "red")
+            .style('width', '5em')
+            .style('height', '5em')
+            // second transition to green
+            .transition()
+            .duration(2000)
+            .style("background-color", "green")
+            .style('width', '15em')
+            .style('height', '15em');
+
+
+        // Exercise 8
+        d3.select('#ex8')
+            .append("div")
+            .style('width', '10em')
+            .style('height', '10em')
+            .style('background-color', 'blue')
+            .attr("class", "square");
+
+        d3.selectAll(".square")
+            .on("mouseover", function () {
+                d3.select(this)
+                    // first transition to red
+                    .transition()
+                    .duration(1000) // in miliseconds
+                    .style("background-color", "red")
+                    // second transition to green
+                    .transition()
+                    .duration(2000)
+                    .style("background-color", "green");
+            })
+            // revert to original on mouseout 
+            .on("mouseout", function () {
+                d3.select(this)
+                    .transition()
+                    .duration(10)
+                    .style('background-color', 'blue');
+            });
+
+
+        // Exercise 9
+        d3.select('#ex9')
+            .append("div")
+            .attr("class", "box1")
+            .style('width', '300px')
+            .style('height', '100px')
+            .style('background-color', 'blue')
+            .transition()
+            .ease(d3.easeBounce)
+            .duration(3000)
+            .style("background-color", "lavender")
+            .style('transform', 'scale(0.6)')
+
+        // Label for box 1
+        d3.select(".box1").append("text")
+            .text("Ease Bounce")
+            .style("font-size", "20px")
+
+        d3.select('#ex9')
+            .append("div")
+            .attr("class", "box2")
+            .style('width', '300px')
+            .style('height', '100px')
+            .style('background-color', 'blue')
+            .transition()
+            .ease(d3.easeElastic)
+            .duration(3000)
+            .style("background-color", "lavender")
+            .style('transform', 'scale(0.6)')
+
+        // Label for box 2
+        d3.select(".box2").append("text")
+            .text("Ease Elastic")
+            .style("font-size", "20px")
+
+        d3.select('#ex9')
+            .append("div")
+            .attr("class", "box3")
+            .style('width', '300px')
+            .style('height', '100px')
+            .style('background-color', 'blue')
+            .transition()
+            .ease(d3.easeBack)
+            .duration(3000)
+            .style("background-color", "lavender")
+            .style('transform', 'scale(0.6)')
+
+        // Label for box 3
+        d3.select(".box3").append("text")
+            .text("Ease Back")
+            .style("font-size", "20px")
+
+
+
+        // Exercise 10
+
+        // Set Dimensions
+        const xSize = 200;
+        const ySize = 200;
+        const margin = 10;
+        const radius = 50
+        // add a svg element
+        const svg10 = d3.select('#ex10')
+            .append("svg")
+            .attr('width', xSize)
+            .attr('height', ySize)
+            .append("g")
+            .attr("transform", "translate(" + margin + "," + margin + ")");
+
+        // append a circle to the centre of the svg
+        svg10.append("circle")
+            .attr("cx", xSize / 2 - margin)
+            .attr("cy", ySize / 2 - margin)
+            // display every 5th data marker
+            .attr("r", radius);
+
+
+        svg10.selectAll("circle")
+            // change circle's radius and color on hover
+            .on("mouseover", function () {
+                d3.select(this)
+                    .transition()
+                    .ease(d3.easeBounce)
+                    .duration(800)
+                    .attr("r", 1.2 * radius)
+                    .attr("fill", "blue")
+
+            })
+            // change circle's radius and colour on hover
+            .on("mouseout", function () {
+                d3.select(this)
+                    .transition()
+                    .ease(d3.easeBounce)
+                    .duration(800)
+                    .attr("r", radius)
+                    .attr("fill", "black")
+            });
+
+
+        // Exercise 11
+        // Add text element
+        d3.select("#ex11")
+            .append("text")
+            .text("On hover..")
+            .style("font-size", "20px")
+            .style("color", "red")
+            .attr("class", "text")
+
+        d3.select(".text")
+            // mouseover event
+            .on("mouseover", function () {
+                d3.select(this)
+                    .transition()
+                    .duration(1000)
+                    .text("..change colour and size")
+                    .style("font-size", "30px")
+                    .style("color", "blue");
+            })
+            // mouseout event 
+            .on("mouseout", function () {
+                d3.select(this)
+                    .transition()
+                    .duration(1000)
+                    .text("On hover..")
+                    .style("font-size", "20px")
+                    .style("color", "red");
+            });
+
+
+        // Exercise 12
+        const svg12 = d3.select("#ex12")
+            .append("svg")
+            .attr("width", 500)
+            .attr("height", 500);
+
+        const bar112 = svg12.append("rect")
+            .attr("fill", "blue")
+            .attr("x", 60)
+            .attr("y", 20)
+            .attr("height", 20)
+            .attr("width", 10)
+
+        const bar212 = svg12.append("rect")
+            .attr("fill", "blue")
+            .attr("x", 80)
+            .attr("y", 20)
+            .attr("height", 20)
+            .attr("width", 10)
+
+        const bar312 = svg12.append("rect")
+            .attr("fill", "blue")
+            .attr("x", 100)
+            .attr("y", 20)
+            .attr("height", 20)
+            .attr("width", 10)
+
+        update12();
+
+        function update12() {
+            bar112.transition()
+                .ease(d3.easeLinear)
+                .duration(2000)
+                .attr("height", 100)
+
+            bar212.transition()
+                .ease(d3.easeLinear)
+                .duration(2000)
+                .delay(2000)
+                .attr("height", 100)
+
+            bar312.transition()
+                .ease(d3.easeLinear)
+                .duration(2000)
+                .delay(4000)
+                .attr("height", 100)
+        }
+
+        // Exercise 13
+
+        const svg13 = d3.select("#ex13")
+            .append("svg")
+            .attr("width", 500)
+            .attr("height", 500);
+
+        const bar113 = svg13.append("rect")
+            .attr("fill", "blue")
+            .attr("x", 60)
+            .attr("y", 20)
+            .attr("height", 20)
+            .attr("width", 10)
+
+        const bar213 = svg13.append("rect")
+            .attr("fill", "blue")
+            .attr("x", 80)
+            .attr("y", 20)
+            .attr("height", 20)
+            .attr("width", 10)
+
+        const bar313 = svg13.append("rect")
+            .attr("fill", "blue")
+            .attr("x", 100)
+            .attr("y", 20)
+            .attr("height", 20)
+            .attr("width", 10)
+
+        update13();
+
+        function update13() {
+            bar113.transition()
+                .ease(d3.easeLinear)
+                .duration(2000)
+                .attr("height", 100)
+                .transition()
+                .ease(d3.easeLinear)
+                .duration(2000)
+                .delay(4000)
+                .attr("height", 20)
+
+
+            bar213.transition()
+                .ease(d3.easeLinear)
+                .duration(2000)
+                .delay(2000)
+                .attr("height", 100)
+                .transition()
+                .ease(d3.easeLinear)
+                .duration(2000)
+                .delay(4000)
+                .attr("height", 20)
+
+            bar313.transition()
+                .ease(d3.easeLinear)
+                .duration(2000)
+                .delay(4000)
+                .attr("height", 100)
+                .transition()
+                .ease(d3.easeLinear)
+                .duration(2000)
+                .delay(4000)
+                .attr("height", 20)
+        }
+
+        // Exercise 14
+        const svg14 = d3.select("#ex14")
+            .append("svg")
+            .attr("width", 500)
+            .attr("height", 500);
+
+        const bar114 = svg14.append("rect")
+            .attr("fill", "blue")
+            .attr("x", 60)
+            .attr("y", 20)
+            .attr("height", 20)
+            .attr("width", 10)
+
+        const bar214 = svg14.append("rect")
+            .attr("fill", "blue")
+            .attr("x", 80)
+            .attr("y", 20)
+            .attr("height", 20)
+            .attr("width", 10)
+
+        const bar314 = svg14.append("rect")
+            .attr("fill", "blue")
+            .attr("x", 100)
+            .attr("y", 20)
+            .attr("height", 20)
+            .attr("width", 10)
+
+        update14();
+
+        function update14() {
+            bar114.transition()
+                .ease(d3.easeLinear)
+                .duration(2000)
+                .attr("height", 100)
+                .attr("fill", "red")
+
+            bar214.transition()
+                .ease(d3.easeLinear)
+                .duration(2000)
+                .delay(2000)
+                .attr("height", 100)
+                .attr("fill", "red")
+
+            bar314.transition()
+                .ease(d3.easeLinear)
+                .duration(2000)
+                .delay(4000)
+                .attr("height", 100)
+                .attr("fill", "red")
+        }
+
     </script>
+
+    <style>
+        .wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 25em 25em;
+            grid-gap: 1em;
+        }
+    </style>
+
 </body>
 
 </html>
