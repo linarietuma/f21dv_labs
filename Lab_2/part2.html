@@ -115,23 +115,18 @@
         // Add event listener
         d3.select(".ex5")
             .on("mouseover", function (event) {
-                // remove the previous text element
+                //remove the previous text element
                 svg5.select("text")
                     .remove();
-
+                
                 // add a new text element in the new location
                 svg5.append("text")
                     .text("O")
                     .style("font-size", 20)
-                    .attr("transform", "translate(" + d3.pointer(event) + ")")
-
-            })
-            .on("mouseout", function () {
-                d3.selectAll("text")
-                    .remove();
-
-            })
-
+                    // get the current location of the pointer
+                    .attr("x", d3.pointer(event)[0])
+                    .attr("y", d3.pointer(event)[1]);
+            });
 
     </script>
 </body>
