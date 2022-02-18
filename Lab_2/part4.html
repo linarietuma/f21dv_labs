@@ -7,15 +7,92 @@
 <head>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;family=Roboto:wght@100;400&amp;display=swap"
         rel="stylesheet">
-    <script src='https://d3js.org/d3.v7.min.js'></script>
+    <script type='text/javascript' src='https://d3js.org/d3.v7.min.js'></script>
 </head>
 
 <body>
     <h1>Part 4: Animated Chart</h1>
+    <svg width="600" height="500"></svg>
 
+
+    <style>
+        .bar {
+            fill: steelblue;
+        }
+
+        .highlight {
+            fill: orange;
+        }
+    </style>
 
     <script>
         d3.select("body").style("font-family", "Montserrat"); // set font style 
+
+        const svg = d3.select("svg");
+        const margin = 200;
+        const width = svg.attr("width") - margin;
+        const height = svg.attr("height") - margin;
+        svg.append("text")
+            .attr("transform", "translate(100,0)")
+            .attr("x", 50)
+            .attr("y", 50)
+            .attr("font-size", "24px")
+            .text("Stock Price")
+
+        const x = d3.scaleBand()
+            .range([0, width])
+            .padding(0.4);
+        const y = d3.scaleLinear()
+            .range([height, 0]);
+
+        const g = svg.append("g")
+            .attr("transform", "translate(" + 100 + "," + 100 + ")");
+
+        d3.csv("/Data/part4.csv")
+            .then(function (data) {
+                x.domain(data.map(function (d) { return d.year; }));
+
+                y.domain([0, d3.max(data, function (d) { return d.value; })]);
+                g.append("g")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(d3.axisBottom(x))
+                    .append("text")
+                    .attr("y", height - 250)
+                    .attr("x", width - 100)
+                    .attr("text-anchor", "end")
+                    .attr( "stroke", "black")
+                    .text("Year");
+            g.append("g")
+                .call(d3.axisLeft(y)
+                    .tickFormat(function (d) {
+                        return "$" + d;
+                    })
+                    .ticks(10))
+                    .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6)
+                    .attr("dy", "-5.1em")
+                    .attr("text-anchor", "end")
+                    .attr("stroke", "black")
+                    .text("Stock Price");
+
+            g.selectAll(".bar")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("class", "bar")
+                //.on(..... ) – call mouse events here... 
+                .attr("x", function (d) { return x(d.year); })
+                .attr("y", function (d) { return y(d.value); })
+                .attr("width", x.bandwidth())
+                                .transition()
+                                .ease(d3.easeLinear)
+                                .duration(400)
+                                .delay(function (d, i) {
+                                    return i * 50;
+                                 })
+                                .attr("height", function (d) { return height - y(d.value); });
+        });
     </script>
 </body>
 
