@@ -34,7 +34,7 @@
         }
 
         .highlight, .highlight16, .highlight17 {
-            fill: orange;
+            fill: orange !important;
         }
     </style>
 
@@ -324,7 +324,7 @@
                     .enter()
                     .append("rect")
                     .attr("class", "bar17")
-                    .style("fill", d => {console.log(d.value); return color(d.value)})
+                    .style("fill", d => {return color(d.value)})
                     .on("mouseover", onMouseOver17) //Add listener for the mouseover event
 
                     .on("mouseout", onMouseOut17)
@@ -332,15 +332,15 @@
                     .attr("x", function (d) { return x17(d.year); })
                     .attr("y", function (d) { return y17(d.value); })
                     .attr("width", x17.bandwidth())
+                    
                     .transition()
                     .ease(d3.easeLinear)
                     .duration(400)
                     .delay(function (d, i) {
                         return i * 50;
                     })
-                    .attr("height", function (d) { return height - y17(d.value); });
+                    .attr("height", function (d) { return height - y17(d.value); })
             });
-
 
 
         //mouseover event handler function 
@@ -354,7 +354,7 @@
                 .duration(400)
                 .attr('width', x17.bandwidth() + 5)
                 .attr("y", function (d) { return y17(d.value) - 10; })
-                .attr("height", function (d) { return height17 - y17(d.value) + 10; });
+                .attr("height", function (d) { return height17 - y17(d.value) + 10; })
 
             g17.append("text")
                 .attr('class', 'val17')
@@ -368,6 +368,7 @@
         }
         //mouseout event handler function 
         function onMouseOut17(d, i) {
+
             // use the text label class to remove label on mouseout 
             d3.select(this)
                 .attr('class', 'bar17');
@@ -377,8 +378,7 @@
                 .duration(400)
                 .attr('width', x17.bandwidth())
                 .attr("y", function (d) { return y17(i.value); })
-                .attr("height", function (d) { return height17 - y17(i.value); });
-
+                .attr("height", function (d) { return height17 - y17(i.value); })
             d3.selectAll('.val17').remove()
         }
 
