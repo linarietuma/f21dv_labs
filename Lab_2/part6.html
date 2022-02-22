@@ -16,6 +16,10 @@
 
     <script>
         d3.select("body").style("font-family", "Montserrat"); // set font style 
+
+        let intr = d3.interpolate( [20, 40, 4], [1, 12, 10])
+console.log("Type of returned function is: ", typeof (intr) );
+console.log( intr(0.2) )
     </script>
 </body>
 
