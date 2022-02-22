@@ -12,10 +12,309 @@
 
 <body>
     <h1>Part 7: D3 Force Layout</h1>
-
+    <div class="ex28">
+        <h2>Exercise 28</h2>
+        <p>Bubbles in different colours.</p>
+    </div>
+    <div class="ex29">
+        <h2>Exercise 29</h2>
+        <p>Data from a CSV.</p>
+    </div>
+    <div class="ex30">
+        <h2>Exercise 30</h2>
+        <p>Bubbles with a popup text.</p>
+    </div>
+    <div class="ex31">
+        <h2>Exercise 31</h2>
+        <p>Bubbles with color change on hover.</p>
+    </div>
+    <div class="ex32">
+        <h2>Exercise 32</h2>
+        <p>Click and drag the bubbles.</p>
+    </div>
 
     <script>
-        d3.select("body").style("font-family", "Montserrat"); // set font style 
+        d3.select("body").style("font-family", "Montserrat"); // set font style
+
+        // Exercise 28 
+
+        var width = 500, height = 500;
+        // setup svg 
+        d3.select('.ex28')
+            .append('svg')
+            .attr("class", "svg28")
+            .attr('width', width)
+            .attr('height', height);
+
+        // generate some random data
+        var numNodes = 100;
+        var nodes28 = d3.range(numNodes)
+            .map(function (d) {
+                return { radius: Math.random() * 25 }
+            })
+
+        var simulation = d3.forceSimulation(nodes28)
+            .force('charge', d3.forceManyBody().strength(5))
+            .force('center', d3.forceCenter(width / 2, height / 2))
+            .force('collision', d3.forceCollide().radius(function (d) {
+                return d.radius
+            }))
+            .on('tick', ticked28);
+
+
+        function ticked28() {
+            // generate color scheme
+            const color = d3.scaleSequential().domain([0, nodes28.length]).interpolator(d3.interpolateRainbow);
+
+            var u = d3.select('.svg28')
+                .selectAll('circle')
+                .data(nodes28)
+                .join('circle')
+                .attr('fill', (d, i) => {
+                    return color(i);
+                })
+                .attr('r', function (d) {
+                    return d.radius
+                })
+                .attr('cx', function (d) {
+                    return d.x
+                })
+                .attr('cy', function (d) {
+                    return d.y
+                })
+        }
+
+        // Exercise 29
+        // setup svg 
+        d3.select('.ex29')
+            .append('svg')
+            .attr("class", "svg29")
+            .attr('width', width)
+            .attr('height', height);
+
+        let data29 = []
+        const csv29 = d3.csv("Data/radius.csv", d => {
+            data29.push({ radius: parseFloat(d.radius) });
+        });
+        csv29.then(() => {
+
+            var simulation29 = d3.forceSimulation(data29)
+                .force('charge', d3.forceManyBody().strength(10))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide().radius(function (d) {
+                    return d.radius
+                }))
+                .on('tick', ticked29);
+
+            function ticked29() {
+
+                const color = d3.scaleSequential().domain([0, data29.length]).interpolator(d3.interpolateCubehelixDefault);
+
+                var u = d3.select('.svg29')
+                    .selectAll('circle')
+                    .data(data29)
+                    .join('circle')
+                    .attr('fill', (d, i) => {
+                        return color(i);
+                    })
+                    .attr('r', function (d) {
+                        return d.radius
+                    })
+                    .attr('cx', function (d) {
+                        return d.x
+                    })
+                    .attr('cy', function (d) {
+                        return d.y
+                    })
+            }
+        });
+
+        // Exercise 30
+        // setup svg 
+        d3.select('.ex30')
+            .append('svg')
+            .attr("class", "svg30")
+            .attr('width', width)
+            .attr('height', height);
+
+
+        // generate some random data
+        const nodes30 = d3.range(numNodes)
+            .map(function (d) {
+                return { radius: Math.random() * 35 }
+            })
+
+
+        var simulation30 = d3.forceSimulation(nodes30)
+            .force('charge', d3.forceManyBody().strength(5))
+            .force('center', d3.forceCenter(width / 2, height / 2))
+            .force('collision', d3.forceCollide().radius(function (d) {
+                return d.radius
+            }))
+            .on('tick', ticked30);
+
+
+        function ticked30() {
+            // generate color scheme
+            const color = d3.scaleSequential().domain([0, nodes30.length]).interpolator(d3.interpolateViridis);
+
+            var u = d3.select('.svg30')
+                .selectAll('circle')
+                .data(nodes28)
+                .join('circle')
+                .attr('fill', (d, i) => {
+                    return color(i);
+                })
+                .attr('r', function (d) {
+                    return d.radius
+                })
+                .attr('cx', function (d) {
+                    return d.x
+                })
+                .attr('cy', function (d) {
+                    return d.y
+                })
+            u.on("mouseover", function (d, i) {
+                d3.select(this)
+                    .attr("opacity", 0.5)
+                d3.select(".svg30")
+                    .append("text")
+                    .text("Bubble's radius: " + i.radius.toFixed(2))
+                    .attr("x", 20)
+                    .attr("y", 20)
+            })
+                .on("mouseout", function () {
+                    d3.select("text").remove();
+                    d3.select(this)
+                        .attr("opacity", 1)
+                })
+        }
+
+        // Exercise 31
+        // setup svg 
+        d3.select('.ex31')
+            .append('svg')
+            .attr("class", "svg31")
+            .attr('width', width)
+            .attr('height', height);
+
+
+        // generate some random data
+        const nodes31 = d3.range(numNodes)
+            .map(function (d) {
+                return { radius: Math.random() * 30 }
+            })
+
+
+        var simulation31 = d3.forceSimulation(nodes31)
+            .force('charge', d3.forceManyBody().strength(5))
+            .force('center', d3.forceCenter(width / 2, height / 2))
+            .force('collision', d3.forceCollide().radius(function (d) {
+                return d.radius
+            }))
+            .on('tick', ticked31);
+
+
+        function ticked31() {
+            // generate color scheme
+            const color = d3.scaleSequential().domain([0, nodes31.length]).interpolator(d3.interpolateRainbow);
+
+            var u = d3.select('.svg31')
+                .selectAll('circle')
+                .data(nodes31)
+                .join('circle')
+                .attr('fill', (d, i) => {
+                    return color(i);
+                })
+                .attr('r', function (d) {
+                    return d.radius
+                })
+                .attr('cx', function (d) {
+                    return d.x
+                })
+                .attr('cy', function (d) {
+                    return d.y
+                })
+            u.on("mouseover", function (d, i) {
+                d3.select(this)
+                    .attr("fill", d => {
+                        // choose a random color
+                        return color(Math.floor(Math.random() * numNodes))
+                    })
+            })
+        }
+
+        // Exercise 32
+        // setup svg 
+        const svg32 = d3.select('.ex32')
+            .append('svg')
+            .attr("class", "svg32")
+            .attr('width', width)
+            .attr('height', height);
+
+        let nodes32 = []
+        const csv32 = d3.csv("Data/radius.csv", d => {
+            nodes32.push({ radius: parseFloat(d.radius) });
+        });
+
+        csv32.then(() => {
+            const color = d3.scaleSequential().domain([0, nodes32.length]).interpolator(d3.interpolateRainbow);
+
+            svg32.selectAll('circle')
+                .data(nodes32)
+                .enter()
+                .append('circle')
+                .attr('fill', (d, i) => {
+                    return color(i);
+                })
+                .attr('r', (d) => {
+                    return d.radius
+                })
+                .attr('cx', width / 2)
+                .attr('cy', height / 2)
+                .call(d3.drag() // add drag handler event
+                    .on("start", (event, d) => {
+                        if (!event.active) {
+                            simulation.alphaTarget(.03).restart();
+                        }
+                        d.fx = d.x;
+                        d.fy = d.y;
+                    })
+                    .on("drag", (event, d) => {
+                        d.fx = event.x;
+                        d.fy = event.y;
+                    })
+                    .on("end", (event, d) => {
+                        if (!event.active) {
+                            simulation.alphaTarget(.03);
+                        }
+                        d.fx = null;
+                        d.fy = null;
+                    }));
+
+            var simulation = d3.forceSimulation(nodes32)
+                .force('charge', d3.forceManyBody().strength(30)) // strength of attraction (positive)/ repel (negative)
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('x', d3.forceX())
+                .force('collision', d3.forceCollide().radius(function (d) { // prevents objects from overlapping
+                    return d.radius + 2;
+                }))
+                .on('tick', ticked32);
+
+
+            function ticked32() {
+                var u = d3.select('.svg32')
+                    .selectAll('circle')
+                    .data(nodes32)
+                    .attr('cx', function (d) {
+                        return d.x
+                    })
+                    .attr('cy', function (d) {
+                        return d.y
+                    })
+            }
+
+        });
     </script>
 </body>
 
