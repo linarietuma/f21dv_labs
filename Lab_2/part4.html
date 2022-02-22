@@ -112,7 +112,6 @@
 
 
         //mouseover event handler function 
-
         function onMouseOver(d, i) {
             d3.select(this)
                 .attr('class', 'highlight');
@@ -172,7 +171,7 @@
         const g16 = svg16.append("g")
             .attr("transform", "translate(" + 100 + "," + 100 + ")");
 
-        d3.csv("/Lab_2/Data/sample.csv")
+        d3.csv("/Data/sample.csv")
             .then(function (data) {
                 x16.domain(data.map(function (d) { return d.year; }));
 
@@ -286,7 +285,7 @@
             .attr("transform", "translate(" + 100 + "," + 100 + ")");
 
 
-        d3.csv("/Lab_2/Data/sample.csv")
+        d3.csv("/Data/sample.csv")
             .then(function (data) {
                 x17.domain(data.map(function (d) { return d.year; }));
 
@@ -342,9 +341,7 @@
                     .attr("height", function (d) { return height - y17(d.value); })
             });
 
-
         //mouseover event handler function 
-
         function onMouseOver17(d, i) {
             d3.select(this)
                 .attr('class', 'highlight17');
@@ -381,9 +378,6 @@
                 .attr("height", function (d) { return height17 - y17(i.value); })
             d3.selectAll('.val17').remove()
         }
-
-
-
     </script>
 </body>
 
