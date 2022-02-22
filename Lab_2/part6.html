@@ -1,5 +1,5 @@
 <!-- Code By: Lina Rietuma (H00361943) -->
-<!-- Finished On: 06/02/2022 -->
+<!-- Finished On: 22/02/2022 -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,14 +13,159 @@
 <body>
     <h1>Part 6: Pie Chart</h1>
 
+    <div class="ex24">
+        <h2>Exercise 24</h2>
+        <p>The interpolate() function allows to interpolate between the two provided arguments. <br>
+            The function recognizes the type of arguments provided and applies the relevant function.
+        </p>
+    </div>
+
+    <div class="ex25">
+        <h2>Exercise 25</h2>
+        <p>The interpolate() function recognizes the arguments as colors and applies the color interpolation function
+            interpolateRgb().</p>
+
+
+    </div>
+    <div class="ex26">
+        <h2>Exercise 26</h2>
+        <p>To interpolate date, Date objects are passed to the interpolate() function as arguments.</p>
+
+    </div>
+    <div class="ex27">
+        <h2>Exercise 27</h2>
+        <button onclick="update(false)" class="button">Apples</button>
+        <button onclick="update(true)" class="button">Pears</button>
+    </div>
 
     <script>
-        d3.select("body").style("font-family", "Montserrat"); // set font style 
+        d3.select("body").style("font-family", "Montserrat"); // set font style
 
-        let intr = d3.interpolate( [20, 40, 4], [1, 12, 10])
-console.log("Type of returned function is: ", typeof (intr) );
-console.log( intr(0.2) )
+        // Exercise 24 
+        let intr = d3.interpolate([20, 40, 4], [1, 12, 10])
+        d3.select(".ex24")
+            .append("p")
+            .append("text")
+            .text("Type of returned function is: " + typeof (intr))
+            .append("p")
+            .append("text")
+            .text("Output: " + intr(0.2))
+
+        // Exercise 25
+        let cc = d3.interpolate('red', 'green')
+        d3.select(".ex25")
+            .append("p")
+            .append("text")
+            .text("Output colour: " + cc(0.5))
+            .style("color", cc(0.5))
+
+        // Exercise 26
+        let date = d3.interpolate(new Date("2022-01-01"), new Date("2022-02-01"))
+        d3.select(".ex26")
+            .append("p")
+            .append("text")
+            .text("Output date: " + date(0.5))
+
+        // Exercise 27
+        const dataset = {
+            apples: [5345, 2879, 1997, 2437, 4045],
+            pears: [3056, 4506, 1346, 903, 1932],
+        };
+
+        const width = 460,
+            height = 300,
+            radius = Math.min(width, height) / 2;
+        // colour scheme
+        const color = d3.scaleOrdinal()
+            .range(d3.schemeSet3);
+
+        // create pie chart
+        const pie = d3.pie()
+            .sort(null);
+        // create individual arc elements
+        const arc = d3.arc()
+            .innerRadius(radius - 100)
+            .outerRadius(radius - 50);
+
+        // create svg element
+        const svg = d3.select("body")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+            let path = svg.selectAll("path")
+                .data(pie(dataset.apples))
+                .enter()
+                .append("path")
+                .attr("class", "pie")
+                .attr("fill", function (d, i) { return color(i); })
+                .attr("d", arc)
+                .transition()
+                .duration(1000)
+                .attrTween("d", function (d) {
+                    const i = d3.interpolate(d.endAngle, d.startAngle);
+
+                    return function (t) {
+                        d.startAngle = i(t);
+                        return arc(d);
+                    }
+                }); 
+
+        function update(pears) {
+
+            if (pears == true) {
+                dataOld = pie(dataset.apples);
+                dataNew = pie(dataset.pears);
+            } else {
+                dataOld = pie(dataset.pears);
+                dataNew =  pie(dataset.apples);
+            }
+
+            path = svg.selectAll("path")
+                .data(dataNew)
+                .enter()
+                .append("path")
+                .attr("class", "pie")
+                .attr("fill", function (d, i) { return color(i); })
+                .attr("d", arc)
+                .transition()
+                .duration(1000)
+                .attrTween("d", function (d, i) {
+                    const j = d3.interpolate(d.endAngle, dataOld[i].startAngle);
+
+                    return function (t) {
+                        dataOld[i].startAngle = j(t);
+                        return arc(d);
+                    }
+                });
+
+
+
+  
+        }
     </script>
+
+    <style>
+        /* style the button */
+        .button {
+            background-color: #1f7956;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 10px;
+        }
+
+        /* button on hover */
+        .button:hover {
+            background-color: #26946a;
+        }
+    </style>
 </body>
 
 </html>
