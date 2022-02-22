@@ -93,7 +93,7 @@
             .attr('height', height);
 
         let data29 = []
-        const csv29 = d3.csv("Data/radius.csv", d => {
+        const csv29 = d3.csv("Lab_2/Data/radius.csv", d => {
             data29.push({ radius: parseFloat(d.radius) });
         });
         csv29.then(() => {
@@ -253,7 +253,7 @@
             .attr('height', height);
 
         let nodes32 = []
-        const csv32 = d3.csv("Data/radius.csv", d => {
+        const csv32 = d3.csv("Lab_2/Data/radius.csv", d => {
             nodes32.push({ radius: parseFloat(d.radius) });
         });
 
