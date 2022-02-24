@@ -82,6 +82,7 @@
         // create pie chart
         const pie = d3.pie()
             .sort(null);
+
         // create individual arc elements
         const arc = d3.arc()
             .innerRadius(radius - 100)
@@ -95,56 +96,57 @@
             .append("g")
             .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-            let path = svg.selectAll("path")
+        // create the donut chart
+        let path = svg.selectAll("path")
                 .data(pie(dataset.apples))
                 .enter()
                 .append("path")
                 .attr("class", "pie")
                 .attr("fill", function (d, i) { return color(i); })
                 .attr("d", arc)
+                // save the current angle 
+                .each(function(d) { this._current = d; }) // reference: https://bl.ocks.org/mbostock/1346410 
                 .transition()
                 .duration(1000)
                 .attrTween("d", function (d) {
+                    
                     const i = d3.interpolate(d.endAngle, d.startAngle);
 
                     return function (t) {
+                        // update the starting angle
                         d.startAngle = i(t);
                         return arc(d);
                     }
-                }); 
+                })
+                
 
         function update(pears) {
-
+            // pears button clicked
             if (pears == true) {
-                dataOld = pie(dataset.apples);
-                dataNew = pie(dataset.pears);
+                dataNew = pie(dataset.pears); // compute new angles
+            // apples button clicked
             } else {
-                dataOld = pie(dataset.pears);
-                dataNew =  pie(dataset.apples);
+                dataNew =  pie(dataset.apples); // compute new angles
             }
 
-            path = svg.selectAll("path")
+            // update the chart
+            path = svg.selectAll(".pie")
                 .data(dataNew)
-                .enter()
-                .append("path")
-                .attr("class", "pie")
-                .attr("fill", function (d, i) { return color(i); })
-                .attr("d", arc)
                 .transition()
                 .duration(1000)
                 .attrTween("d", function (d, i) {
-                    const j = d3.interpolate(d.endAngle, dataOld[i].startAngle);
+                    
+                    // Code reference: https://bl.ocks.org/mbostock/1346410
+                    const j = d3.interpolate(this._current, d);
+                    // update the current angle
+                    this._current = j(0)   
 
                     return function (t) {
-                        dataOld[i].startAngle = j(t);
-                        return arc(d);
+                        return arc(j(t));
                     }
                 });
-
-
-
-  
         }
+
     </script>
 
     <style>
