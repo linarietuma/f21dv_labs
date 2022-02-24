@@ -15,6 +15,7 @@
     <div class="wrapper">
         <div class="ex18">
             <h2>Exercise 18</h2>
+            <p>Bar chart with 3 datasets.</p>
             <button onclick="update18(data1)" class="button">Variable 1</button>
             <button onclick="update18(data2)" class="button">Variable 2</button>
             <button onclick="update18(data3)" class="button">Variable 3</button>
@@ -22,24 +23,28 @@
         </div>
         <div class="ex19">
             <h2>Exercise 19</h2>
+            <p>Bar chart with 3 datasets in different colours.</p>
             <button onclick="update19(data1, 'red')" class="button">Variable 1</button>
             <button onclick="update19(data2, 'purple')" class="button">Variable 2</button>
             <button onclick="update19(data3, 'blue')" class="button">Variable 3</button>
         </div>
         <div class="ex20">
             <h2>Exercise 20</h2>
+            <p>Bar chart with popup text label on hover.</p>
             <button onclick="update20(data1, 'turquoise', true)" class="button">Variable 1</button>
             <button onclick="update20(data2, 'DeepSkyBlue', true)" class="button">Variable 2</button>
             <button onclick="update20(data3, 'DodgerBlue', true)" class="button">Variable 3</button>
         </div>
         <div class="ex21">
             <h2>Exercise 21</h2>
+            <p>Bar chart with additional axis on the right and at the top.</p>
             <button onclick="update21(data1, 'SteelBlue', true)" class="button">Variable 1</button>
             <button onclick="update21(data2, 'SkyBlue', true)" class="button">Variable 2</button>
             <button onclick="update21(data3, 'navy', true)" class="button">Variable 3</button>
         </div>
         <div class="ex22">
             <h2>Exercise 22</h2>
+            <p>Datasets with different group count.</p>
             <button onclick="update22(data3, 'MidnightBlue', true)" class="button">Variable 1</button>
             <button onclick="update22(data4, 'CadetBlue', true)" class="button">Variable 2</button>
             <button onclick="update22(data5, 'SlateBlue', true)" class="button">Variable 3</button>
@@ -47,6 +52,7 @@
         </div>
         <div class="ex23">
             <h2>Exercise 23</h2>
+            <p>Chart with line and bar options.</p>
             <button onclick="typeOfChart(data3, 'CornflowerBlue')" class="button">Variable 1</button>
             <button onclick="typeOfChart(data4, 'BlueViolet')" class="button">Variable 2</button>
             <button onclick="typeOfChart(localData,localColor,true)" class="chartButton button">Line Chart</button>
@@ -147,11 +153,11 @@
                             svg.append("text")
                                 .attr('class', 'val')
                                 .attr('x', function () {
-                                    console.log(x(i.group))
+                              
                                     return x(i.group) + 40;
                                 })
                                 .attr('y', function () {
-                                    console.log(y(i.value))
+                                   
                                     return y(i.value) - 11;
                                 })
                                 .text(i.value)
