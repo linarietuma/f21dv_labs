@@ -1,5 +1,5 @@
 <!-- Code By: Lina Rietuma (H00361943) -->
-<!-- Finished On: 06/02/2022 -->
+<!-- Finished On: 25/02/2022 -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +38,7 @@
 
         // Exercise 28 
 
-        var width = 500, height = 500;
+        const width = 500, height = 500;
         // setup svg 
         d3.select('.ex28')
             .append('svg')
@@ -47,13 +47,13 @@
             .attr('height', height);
 
         // generate some random data
-        var numNodes = 100;
-        var nodes28 = d3.range(numNodes)
+        const numNodes = 100;
+        const nodes28 = d3.range(numNodes)
             .map(function (d) {
                 return { radius: Math.random() * 25 }
             })
 
-        var simulation = d3.forceSimulation(nodes28)
+        const simulation = d3.forceSimulation(nodes28)
             .force('charge', d3.forceManyBody().strength(5))
             .force('center', d3.forceCenter(width / 2, height / 2))
             .force('collision', d3.forceCollide().radius(function (d) {
@@ -66,7 +66,7 @@
             // generate color scheme
             const color = d3.scaleSequential().domain([0, nodes28.length]).interpolator(d3.interpolateRainbow);
 
-            var u = d3.select('.svg28')
+            const u = d3.select('.svg28')
                 .selectAll('circle')
                 .data(nodes28)
                 .join('circle')
@@ -99,7 +99,7 @@
         });
         csv29.then(() => {
 
-            var simulation29 = d3.forceSimulation(data29)
+            const simulation29 = d3.forceSimulation(data29)
                 .force('charge', d3.forceManyBody().strength(10))
                 .force('center', d3.forceCenter(width / 2, height / 2))
                 .force('collision', d3.forceCollide().radius(function (d) {
@@ -111,7 +111,7 @@
 
                 const color = d3.scaleSequential().domain([0, data29.length]).interpolator(d3.interpolateCubehelixDefault);
 
-                var u = d3.select('.svg29')
+                const u = d3.select('.svg29')
                     .selectAll('circle')
                     .data(data29)
                     .join('circle')
@@ -146,7 +146,7 @@
             })
 
 
-        var simulation30 = d3.forceSimulation(nodes30)
+        const simulation30 = d3.forceSimulation(nodes30)
             .force('charge', d3.forceManyBody().strength(5))
             .force('center', d3.forceCenter(width / 2, height / 2))
             .force('collision', d3.forceCollide().radius(function (d) {
@@ -159,7 +159,7 @@
             // generate color scheme
             const color = d3.scaleSequential().domain([0, nodes30.length]).interpolator(d3.interpolateViridis);
 
-            var u = d3.select('.svg30')
+            const u = d3.select('.svg30')
                 .selectAll('circle')
                 .data(nodes28)
                 .join('circle')
@@ -181,8 +181,9 @@
                 d3.select(".svg30")
                     .append("text")
                     .text("Bubble's radius: " + i.radius.toFixed(2))
-                    .attr("x", 20)
-                    .attr("y", 20)
+                    .style("font-size", 20)
+                    .attr("x", 40)
+                    .attr("y", 40)
             })
                 .on("mouseout", function () {
                     d3.select("text").remove();
@@ -207,7 +208,7 @@
             })
 
 
-        var simulation31 = d3.forceSimulation(nodes31)
+        const simulation31 = d3.forceSimulation(nodes31)
             .force('charge', d3.forceManyBody().strength(5))
             .force('center', d3.forceCenter(width / 2, height / 2))
             .force('collision', d3.forceCollide().radius(function (d) {
@@ -220,7 +221,7 @@
             // generate color scheme
             const color = d3.scaleSequential().domain([0, nodes31.length]).interpolator(d3.interpolateRainbow);
 
-            var u = d3.select('.svg31')
+            const u = d3.select('.svg31')
                 .selectAll('circle')
                 .data(nodes31)
                 .join('circle')
@@ -293,7 +294,7 @@
                         d.fy = null;
                     }));
 
-            var simulation = d3.forceSimulation(nodes32)
+            const simulation = d3.forceSimulation(nodes32)
                 .force('charge', d3.forceManyBody().strength(30)) // strength of attraction (positive)/ repel (negative)
                 .force('center', d3.forceCenter(width / 2, height / 2))
                 .force('x', d3.forceX())
@@ -304,7 +305,7 @@
 
 
             function ticked32() {
-                var u = d3.select('.svg32')
+                const u = d3.select('.svg32')
                     .selectAll('circle')
                     .data(nodes32)
                     .attr('cx', function (d) {
@@ -314,7 +315,6 @@
                         return d.y
                     })
             }
-
         });
     </script>
 </body>

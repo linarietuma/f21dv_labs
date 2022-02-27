@@ -12,12 +12,12 @@
 
 <body>
     <h1>Part 4: Animated Chart</h1>
-    
+
     <div class="ex15">
         <h2>Exercise 15</h2>
 
         <svg width="600" height="500" id="ex15"></svg>
-        
+
     </div>
     <div class="ex16">
         <h2>Exercise 16</h2>
@@ -32,11 +32,15 @@
 
 
     <style>
-        .bar, .bar16, .bar17 {
+        .bar,
+        .bar16,
+        .bar17 {
             fill: steelblue;
         }
 
-        .highlight, .highlight16, .highlight17 {
+        .highlight,
+        .highlight16,
+        .highlight17 {
             fill: orange !important;
         }
     </style>
@@ -320,7 +324,7 @@
 
                 // generate color palette 
                 const yExtent = d3.extent(data, d => { return d.value });
-                
+
                 const color = d3.scaleLinear().domain([yExtent[0], yExtent[1]]).range(["green", "red"]);
 
                 g17.selectAll(".bar17")
@@ -328,7 +332,7 @@
                     .enter()
                     .append("rect")
                     .attr("class", "bar17")
-                    .style("fill", d => {return color(d.value)})
+                    .style("fill", d => { return color(d.value) })
                     .on("mouseover", onMouseOver17) //Add listener for the mouseover event
 
                     .on("mouseout", onMouseOut17)
@@ -336,7 +340,7 @@
                     .attr("x", function (d) { return x17(d.year); })
                     .attr("y", function (d) { return y17(d.value); })
                     .attr("width", x17.bandwidth())
-                    
+
                     .transition()
                     .ease(d3.easeLinear)
                     .duration(400)
