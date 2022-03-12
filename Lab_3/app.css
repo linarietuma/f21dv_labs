@@ -12,8 +12,6 @@ header {
     margin-bottom: 1em;
 }
 
-
-
 .grid {
    
     display: grid;
@@ -37,7 +35,9 @@ header {
 
 
 .line-countries, #map, .line-vaccines  {
-    background-color:  rgba(118, 214, 252, 0.11)   
+    background-color: transparent;
+    border: none;
+    box-shadow: 0 .7rem 1rem rgba(118, 214, 252, 0.2);   
 }
 
 .bubble {
@@ -96,4 +96,9 @@ header {
 
 #map .centroid circle {
     fill: red
+}
+
+#map {
+    display: flex;
+    flex-direction: column;
 }
