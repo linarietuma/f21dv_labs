@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+
+<body>
+
+    <script type="text/javascript" src="https://d3js.org/d3.v7.min.js"></script>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+
+    <style>
+        body {
+            height: 700px;
+            margin: 0;
+        }
+
+        #map {
+            height: 100%;
+        }
+
+        .leaflet-container .leaflet-tile-pane img {
+            filter: grayscale(1);
+        }
+    </style>
+
+    <div id="map"></div>
+
+    <script>
+        var data;
+        function addMarkers() {
+            data.forEach(function (d) {
+                var marker = L.circleMarker([+d.latitude, +d.longitude]);
+                marker.addTo(map);
+            })
+        }
+
+        // Initialise map
+        var map = L.map('map');
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        map.setView([55, -2], 6);
+
+        // Get CSV and plot points
+        d3.csv('https://s3-us-west-2.amazonaws.com/s.cdpn.io/2814973/charge-points-slim.csv')
+            .then(function (csv) {
+                data = csv;
+                addMarkers();
+            });
+    </script>
+</body>

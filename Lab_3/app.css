@@ -1,0 +1,99 @@
+
+
+body {
+    font-family: Montserrat;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+
+
+.grid {
+   
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-template-rows:  2fr 3fr;
+    height: 700px;
+    gap: 10px 10px; /* gap between grid rows/ columns */
+
+}
+
+.grid * {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1px;
+    margin-right: 1px;
+    border-radius: 5px;
+  }
+
+
+
+
+.line-countries, #map, .line-vaccines  {
+    background-color:  rgba(118, 214, 252, 0.11)   
+}
+
+.bubble {
+    background-color: rgb(255, 255, 255);
+
+}
+
+/* change layout on smaller screens */
+@media (max-width: 800px) {
+    .grid {
+        display: flex;
+        flex-direction: column;
+    }
+    #map {
+        height: 400px
+    }
+}
+
+/* increase dashboard height on larger screens */
+@media (min-height: 800px) {
+    .grid {
+        height: 900px;
+    }
+}
+
+.title {
+    margin-right: 30px;
+}
+
+.btn {
+    margin: 1px 3px;
+    padding: 1px 6px;
+    height: 55px;
+    font-family: inherit;
+    font-size: 25px;
+    border-radius: 1em;
+
+    background-color: transparent;
+    border: none;
+    box-shadow: 0 .7rem 1rem rgba(118, 214, 252, 0.2);
+}
+
+.btn:hover {
+    cursor: pointer;
+    color: aliceblue;
+    background-color: rgba(118, 214, 252);
+    box-shadow: none;
+    transition: background-color 400ms;
+}
+
+#map .map path {
+    fill: rgb(214, 214, 214, 0.7);
+    stroke: #fff;
+}
+
+
+#map .centroid circle {
+    fill: red
+}

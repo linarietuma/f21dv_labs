@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+
+<body>
+    <script type="text/javascript" src="https://d3js.org/d3.v7.min.js"></script>
+
+    <style>
+        #content .map path {
+            fill: #aaa;
+            stroke: #fff;
+        }
+
+        #content .bounding-box rect {
+            fill: none;
+            stroke: #333;
+            stroke-dasharray: 2, 1;
+        }
+
+        #content .centroid circle {
+            fill: red
+        }
+    </style>
+
+    <div id="content">
+        <div class="info">Hover over to get details</div>
+        <svg width="620px" height="600px">
+            <g class="map"></g>
+            <g class="bounding-box">
+                <rect></rect>
+            </g>
+            <g class="centroid">
+                <circle r="4"></circle>
+            </g>
+        </svg>
+    </div>
+
+    <script>
+        let projection = d3.geoMercator().scale(80).translate([300, 280]).center([0, 5]);
+
+        let geoGenerator = d3.geoPath().projection(projection);
+
+        function handleMouseover(e, d) {
+            let pixelArea = geoGenerator.area(d);
+            let bounds = geoGenerator.bounds(d);
+            let centroid = geoGenerator.centroid(d);
+            let measure = geoGenerator.measure(d);
+
+            d3.select('#content .info').text(d.properties.name + ' (path.area = ' + pixelArea.toFixed(1) + ' path.measure = ' + measure.toFixed(1) + ')');
+
+
+            d3.select('#content .centroid')
+                .style('display', 'inline')
+                .attr('transform', 'translate(' + centroid + ')');
+        }
+
+        function update(geojson) {
+            let u = d3.select('#content g.map').selectAll('path').data(geojson.features);
+            u.enter().append('path').attr('d', geoGenerator).on('mouseover', handleMouseover);
+        }
+
+        var zoom = d3.zoom()
+            .scaleExtent([1, 8])
+            .on('zoom', function () {
+                g.selectAll('path')
+                    .attr('transform', d3.event.transform);
+            });
+
+        svg.call(zoom);
+
+        // REQUEST DATA
+        // Data source: https://gist.github.com/markmarkoh/2969317
+        d3.json('data/map.json')
+            .then(function (json) {
+                update(json)
+            });
+    </script>
