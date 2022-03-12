@@ -10,14 +10,14 @@ function mapInit(map, iso, covid_data) {
     let max_cases = 0;
     // find the max total cases per million among the countries
     Object.keys(covid_data).forEach(key => {
-        let total_cases = covid_data[key].data[covid_data[key].data.length -1].total_cases_per_million
+        let total_cases = covid_data[key].data[covid_data[key].data.length - 1].total_cases_per_million
         if (total_cases > max_cases) {
             max_cases = total_cases;
         }
     });
 
     const domain = [max_cases, 0]
-   
+
     // create a color palette 
     const colorScheme = d3.scaleSequentialSqrt().domain(domain).interpolator(d3.interpolateViridis)
 
@@ -146,12 +146,12 @@ function mapInit(map, iso, covid_data) {
         .attr("y", ySize * 0.97)
         .attr("font-size", "10px");
 
-     // Add a label 
-     legend.append("text")
-     .text("Total Cases per Million")
-     .attr("x", 15)
-     .attr("y", ySize * 0.8)
-     .attr("font-size", "12px");
+    // Add a label 
+    legend.append("text")
+        .text("Total Cases per Million")
+        .attr("x", 15)
+        .attr("y", ySize * 0.8)
+        .attr("font-size", "12px");
 
     const barWidth = 1.5;
     const barHeight = 20;
@@ -160,23 +160,23 @@ function mapInit(map, iso, covid_data) {
         .data(points)
         .enter()
         .append("rect")
-        .attr('y', ySize*0.82)
-        .attr('x', (d, i) => 15+i * barWidth)
+        .attr('y', ySize * 0.82)
+        .attr('x', (d, i) => 15 + i * barWidth)
         .attr('width', barWidth)
         .attr('height', barHeight)
         .attr("fill", colorScheme)
-    
+
     legend.selectAll('.barLables')
         .data(points)
         .enter()
         .append('text')
-        .text((d, i)=> {
-            if (i%25 == 0) {
-                return (d/1000) +'k'
+        .text((d, i) => {
+            if (i % 25 == 0) {
+                return (d / 1000) + 'k'
             }
         })
-        .attr('y', ySize*0.91)
-        .attr('x', (d, i) => 15+i * barWidth)
+        .attr('y', ySize * 0.91)
+        .attr('x', (d, i) => 15 + i * barWidth)
         .attr("font-size", "10px");
 
 
@@ -250,7 +250,7 @@ function findMax(countries) {
 
     for (const c of countries) {
         // find the min/ max value for the given dataset
-        const extent = d3.extent(c.data, d => { return d.new_cases_per_million; });
+        const extent = d3.extent(c.data, d => { return d.new_cases_smoothed_per_million; });
 
         // if max of the current dataset larger than the previous max value, save as the new max
         if (extent[1] > max) {
@@ -265,7 +265,7 @@ function findMax(countries) {
 }
 
 
-const chartInit = (htmlEl, data) => {
+const lineChartInit = (htmlEl, data) => {
 
     let el = document.querySelector(htmlEl);
     let xSize = el.clientWidth;
@@ -298,10 +298,13 @@ const chartInit = (htmlEl, data) => {
     const xScale = d3.scaleTime().domain([parseTime(minX), parseTime(maxX)]).range([0, (xSize - 1.5 * margin)]);
     const yScale = d3.scaleLinear().domain([maxY, minY]).range([0, (ySize - 1.5 * margin)]);
 
+    const yAxisGenerator = d3.axisLeft(yScale);
+    yAxisGenerator.tickFormat(d3.format(".2s"));
+
     // add y axis 
     svg.append("g")
         .attr("transform", "translate(0," + (-0.5 * margin) + ")")
-        .call(d3.axisLeft(yScale));
+        .call(yAxisGenerator);
 
     // add x axis  
     svg.append("g")
@@ -313,7 +316,7 @@ const chartInit = (htmlEl, data) => {
 
     // add title
     svg.append("text")
-        .text("New cases per million")
+        .text("New cases per million (7-day Average)")
         .attr("x", xSize / 2 - 2.5 * margin)
         .attr("y", -margin / 2)
 
@@ -323,7 +326,7 @@ const chartInit = (htmlEl, data) => {
         .text(d => d.location)
         .attr("fill", "black")
         .attr("x", xSize - 1.5 * margin)
-        .attr("y", d => yScale(d[0].new_cases_per_million));
+        .attr("y", d => yScale(d[0].new_cases_smoothed_per_million));
 
     // ------------- Tooltip ----------------
     const onHover = svg.append("g")
@@ -409,9 +412,9 @@ const chartInit = (htmlEl, data) => {
             .attr("opacity", 0.3)
             .attr("stroke-width", 1.5)
             .attr("d", d3.line()
-                .defined((d) => { return d.new_cases_per_million !== undefined; }) // skip undefined values
+                .defined((d) => { return d.new_cases_smoothed_per_million !== undefined; }) // skip undefined values
                 .x(d => { return xScale(parseTime(d.date)); })
-                .y(d => { return yScale(d.new_cases_per_million); }))
+                .y(d => { return yScale(d.new_cases_smoothed_per_million); }))
             .on("mouseover", mouseover)
             .on("mouseout", mouseout);
     }
@@ -469,11 +472,324 @@ const chartInit = (htmlEl, data) => {
         for (const c of data) {
             try {
                 svg.select("." + c.location.substring(0, 3))
-                    .text(c.data[i].new_cases_per_million)
+                    .text(c.data[i].new_cases_smoothed_per_million)
             } catch (err) {
 
             }
         }
+    }
+}
+
+
+const barChartInit = (htmlEl, data) => {
+    // get the dimensions of the user screen
+    let el = document.querySelector(htmlEl);
+    let xSize = el.clientWidth;
+    let ySize = el.clientHeight;
+
+    const margin = 50;
+
+    // Add the svg container
+    const svg = d3.select(htmlEl)
+        .append("svg")
+        .attr('width', xSize)
+        .attr('height', ySize)
+        .append("g")
+        .attr("transform", "translate(" + 1.5*margin + "," + margin + ")");
+
+
+    // scale of x axis the same for all data arrays 
+    const maxX = data.data[(data.data.length - 1)].date // latest date appears last in the array 
+    let minX = 0;
+    let index_minX = 0;
+
+    for (const el of data.data) {
+        let vacc = el.people_vaccinated
+        if (vacc != undefined) {
+            minX = el.date;
+            break;
+        }
+        index_minX++;
+    }
+
+    for (const val of data.data) {
+        let vacc = val.people_vaccinated
+        if (vacc != undefined) {
+            minX = val.date;
+            break;
+        }
+    }
+
+    // find the boundary values for x/y axis
+    const minY = 0;
+    let maxY = 0;
+    for (const val of data.data) {
+        let vacc = val.people_vaccinated
+        if (vacc > maxY) {
+            maxY = vacc;
+        }
+    }
+
+    // min/max values for the second Y axis
+    const extentY2 = findMax([data])
+    const minY2 = extentY2[0]
+    const maxY2 = extentY2[1]
+
+    // Reference: http://using-d3js.com/04_04_working_with_dates.html
+    const parseTime = d3.timeParse("%Y-%m-%d");
+
+    const xScale = d3.scaleTime().domain([parseTime(minX), parseTime(maxX)]).range([0, (xSize - 3 * margin)]);
+    const yScale = d3.scaleLinear().domain([maxY, minY]).range([0, (ySize - 1.5 * margin)]);
+    // second y axis
+    const yScale2 = d3.scaleLinear().domain([maxY2, minY2]).range([0, (ySize - 1.5 * margin)]);
+
+
+    const yAxisGenerator = d3.axisLeft(yScale);
+    yAxisGenerator.tickFormat(d3.format(".2s"));
+    // add y axis 
+    svg.append("g")
+        .attr("transform", "translate(0," + (-0.5 * margin) + ")")
+        .call(yAxisGenerator);
+
+    const yAxisGenerator2 = d3.axisRight(yScale2);
+    yAxisGenerator2.tickFormat(d3.format(".2s"));
+    // add y axis 
+    svg.append("g")
+        .attr("transform", "translate(" + (xSize-3*margin) + "," + (-0.5 * margin) + ")")
+        .call(yAxisGenerator2);
+
+    const xAxisGenerator = d3.axisBottom(xScale)
+    xAxisGenerator.ticks(6)
+
+    // add x axis  
+    svg.append("g")
+        .attr("transform", "translate(0," + (ySize - 2 * margin) + ")")
+        .call(xAxisGenerator)
+
+    // set font of the ticks
+    svg.selectAll(".tick text").attr("font-family", "Montserrat");
+
+    // add title
+    svg.append("text")
+        .text("Vaccination vs total cases per million")
+        .attr("x", xSize / 8 )
+        .attr("y", -margin / 2)
+
+
+
+    // ----------------- Graph Elements ---------------
+    svg.append("rect")
+        .attr("width", xSize - 3 * margin)
+        .attr("height", ySize - margin)
+        .attr("opacity", 0)
+        .on("mouseout", mousestop)
+        .on("mousemove", mousemove);
+
+    const vacc_data = ['people_vaccinated', 'people_fully_vaccinated', 'total_boosters']
+    const vacc_colours = ['#1E2F97', '#1AA7EC', '#4ADEDE', '#4ADEDE']
+
+    vacc_data.forEach((el, i) => {
+
+        // define the area
+        // add the area
+        svg.append("path")
+            .datum(data.data)
+            .attr("class", "area")
+            .attr("fill", vacc_colours[i])
+            .attr("opacity", 0.7)
+            .attr("d", d3.area()
+                .defined((d) => { return d[el] !== undefined; })
+                .x(d => xScale(parseTime(d.date)))
+                .y0(ySize - 2 * margin)
+                .y1(d => yScale(d[el]) - 0.5 * margin))
+            .on("mousemove", mousemove);
+
+        // add data line
+        svg.append("path")
+            .datum(data.data)
+            .attr("fill", "none")
+            .attr("transform", "translate(0," + (-0.5 * margin) + ")")
+            .attr("stroke", vacc_colours[i])
+            .attr("stroke-width", 2)
+            .attr("d", d3.line()
+                .defined((d) => { return d[el] !== undefined; }) // skip undefined values
+                .x(d => { return xScale(parseTime(d.date)); })
+                .y(d => { return yScale(d[el]); }))
+            .on("mouseover", mouseover)
+            .on("mouseout", mouseout)
+
+    })
+
+            // add data line
+            svg.append("path")
+            .datum(data.data.slice(index_minX))
+            .attr("fill", "none")
+            .attr("transform", "translate(0," + (-0.5 * margin) + ")")
+            .attr("stroke", "red")
+            .attr("stroke-width", 3)
+            .attr("d", d3.line()
+                .defined((d) => { return d.date !== undefined; }) // skip undefined values
+                .x(d => { console.log(d.date);return xScale(parseTime(d.date)); })
+                .y(d => { return yScale2(d.new_cases_smoothed_per_million); }))
+           
+
+
+
+
+    // ------------- Tooltip ----------------
+
+    // Add tooltip container
+    const onHover = svg.append("g")
+        .attr("class", "hover")
+        .style("display", "none");
+
+    // Add tooltip line 
+    const tooltipLine = svg.append("line")
+        .attr("class", "tooltip-line")
+        .attr('stroke', 'gray')
+        .style("stroke-dasharray", ("3, 3"))
+        .attr('x1', 0)
+        .attr('x2', 0)
+        .attr('y1', -margin / 2)
+        .attr('y2', ySize - 2 * margin)
+        .style("display", "none");
+
+    // Add tooltip background
+    onHover.append("rect")
+        .attr("class", "tooltip")
+        .attr("fill", "white")
+        .attr("opacity", 0.8)
+        .attr("width", 220)
+        .attr("height", 115)
+        .attr("x", 10)
+        .attr("y", -22)
+        .attr("rx", 4)
+        .attr("ry", 4);
+
+    // Add tooltip text/ text placeholders
+    onHover.append("text")
+        .attr("x", 18)
+        .attr("y", -2)
+        .attr("font-size", "12px")
+        .attr("font-weight", "bold")
+        .text(data.location)
+        .attr("opacity", 1)
+
+    onHover.append("text")
+        .attr("x", 18)
+        .attr("y", 18)
+        .text("Date: ")
+        .attr("font-size", "12px");
+    onHover.append("text")
+        .attr("class", "tooltip-date")
+        .attr("x", 140)
+        .attr("y", 18)
+        .attr("font-size", "12px");
+
+    onHover.append("text")
+        .attr("x", 18)
+        .attr("y", 38)
+        .text("People Vaccinated: ")
+        .attr("font-size", "12px")
+        .attr("fill", vacc_colours[0]);
+
+    onHover.append("text")
+        .attr("class", vacc_data[0])
+        .attr("x", 140)
+        .attr("font-size", "12px")
+        .attr("y", 38);
+
+    onHover.append("text")
+        .attr("x", 18)
+        .attr("y", 58)
+        .text("Fully Vaccinated: ")
+        .attr("font-size", "12px")
+        .attr("fill", vacc_colours[1]);
+
+    onHover.append("text")
+        .attr("class", vacc_data[1])
+        .attr("x", 140)
+        .attr("font-size", "12px")
+        .attr("y", 58);
+
+    onHover.append("text")
+        .attr("x", 18)
+        .attr("y", 78)
+        .text("Total Boosters: ")
+        .attr("font-size", "12px")
+        .attr("fill", vacc_colours[2]);
+
+    onHover.append("text")
+        .attr("class", vacc_data[2])
+        .attr("x", 140)
+        .attr("font-size", "12px")
+        .attr("y", 78);
+
+
+    // -------------- Event Handler Functions -------------
+    // mouseover function for the line
+    function mouseover() {
+        d3.select(this)
+            .attr("opacity", 1)
+            .attr("stroke-width", 2)
+    }
+
+    // mouseout function for the line
+    function mouseout() {
+        d3.select(this)
+            .attr("opacity", 0.3)
+            .attr("stroke-width", 1.5)
+    }
+
+    // mouseout function for the graph area
+    function mousestop() {
+        onHover.style("display", "none");
+        tooltipLine.style("display", "none");
+    }
+
+    // Reference: https://bl.ocks.org/Qizly/8f6ba236b79d9bb03a80
+    // mousemove function for the graph area
+    function mousemove(event) {
+        // make tooltip visible
+        onHover.style("display", null);
+        tooltipLine.style("display", null);
+
+        // get the date at the location of the pointer
+        const x0 = xScale.invert(d3.pointer(event)[0])
+
+        // find the index of the pointer date in the data array
+        const bisectDate = d3.bisector((d) => { return parseTime(d.date); }).left;
+        let i = bisectDate(data.data, x0, 1);
+
+        let d0 = data.data[i - 1];
+        let d1 = data.data[i];
+        let d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+
+        // reposition the tooltip to the left if country is close to the tight edge of the container 
+        if (xScale(parseTime(d.date)) > 0.35 * xSize) {
+            onHover.attr("transform", "translate(" + (xScale(parseTime(d.date)) - 240) + ",0)");
+        } else {
+            onHover.attr("transform", "translate(" + xScale(parseTime(d.date)) + "," + 0 + ")");
+        }
+        // position the tooltip line to the location of the pointer 
+        tooltipLine
+            .attr('x1', xScale(parseTime(d.date)))
+            .attr('x2', xScale(parseTime(d.date)))
+
+        // set tooltip date 
+        svg.select(".tooltip-date").text(d.date)
+
+        vacc_data.forEach(d => {
+            try {
+                svg.select("." + d)
+                    .text(data.data[i][d])
+            } catch (err) {
+
+            }
+
+        })
+
+
     }
 }
 
@@ -494,10 +810,7 @@ let fulfilled = Promise.all(promises).then((data) => {
 
     const root = d3.hierarchy(data[1]) // *d3.hierarchy function which gets/organised data*
     mapInit(data[0], data[2], root.data)
-    chartInit(".line-countries", [root.data.OWID_ASI, root.data.OWID_AFR, root.data.OWID_EUR, root.data.OWID_NAM, root.data.OWID_SAM, root.data.OWID_OCE])
-    chartInit(".line-vaccines", [root.data.OWID_WRL])
-
-
-
+    lineChartInit(".line-countries", [root.data.OWID_ASI, root.data.OWID_AFR, root.data.OWID_EUR, root.data.OWID_NAM, root.data.OWID_SAM, root.data.OWID_OCE])
+    barChartInit(".line-vaccines", root.data.OWID_WRL)
 
 })
