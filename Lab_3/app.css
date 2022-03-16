@@ -113,3 +113,25 @@ header {
     display: flex;
     flex-direction: column;
 }
+
+/* hover event of the dots in the scatter plot */
+.bubble-dots:hover {
+    /* shorthand syntax for animations */
+    animation: 0.3s q alternate pulsar;
+    /* transforms the marker to the center of the svg container */
+    transform-origin: 5px 5px;
+    transform: scale(1.5);
+    stroke: black;
+    transition: 300 stroke;
+}
+
+.selected-dot {
+    stroke: black !important; 
+}
+
+.selected-map {
+    fill: red !important;
+}
+
+
+
