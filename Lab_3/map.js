@@ -36,6 +36,7 @@ function updateBtn(cases) {
         d3.select("#map").select('text').remove();
         d3.select(".line-countries").select('svg').remove();
         d3.select(".line-vaccines").select('svg').remove();
+        d3.select(".bubble").select('text').remove();
         d3.select(".bubble").select("svg").remove();
 
         // update the charts/ map 
@@ -121,7 +122,8 @@ function mapInit(map, iso, covid_data) {
         })
         .attr("opacity", 0.8)
         .on('mouseover', mapMouseover)
-        .on("mouseout", mapMouseout);
+        .on("mouseout", mapMouseout)
+        .on("click", mapClick);
 
     // Add tooltip container
     const onHover = svg.append("g")
@@ -283,6 +285,20 @@ function mapInit(map, iso, covid_data) {
             .duration(200)
             .style("opacity", 0.8)
             .style("stroke", "none")
+    }
+    // add an interaction with the scatter plot on click 
+    function mapClick() {
+        // get the class (iso code) of the clicked country
+        const cl = d3.select(this).attr("class")
+        // select the clicked country in the scatter plot using the class name
+        const dot_colour = d3.select(".bubble").select(`.${cl}`).select(".bubble-dots").style("fill");
+        // if the data point already selected, unselect it
+        if (dot_colour == "red") {
+            d3.select(".bubble").select(`.${cl}`).select(".bubble-dots").style("fill", "#69b3a2").style("stroke", null).style("transform", "scale(1)");
+        // if the data point not selected, select it
+        } else {
+            d3.select(".bubble").select(`.${cl}`).raise().select(".bubble-dots").style("fill", "red").style("stroke", "black").style("transform", "scale(1.5)").style("transform-origin", "5px 5px");
+        }
     }
 }
 
@@ -609,6 +625,27 @@ const barChartInit = (htmlEl, data) => {
         .duration(500)
         .call(xAxisGenerator)
 
+
+    // text label for the y axis
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - 1.2 * margin)
+        .attr("x", 0 - (ySize / 3))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text(`Total Vaccinations`)
+        .attr("font-size", "12px");
+
+    // text label for the second y axis
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", xSize - 2.2 * margin)
+        .attr("x", 0 - (ySize / 3))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text(`New ${data_value} per Million`)
+        .attr("font-size", "12px");
+
     // set font of the ticks
     svg.selectAll(".tick text").attr("font-family", "Montserrat");
 
@@ -853,8 +890,6 @@ function scatterInit(htmlEl, data) {
     let xSize = el.clientWidth;
     let ySize = el.clientHeight;
 
-
-
     // Add map title 
     d3.select(htmlEl).append("text")
         .style("margin-top", "30px")
@@ -867,6 +902,12 @@ function scatterInit(htmlEl, data) {
         .attr('height', ySize)
         .append("g")
         .attr("transform", "translate(" + 1.5 * margin + "," + margin + ")");
+
+    // Add brushing
+    svg.append("g").call(d3.brush()
+        .extent([[0, 0], [xSize, ySize - 2 * margin]])
+        .on("start brush", brushed)
+    )
 
     const covid_data = [];
     let max_gdp = 0;
@@ -882,9 +923,10 @@ function scatterInit(htmlEl, data) {
             // get the latests figure of the cases for each country 
             let total_cases = data.data[key].data[index - 1][data_key_map]
             let gdp_per_capita = data.data[key].gdp_per_capita
+            let country = data.data[key].location;
 
             if (total_cases != undefined && gdp_per_capita != undefined) {
-                covid_data.push({ country: key, gdp_per_capita: gdp_per_capita, total_cases: total_cases })
+                covid_data.push({ iso: key, country: country, gdp_per_capita: gdp_per_capita, total_cases: total_cases })
 
                 if (total_cases > max_cases) {
                     max_cases = total_cases;
@@ -922,21 +964,160 @@ function scatterInit(htmlEl, data) {
         .duration(500)
         .call(xAxisGenerator)
 
+    // text label for the x axis
+    svg.append("text")
+        .attr("transform",
+            "translate(" + (xSize / 2.5) + " ," +
+            (ySize - 1.25 * margin) + ")")
+        .style("text-anchor", "middle")
+        .text("GDP per Capita")
+        .attr("font-size", "12px");
+
+    // text label for the y axis
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - 1.1 * margin)
+        .attr("x", 0 - (ySize / 3))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text(`Total ${data_value} per Million`)
+        .attr("font-size", "12px");
+
     // set font of the ticks
     svg.selectAll(".tick text").attr("font-family", "Montserrat");
 
+    const containerSize = 12;
     // Add dots
-    svg.append('g')
-        .selectAll("dot")
+    const dots_container = svg
+        .selectAll("bubble-dots")
         .data(covid_data)
         .enter()
-        .append("circle")
+        .append("svg")
+        .attr("height", containerSize)
+        .attr("width", containerSize)
+        // center the SVG container on the line
+        .attr("y", d => { return scaleY(d.total_cases) - containerSize / 2 })
+        .attr("x", d => { return scaleX(d.gdp_per_capita) - containerSize / 2 })
+      
+        .attr("class", d => d.iso)
+        .classed("bubbles-container", true);
+ 
+
+    const dots = dots_container.append("circle")
         .style("fill", "#69b3a2")
-        .attr("cx", d => scaleX(d.gdp_per_capita))
-        .attr("cy", d => scaleY(d.total_cases))
-        .transition()
-        .duration(500)
-        .attr("r", 2.5)
+        .attr("cx", containerSize / 2)
+        .attr("cy", containerSize / 2)
+        .attr("r", 3)
+        .attr("class", "bubble-dots");
+
+    // add event handlers 
+    dots.on("mouseover", mouseover)
+        .on("mouseout", mouseout);
+
+
+
+    // ------------- Tooltip ----------------
+
+    // Add tooltip container
+    const onHover = svg.append("g")
+        .attr("class", "hover")
+        .style("display", "none");
+
+
+    // Add tooltip background
+    onHover.append("rect")
+        .attr("class", "tooltip")
+        .attr("fill", "white")
+        .attr("opacity", 0.8)
+        .attr("width", 120)
+        .attr("height", 75)
+        .attr("x", 10)
+        .attr("y", -22)
+        .attr("rx", 4)
+        .attr("ry", 4);
+
+    // Add tooltip text/ text placeholders
+    onHover.append("text")
+        .attr("class", "bubble-tooltip-country")
+        .attr("x", 18)
+        .attr("y", -2)
+        .attr("font-size", "12px")
+        .attr("font-weight", "bold")
+    onHover.append("text")
+        .text(`${data_value}: `)
+        .attr("x", 18)
+        .attr("y", 18)
+        .attr("font-size", "12px")
+
+    onHover.append("text")
+        .attr('class', "bubble-tooltip-cases")
+        .attr("x", 70)
+        .attr("y", 18)
+        .attr("font-size", "12px")
+
+    onHover.append("text")
+        .text(`GDP: `)
+        .attr("x", 18)
+        .attr("y", 38)
+        .attr("font-size", "12px")
+
+    onHover.append("text")
+        .attr('class', "bubble-tooltip-gdp")
+        .attr("x", 70)
+        .attr("y", 38)
+        .attr("font-size", "12px")
+
+    function mouseover(e, i) {
+        onHover.style("display", null);
+
+        // reposition the tooltip to the left if country is close to the tight edge of the container 
+        if ((scaleX(i.gdp_per_capita) > 0.5 * xSize) && (scaleY(i.total_cases) > 0.5 * ySize)) {
+            onHover.attr("transform", "translate(" + (scaleX(i.gdp_per_capita) - 150) + "," + (scaleY(i.total_cases) - 60) + ")");
+        } else if ((scaleX(i.gdp_per_capita) > 0.5 * xSize) && (scaleY(i.total_cases) < 0.5 * ySize)) {
+            onHover.attr("transform", "translate(" + (scaleX(i.gdp_per_capita) - 150) + "," + scaleY(i.total_cases) + ")");
+        } else if ((scaleX(i.gdp_per_capita) < 0.5 * xSize) && (scaleY(i.total_cases) > 0.5 * ySize)) {
+            onHover.attr("transform", "translate(" + (scaleX(i.gdp_per_capita)) + "," + (scaleY(i.total_cases) - 60) + ")");
+        } else if ((scaleX(i.gdp_per_capita) < 0.5 * xSize) && (scaleY(i.total_cases) < 0.5 * ySize)) {
+            onHover.attr("transform", "translate(" + scaleX(i.gdp_per_capita) + "," + scaleY(i.total_cases) + ")");
+        }
+
+        svg.select(".bubble-tooltip-country").text(i.country);
+        svg.select(".bubble-tooltip-cases").text(i.total_cases);
+        svg.select(".bubble-tooltip-gdp").text(i.gdp_per_capita);
+
+    }
+
+    function mouseout(e, i) {
+        onHover.style("display", "none");
+    }
+
+    // Reference: https://www.d3-graph-gallery.com/graph/interactivity_brush.html
+    function isBrushed(coords, x, y, iso) {
+        const x0 = coords[0][0],
+            x1 = coords[1][0],
+            y0 = coords[0][1],
+            y1 = coords[1][1];
+        
+        const isBrushed = x0 <= x && x <= x1 && y0 <= y && y <= y1;
+        
+        // add interactivity with the map
+        if (isBrushed == true) {
+            d3.select("#map").select(`.${iso}`).classed("selected-map", true);
+        } else {
+            d3.select("#map").select(`.${iso}`).classed("selected-map", false);
+        }
+        return isBrushed;
+    }
+
+    function brushed(e, i) {
+        // area selected
+        const brush = e.selection;
+
+
+        // style brushed circles
+        svg.selectAll(".bubbles-container").classed("selected-dot", d => isBrushed(brush, scaleX(d.gdp_per_capita), scaleY(d.total_cases), d.iso));
+        
+    }
 
 }
 
