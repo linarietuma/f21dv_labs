@@ -22,7 +22,7 @@ function updateBtn(cases) {
         if (cases == true && data_value != 'Cases') {
             // update the global variables
             data_key_map = 'total_cases_per_million';
-            data_key_charts = 'new_cases_smoothed_per_million';
+            data_key_charts = 'ncs_per_million';
             data_value = 'Cases';
             // update the button formatting 
             d3.select(".btn-cases").classed("selected", true);
