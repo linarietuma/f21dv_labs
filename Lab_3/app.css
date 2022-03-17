@@ -39,11 +39,14 @@ header {
 
 
 
-
 .line-countries, #map, .line-vaccines, .bubble {
     background-color: transparent;
     border: none;
     box-shadow: 0 .7rem 1rem #4917707a;   
+}
+
+.line-countries, .line-vaccines {
+    min-height: 300px;
 }
 
 .bubble {
