@@ -12,6 +12,12 @@ header {
     margin-bottom: 1em;
 }
 
+.info {
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+}
+
 .grid {
    
     display: grid;
@@ -65,6 +71,7 @@ header {
 
 .title {
     margin-right: 30px;
+    margin-left: 15px;
 }
 
 .btn {
@@ -114,6 +121,13 @@ header {
     flex-direction: column;
 }
 
+.clicked-dot{
+    fill:red !important;
+    stroke: black !important;
+    transform: scale(1.5);
+    transform-origin: 5px 5px;
+}
+
 /* hover event of the dots in the scatter plot */
 .bubble-dots:hover {
     /* shorthand syntax for animations */
@@ -132,6 +146,8 @@ header {
 .selected-map {
     fill: red !important;
 }
+
+
 
 
 

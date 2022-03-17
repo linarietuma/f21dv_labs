@@ -6,6 +6,12 @@ let data_key_map = 'total_cases_per_million'
 let data_key_charts = 'new_cases_smoothed_per_million'
 let data_value = 'Cases'
 
+let map_data;
+let iso_data;
+let covid_data;
+let filled_line_chart_data;
+
+
 // -------------------------------- Button Function ----------------------------------------------------------------------------------------
 
 function updateBtn(cases) {
@@ -42,8 +48,21 @@ function updateBtn(cases) {
         // update the charts/ map 
         mapInit(map_data, iso_data, covid_data.data);
         lineChartInit(".line-countries", [covid_data.data.OWID_ASI, covid_data.data.OWID_AFR, covid_data.data.OWID_EUR, covid_data.data.OWID_NAM, covid_data.data.OWID_SAM, covid_data.data.OWID_OCE, covid_data.data.OWID_WRL])
-        barChartInit(".line-vaccines", covid_data.data.OWID_WRL);
+        barChartInit(".line-vaccines", filled_line_chart_data);
         scatterInit(".bubble", covid_data);
+    }
+}
+
+function updateplot(iso) {
+    
+    try {
+        const data = covid_data.data[iso];
+        filled_line_chart_data =  covid_data.data[iso];
+        console.log(filled_line_chart_data)
+        d3.select(".line-vaccines").select('svg').remove();
+        barChartInit(".line-vaccines", filled_line_chart_data)  
+    } catch(err) {
+
     }
 }
 
@@ -76,7 +95,7 @@ function mapInit(map, iso, covid_data) {
     // Add map title 
     d3.select("#map").append("text")
         .attr("class", "title map-svg")
-        .text(`Total ${data_value} per million`)
+        .text(`Total ${data_value} per Million`)
 
     // Add SVG container for the map
     const svg = d3.select("#map")
@@ -267,7 +286,7 @@ function mapInit(map, iso, covid_data) {
         let pointer_loc = d3.pointer(e)
         // reposition the tooltip to the left if country is close to the tight edge of the container 
         if (pointer_loc[0] > 0.7 * xSize) {
-            onHover.attr("transform", "translate(" + (pointer_loc[0] - 190) + "," + pointer_loc[1] + ")");
+            onHover.attr("transform", "translate(" + (pointer_loc[0] - 200) + "," + pointer_loc[1] + ")");
 
         } else {
             onHover.attr("transform", "translate(" + pointer_loc + ")");
@@ -289,15 +308,17 @@ function mapInit(map, iso, covid_data) {
     // add an interaction with the scatter plot on click 
     function mapClick() {
         // get the class (iso code) of the clicked country
-        const cl = d3.select(this).attr("class")
+        const cl = d3.select(this).attr("class");
+        updateplot(cl);
+
         // select the clicked country in the scatter plot using the class name
-        const dot_colour = d3.select(".bubble").select(`.${cl}`).select(".bubble-dots").style("fill");
+        const dot_class = d3.select(".bubble").select(`.${cl.substring(0,3)}`).select(".bubble-dots").attr("class")
         // if the data point already selected, unselect it
-        if (dot_colour == "red") {
-            d3.select(".bubble").select(`.${cl}`).select(".bubble-dots").style("fill", "#69b3a2").style("stroke", null).style("transform", "scale(1)");
-        // if the data point not selected, select it
+        if (dot_class.includes("clicked-dot")) {
+            d3.select(".bubble").select(`.${cl.substring(0,3)}`).select(".bubble-dots").classed("clicked-dot", false);
+            // if the data point not selected, select it
         } else {
-            d3.select(".bubble").select(`.${cl}`).raise().select(".bubble-dots").style("fill", "red").style("stroke", "black").style("transform", "scale(1.5)").style("transform-origin", "5px 5px");
+            d3.select(".bubble").select(`.${cl.substring(0,3)}`).raise().select(".bubble-dots").classed("clicked-dot", true);
         }
     }
 }
@@ -344,7 +365,7 @@ const lineChartInit = (htmlEl, data) => {
         .attr('width', xSize)
         .attr('height', ySize)
         .append("g")
-        .attr("transform", "translate(" + margin + "," + margin + ")");
+        .attr("transform", "translate(" +1.5* margin + "," + margin + ")");
 
     // scale of x axis the same for all data arrays 
     const maxX = data[0].data[(data[0].data.length - 1)].date // latest date appears last in the array 
@@ -359,8 +380,8 @@ const lineChartInit = (htmlEl, data) => {
     const parseTime = d3.timeParse("%Y-%m-%d");
 
     // create x/y scales 
-    const xScale = d3.scaleTime().domain([parseTime(minX), parseTime(maxX)]).range([0, (xSize - 1.5 * margin)]);
-    const yScale = d3.scaleLinear().domain([maxY, minY]).range([0, (ySize - 1.5 * margin)]);
+    const xScale = d3.scaleTime().domain([parseTime(minX), parseTime(maxX)]).range([0, (xSize - 1.75 * margin)]);
+    const yScale = d3.scaleLinear().domain([maxY, minY]).range([0, (ySize - 1.75 * margin)]);
 
     // create a y axis 
     const yAxisGenerator = d3.axisLeft(yScale).tickFormat(d3.format(".2s"));
@@ -378,6 +399,16 @@ const lineChartInit = (htmlEl, data) => {
         .transition()
         .duration(500)
         .call(d3.axisBottom(xScale))
+
+    // text label for the y axis
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - 1.2 * margin)
+        .attr("x", 0 - (ySize / 3))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text(`New ${data_value} per Million`)
+        .attr("font-size", "12px");
 
     // set font of the ticks
     svg.selectAll(".tick text").attr("font-family", "Montserrat");
@@ -454,7 +485,7 @@ const lineChartInit = (htmlEl, data) => {
 
     // add the area (same as the graph) were the mouseover events are active
     svg.append("rect")
-        .attr("width", xSize - 1.5 * margin)
+        .attr("width", xSize - 1.75 * margin)
         .attr("height", ySize - margin)
         .attr("opacity", 0)
         .on("mouseout", mousestop)
@@ -469,14 +500,13 @@ const lineChartInit = (htmlEl, data) => {
             .attr("fill", "none")
             .attr("transform", "translate(0," + (-0.5 * margin) + ")")
             .attr("stroke", color(data.indexOf(cc)))
-            .attr("opacity", 0.5)
+            .attr("opacity", 0.8)
             .attr("stroke-width", 1.5)
             .attr("d", d3.line()
                 .defined((d) => { return d[data_key_charts] !== undefined; }) // skip undefined values
                 .x(d => { return xScale(parseTime(d.date)); })
                 .y(d => { return yScale(d[data_key_charts]); }))
-            .on("mouseover", mouseover)
-            .on("mouseout", mouseout);
+            .on("mousemove", mousemove);
     }
     // style the world data line 
     svg.select(".Worl").attr("fill", "red")
@@ -484,16 +514,6 @@ const lineChartInit = (htmlEl, data) => {
 
 
     // -------------- Event Handler Functions -------------
-    function mouseover() {
-        d3.select(this)
-            .attr("opacity", 1)
-            .attr("stroke-width", 2)
-    }
-    function mouseout() {
-        d3.select(this)
-            .attr("opacity", 0.3)
-            .attr("stroke-width", 1.5)
-    }
 
     function mousestop() {
         onHover.style("display", "none");
@@ -708,7 +728,7 @@ const barChartInit = (htmlEl, data) => {
         .attr("stroke", "red")
         .attr("stroke-width", 2)
         .attr("d", d3.line()
-            .defined((d) => { return d.date !== undefined; }) // skip undefined values
+            .defined((d) => { return d[data_key_charts] !== undefined; }) // skip undefined values
             .x(d => { return xScale(parseTime(d.date)); })
             .y(d => { return yScale2(d[data_key_charts]); }))
 
@@ -881,6 +901,102 @@ const barChartInit = (htmlEl, data) => {
     }
 }
 
+// ------------------------------------------------ K Means Clustering Functions ----------------------------------------------------------
+// generate a random point with min/ max domain
+function getRandomPoint(min, max) {
+    return min + Math.floor(Math.random() * (max - min));
+}
+
+// Reference: https://medium.com/geekculture/implementing-k-means-clustering-from-scratch-in-javascript-13d71fbcb31e
+// assign data points to clusters 
+function assignPoints(data, centroids) {
+    // iterate through the data points
+    for (let d in data) {
+        let distances = []
+        // iterate through the centroids
+        for (let p in centroids) {
+            // find the difference between centroid centres and the data point
+            let diff_cases = centroids[p].total_cases - data[d].total_cases
+            let diff_gdp = centroids[p].gdp_per_capita - data[d].gdp_per_capita
+
+            // sum of squares
+            let sum = Math.pow(diff_cases, 2) + Math.pow(diff_gdp, 2)
+            distances[p] = Math.sqrt(sum);
+        }
+        // assign closest centroid
+        data[d].centroid = distances.indexOf(Math.min.apply(null, distances));
+    }
+}
+
+function moveCentroids(k, data, centroids) {
+
+    assignPoints(data, centroids);
+
+    let sums_cases = [];
+    let sums_gdps = [];
+    let count_points = []
+    let moved = true;
+    let clusters_moved = centroids.length;
+
+    for (let d in data) {
+        // get the assigned cluster if the data point
+        let centroid = data[d].centroid;
+
+        // sum all the data points for each cluster
+        if (isNaN(sums_cases[centroid])) {
+            sums_cases[centroid] = data[d].total_cases;
+            sums_gdps[centroid] = data[d].gdp_per_capita;
+            count_points[centroid] = 1;
+
+        } else {
+            sums_cases[centroid] = sums_cases[centroid] + data[d].total_cases;
+            sums_gdps[centroid] = sums_gdps[centroid] + data[d].gdp_per_capita;
+            // increment the number of points a cluster has (used to find the mean)
+            count_points[centroid]++;
+        }
+    }
+
+
+    // move centroids
+    for (let c in centroids) {
+        // find the new cluster centres
+        let new_cases = sums_cases[c] / count_points[c];
+        let new_gdp = sums_gdps[c] / count_points[c];
+
+        // check if cluster centres have moved 
+        // round values to speed up the clustering
+        if ((Math.round(new_cases) == Math.round(centroids[c].total_cases) && (Math.round(new_gdp) == Math.round(centroids[c].gdp_per_capita)))) {
+
+            clusters_moved--;
+        }
+        // find the means 
+        centroids[c].total_cases = new_cases;
+        centroids[c].gdp_per_capita = new_gdp;
+    }
+
+    // if none of the clusters have moved 
+    if (clusters_moved == 0) {
+        moved = false;
+    }
+    return moved;
+}
+
+// Reference: https://burakkanber.com/blog/machine-learning-k-means-clustering-in-javascript-part-1/
+// Reference: https://medium.com/geekculture/implementing-k-means-clustering-from-scratch-in-javascript-13d71fbcb31e
+function kMeans(k, data, minX, maxX, minY, maxY) {
+
+    // generate random centroids
+    const centroids = []
+    while (k--) {
+        centroids.push({ gdp_per_capita: getRandomPoint(minX, maxX), total_cases: getRandomPoint(minY, maxY) })
+    }
+   
+    let moved = true;
+    while ((moved != false)) {
+        moved = moveCentroids(k, data, centroids);
+    }
+}
+
 // -------------------------------- Scatter Plot Function ----------------------------------------------------------------------------------------
 
 function scatterInit(htmlEl, data) {
@@ -926,7 +1042,7 @@ function scatterInit(htmlEl, data) {
             let country = data.data[key].location;
 
             if (total_cases != undefined && gdp_per_capita != undefined) {
-                covid_data.push({ iso: key, country: country, gdp_per_capita: gdp_per_capita, total_cases: total_cases })
+                covid_data.push({ iso: key, country: country, gdp_per_capita: gdp_per_capita, total_cases: total_cases, centroid: 0 })
 
                 if (total_cases > max_cases) {
                     max_cases = total_cases;
@@ -946,6 +1062,9 @@ function scatterInit(htmlEl, data) {
     // generate x/y scale based on the min/max values
     const scaleX = d3.scaleSequentialSqrt().domain([min_gdp, max_gdp]).range([0, (xSize - 2 * margin)])
     const scaleY = d3.scaleSequentialSqrt().domain([max_cases, min_cases]).range([0, (ySize - 2 * margin)])
+
+
+    kMeans(3, covid_data, min_gdp, max_gdp, min_cases, max_cases);
 
     const yAxisGenerator = d3.axisLeft(scaleY).tickFormat(d3.format(".2s")).ticks(6);
     const xAxisGenerator = d3.axisBottom(scaleX).tickFormat(d3.format(".2s")).ticks(8);
@@ -987,6 +1106,7 @@ function scatterInit(htmlEl, data) {
     svg.selectAll(".tick text").attr("font-family", "Montserrat");
 
     const containerSize = 12;
+    const clusterColor = d3.scaleOrdinal().range(d3.schemeSet2);
     // Add dots
     const dots_container = svg
         .selectAll("bubble-dots")
@@ -998,13 +1118,13 @@ function scatterInit(htmlEl, data) {
         // center the SVG container on the line
         .attr("y", d => { return scaleY(d.total_cases) - containerSize / 2 })
         .attr("x", d => { return scaleX(d.gdp_per_capita) - containerSize / 2 })
-      
+
         .attr("class", d => d.iso)
         .classed("bubbles-container", true);
- 
+
 
     const dots = dots_container.append("circle")
-        .style("fill", "#69b3a2")
+        .style("fill", d => clusterColor(d.centroid))
         .attr("cx", containerSize / 2)
         .attr("cy", containerSize / 2)
         .attr("r", 3)
@@ -1097,9 +1217,9 @@ function scatterInit(htmlEl, data) {
             x1 = coords[1][0],
             y0 = coords[0][1],
             y1 = coords[1][1];
-        
+
         const isBrushed = x0 <= x && x <= x1 && y0 <= y && y <= y1;
-        
+
         // add interactivity with the map
         if (isBrushed == true) {
             d3.select("#map").select(`.${iso}`).classed("selected-map", true);
@@ -1113,19 +1233,15 @@ function scatterInit(htmlEl, data) {
         // area selected
         const brush = e.selection;
 
-
         // style brushed circles
         svg.selectAll(".bubbles-container").classed("selected-dot", d => isBrushed(brush, scaleX(d.gdp_per_capita), scaleY(d.total_cases), d.iso));
-        
+
     }
 
 }
 
 // reference: https://medium.datadriveninvestor.com/getting-started-with-d3-js-maps-e721ba6d8560
 const promises = []
-let map_data;
-let iso_data;
-let covid_data;
 
 promises.push(d3.json("data/map.json"))
 promises.push(d3.json("data/covid-data.json"))
@@ -1136,6 +1252,7 @@ let fulfilled = Promise.all(promises).then((data) => {
     map_data = data[0];
     iso_data = data[2];
     covid_data = d3.hierarchy(data[1]) // *d3.hierarchy function which gets/organised data*
+    filled_line_chart_data = covid_data.data.OWID_WRL;
 
     mapInit(map_data, iso_data, covid_data.data)
     lineChartInit(".line-countries", [covid_data.data.OWID_ASI, covid_data.data.OWID_AFR, covid_data.data.OWID_EUR, covid_data.data.OWID_NAM, covid_data.data.OWID_SAM, covid_data.data.OWID_OCE, covid_data.data.OWID_WRL])
