@@ -3,13 +3,14 @@
 
 // global variables
 let data_key_map = 'total_cases_per_million'
-let data_key_charts = 'new_cases_smoothed_per_million'
+let data_key_charts = 'ncs_per_million'
 let data_value = 'Cases'
 
 let map_data;
 let iso_data;
 let covid_data;
 let filled_line_chart_data;
+let line_chart_data;
 
 
 // -------------------------------- Button Function ----------------------------------------------------------------------------------------
@@ -47,20 +48,28 @@ function updateBtn(cases) {
 
         // update the charts/ map 
         mapInit(map_data, iso_data, covid_data.data);
-        lineChartInit(".line-countries", [covid_data.data.OWID_ASI, covid_data.data.OWID_AFR, covid_data.data.OWID_EUR, covid_data.data.OWID_NAM, covid_data.data.OWID_SAM, covid_data.data.OWID_OCE, covid_data.data.OWID_WRL])
+        lineChartInit(".line-countries", line_chart_data)
         barChartInit(".line-vaccines", filled_line_chart_data);
         scatterInit(".bubble", covid_data);
     }
 }
 
+// update both line graphs when a country is clicked on the map 
 function updateplot(iso) {
     
     try {
         const data = covid_data.data[iso];
         filled_line_chart_data =  covid_data.data[iso];
-        console.log(filled_line_chart_data)
+        
         d3.select(".line-vaccines").select('svg').remove();
-        barChartInit(".line-vaccines", filled_line_chart_data)  
+        d3.select(".line-countries").select('svg').remove();
+        barChartInit(".line-vaccines", filled_line_chart_data)
+        if (iso == "OWID_WRL")  {
+            line_chart_data = [covid_data.data.OWID_ASI, covid_data.data.OWID_AFR, covid_data.data.OWID_EUR, covid_data.data.OWID_NAM, covid_data.data.OWID_SAM, covid_data.data.OWID_OCE, covid_data.data.OWID_WRL];
+        } else {
+            line_chart_data = [covid_data.data[iso], covid_data.data.OWID_WRL];
+        }
+        lineChartInit(lineChartInit(".line-countries", line_chart_data))
     } catch(err) {
 
     }
@@ -305,12 +314,21 @@ function mapInit(map, iso, covid_data) {
             .style("opacity", 0.8)
             .style("stroke", "none")
     }
+
+    let clicked_country = '';
     // add an interaction with the scatter plot on click 
     function mapClick() {
         // get the class (iso code) of the clicked country
         const cl = d3.select(this).attr("class");
-        updateplot(cl);
 
+        // update the filled line chart on click
+        if ((filled_line_chart_data.location == "World") || (clicked_country != cl)) {
+            updateplot(cl);
+            clicked_country = cl;
+        } else  {
+            updateplot("OWID_WRL");
+        }
+      
         // select the clicked country in the scatter plot using the class name
         const dot_class = d3.select(".bubble").select(`.${cl.substring(0,3)}`).select(".bubble-dots").attr("class")
         // if the data point already selected, unselect it
@@ -365,7 +383,7 @@ const lineChartInit = (htmlEl, data) => {
         .attr('width', xSize)
         .attr('height', ySize)
         .append("g")
-        .attr("transform", "translate(" +1.5* margin + "," + margin + ")");
+        .attr("transform", "translate(" +1.5 * margin + "," + margin + ")");
 
     // scale of x axis the same for all data arrays 
     const maxX = data[0].data[(data[0].data.length - 1)].date // latest date appears last in the array 
@@ -381,7 +399,7 @@ const lineChartInit = (htmlEl, data) => {
 
     // create x/y scales 
     const xScale = d3.scaleTime().domain([parseTime(minX), parseTime(maxX)]).range([0, (xSize - 1.75 * margin)]);
-    const yScale = d3.scaleLinear().domain([maxY, minY]).range([0, (ySize - 1.75 * margin)]);
+    const yScale = d3.scaleLinear().domain([maxY, minY]).range([0, (ySize - 1.5 * margin)]);
 
     // create a y axis 
     const yAxisGenerator = d3.axisLeft(yScale).tickFormat(d3.format(".2s"));
@@ -1235,9 +1253,7 @@ function scatterInit(htmlEl, data) {
 
         // style brushed circles
         svg.selectAll(".bubbles-container").classed("selected-dot", d => isBrushed(brush, scaleX(d.gdp_per_capita), scaleY(d.total_cases), d.iso));
-
     }
-
 }
 
 // reference: https://medium.datadriveninvestor.com/getting-started-with-d3-js-maps-e721ba6d8560
@@ -1247,16 +1263,19 @@ promises.push(d3.json("data/map.json"))
 promises.push(d3.json("data/covid-data.json"))
 promises.push(d3.json("data/iso3.json"))
 
+
 // once all promises fulfilled, execute the functions 
 let fulfilled = Promise.all(promises).then((data) => {
     map_data = data[0];
     iso_data = data[2];
+
     covid_data = d3.hierarchy(data[1]) // *d3.hierarchy function which gets/organised data*
     filled_line_chart_data = covid_data.data.OWID_WRL;
+    line_chart_data = [covid_data.data.OWID_ASI, covid_data.data.OWID_AFR, covid_data.data.OWID_EUR, covid_data.data.OWID_NAM, covid_data.data.OWID_SAM, covid_data.data.OWID_OCE, covid_data.data.OWID_WRL]
 
     mapInit(map_data, iso_data, covid_data.data)
-    lineChartInit(".line-countries", [covid_data.data.OWID_ASI, covid_data.data.OWID_AFR, covid_data.data.OWID_EUR, covid_data.data.OWID_NAM, covid_data.data.OWID_SAM, covid_data.data.OWID_OCE, covid_data.data.OWID_WRL])
-    barChartInit(".line-vaccines", covid_data.data.OWID_WRL)
+    lineChartInit(".line-countries", line_chart_data)
+    barChartInit(".line-vaccines", filled_line_chart_data)
     scatterInit(".bubble", covid_data)
 
 })
