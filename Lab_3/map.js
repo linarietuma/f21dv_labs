@@ -58,7 +58,6 @@ function updateBtn(cases) {
 function updateplot(iso) {
     
     try {
-        const data = covid_data.data[iso];
         filled_line_chart_data =  covid_data.data[iso];
         
         d3.select(".line-vaccines").select('svg').remove();
@@ -457,9 +456,10 @@ const lineChartInit = (htmlEl, data) => {
     // add tooltip background
     onHover.append("rect")
         .attr("class", "tooltip")
-        .attr("fill", "none")
-        .attr("width", 150)
-        .attr("height", 80)
+        .attr("fill", "white")
+        .attr("width", 160)
+        .attr("height", 170)
+        .attr("opacity", 0.85)
         .attr("x", 10)
         .attr("y", -22)
         .attr("rx", 4)
@@ -542,6 +542,7 @@ const lineChartInit = (htmlEl, data) => {
     function mousemove(event) {
         // make the tooltip visible 
         onHover.style("display", null);
+        onHover.raise();
         tooltipLine.style("display", null);
 
         const x0 = xScale.invert(d3.pointer(event)[0])
