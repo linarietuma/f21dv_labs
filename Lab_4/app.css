@@ -1,0 +1,62 @@
+html, body {
+    font-family: Montserrat;
+    margin:0px;
+    height: 88vh;
+    min-height: 650px; 
+}
+
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid { 
+    display: grid;
+    grid-template-columns: 7fr 2fr;
+    height: 100%;
+    gap: 10px 10px; /* gap between grid rows/ columns */
+    margin: 10px;
+}
+
+
+.doughnuts {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    height: 100%;
+    gap: 7px 7px;
+
+  }
+
+  .bubbles {
+    display: grid;
+    grid-template-rows: 1fr 6fr;
+    height: 100%;
+    gap: 7px 7px;
+
+}
+
+ .bubbles *, .doughnuts * {
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1px;
+    margin-right: 1px;
+    border-radius: 5px;
+    background-color: #f9c74f;
+
+  }
+
+  .track {
+    stroke-width: 8;
+  }
+  .track-inset {
+    fill: black;
+  }
+
+  /* .tick text:nth-of-type(10n) {
+    opacity: 0;
+  } */
+
