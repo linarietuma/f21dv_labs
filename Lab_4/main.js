@@ -9,18 +9,22 @@ function createSlider() {
     let xSize = el.clientWidth-50;
     let ySize = el.clientHeight-10;
 
+    let min = 1890;
+    let max = 2022;
+    let step = 10;
+
     // range for the slider
-    const range = d3.range(1998, 2028)
+    const range = d3.range(min, max, step)
     // create the slider object
     const slider = d3
         .sliderBottom()
-        .min(d3.min(range))
-        .max(d3.max(range))
+        .min(min)
+        .max(max)
         .step(1)
         .width(xSize-50)
         .tickFormat(d3.format('d'))
         .tickValues(range)
-        .default(1998)
+        .default(min)
         .on('onchange', val => {
             console.log(val)
         });
@@ -39,7 +43,6 @@ function createSlider() {
     gTime.call(slider);
 
     // format the slider 
-    d3.selectAll('.tick').attr("font-family", "Montserrat").select("text").attr("opacity", 0)
     d3.select('.parameter-value').attr("font-family", "Montserrat").select('text').attr('font-size', 15)
     d3.select('.track').attr('stroke-width', 8).attr("stroke", "black")
     d3.select('.track-inset').attr("stroke", "#277da1")

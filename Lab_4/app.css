@@ -49,14 +49,5 @@ header {
 
   }
 
-  .track {
-    stroke-width: 8;
-  }
-  .track-inset {
-    fill: black;
-  }
 
-  /* .tick text:nth-of-type(10n) {
-    opacity: 0;
-  } */
 
