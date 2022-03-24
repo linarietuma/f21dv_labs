@@ -41,7 +41,7 @@ header {
 
 }
 
- .bubbles *, .doughnuts * {
+.selection-controls *,  .doughnuts * {
     display: flex;
     height: 100%;
     justify-content: center;
@@ -51,6 +51,20 @@ header {
     border-radius: 5px;
     background-color: #f9c74f;
 
+  }
+
+  .selection-controls {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    height: 100%;
+    gap: 10px 10px; /* gap between grid rows/ columns */
+    margin: 0 10px 0 10px;
+  }
+
+  circle:hover {
+    stroke-width: 3px;
+    opacity: 1;
+    
   }
 
 
