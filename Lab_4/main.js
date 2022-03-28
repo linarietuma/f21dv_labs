@@ -2,6 +2,23 @@
 //  Finished On: 08/04/2022
 
 
+// reference: https://medium.datadriveninvestor.com/getting-started-with-d3-js-maps-e721ba6d8560
+const promises = []
+let population;
+let mortality;
+let gdp;
+let life_exp;
+let young_births;
+let gdp_per_capita;
+let data_changed = true;
+let yData;
+let bubbleUpdate;
+let combo;
+let year = 1960;
+let key = 'mortality';
+let key_name = 'Mortality';
+let y_label = { mortality: 'Child Mortality (under 5s) per 1000', life_expectancy: "Female Life Expectancy", young_births: "" }
+
 // colour palette: https://coolors.co/palette/f94144-f3722c-f8961e-f9844a-f9c74f-90be6d-43aa8b-4d908e-577590-277da1
 
 // -------------------------------------------- SLider Function ---------------------------------------------------------------------
@@ -32,8 +49,10 @@ function createSlider() {
         .width(xSize - 60)
         .tickFormat(d3.format('d'))
         .on('onchange', val => {
-            bubbleUpdate(yData, val);
-            // console.log(val)
+            // update the bubble chart 
+            bubbleUpdate(combo, val);
+            // update the global year variable
+            year = val;
         });
 
     // add svg container 
@@ -65,7 +84,7 @@ function createSlider() {
 // --------------------------------------------------- Find Max Function --------------------------------------------------------
 
 // find min/ max for the y axis
-function findMinMax(data) {
+function findMinMax(data, data_key) {
 
     let min = 100000;
     let max = 0;
@@ -74,8 +93,8 @@ function findMinMax(data) {
         Object.keys(c).forEach(key => {
             // the key is a year
             if (key.length == 4) {
-                if (c[key].length != 0) {
-                    let value = parseFloat(c[key])
+                if (!isNaN(c[key][data_key])) {
+                    let value = parseFloat(c[key][data_key])
                     if (value > max) {
 
                         max = value;
@@ -115,7 +134,7 @@ function createChart() {
         .attr("fill", "none")
         .attr("class", "chartBack");
 
-    const extentX = findMinMax(gdp_per_capita);
+    const extentX = findMinMax(combo, 'gdp_per_capita');
     const minX = extentX[0];
     const maxX = extentX[1];
 
@@ -157,7 +176,7 @@ function createChart() {
         .attr("font-size", "12px")
         .attr("class", "yLabel");
 
-    const rExtent = findMinMax(population);
+    const rExtent = findMinMax(combo, 'population');
     let minR = rExtent[0];
     let maxR = rExtent[1];
 
@@ -165,12 +184,21 @@ function createChart() {
 
     // add initial circles
     svg.append("g").attr("class", "bubbleArea").selectAll("circle")
-        .data(yData)
+        .data(combo)
         .enter()
         .append("circle")
         .attr("cx", 0)
         .attr("cy", 0)
         .attr("r", 0)
+
+    svg.append('text')
+        .style("text-anchor", "middle")
+        .attr("x", width / 2)
+        .attr("y", height / 1.5)
+        .attr("font-size", "150px")
+        .attr("class", "year")
+        .attr("fill", "white")
+
 
     // ------------- Tooltip ----------------
     const onHover = svg.append("g")
@@ -181,8 +209,8 @@ function createChart() {
     onHover.append("rect")
         .attr("class", "tooltip")
         .attr("fill", "white")
-        .attr("width", 0)
-        .attr("height", 0)
+        .attr("width", 180)
+        .attr("height", 90)
         .attr("opacity", 0.85)
         .attr("x", 10)
         .attr("y", -22)
@@ -193,48 +221,80 @@ function createChart() {
         .attr("class", "tooltip-country")
         .attr("x", 18)
         .attr("y", -2)
-        .attr("font-size", "12px");
+        .attr("font-size", "12px")
+        .attr("font-weight", "bold");
+
 
     // add tooltip text/ placeholder text
     onHover.append("text")
         .attr("x", 18)
-        .attr("y", 20)
+        .attr("y", 18)
+        .text(`${key_name}:`)
+        .attr("font-size", "12px");
+    onHover.append("text")
+        .attr("class", "tooltip-mortality")
+        .attr("x", 119)
+        .attr("y", 18)
+        .attr("font-size", "12px");
+    onHover.append("text")
+        .attr("x", 18)
+        .attr("y", 38)
         .text("Population: ")
         .attr("font-size", "12px");
     onHover.append("text")
-        .attr("class", "tooltip-date")
-        .attr("x", 60)
-        .attr("y", 20)
+        .attr("class", "tooltip-population")
+        .attr("x", 119)
+        .attr("y", 38)
         .attr("font-size", "12px");
 
-    function showTooltip(e, d) {
-        console.log(d3.pointer(d))
+    onHover.append("text")
+        .attr("x", 18)
+        .attr("y", 58)
+        .text("GDP per Capita:")
+        .attr("font-size", "12px");
+    onHover.append("text")
+        .attr("class", "tooltip-gdp")
+        .attr("x", 119)
+        .attr("y", 58)
+        .attr("font-size", "12px");
 
-        d3.select(this).raise()
-        onHover.attr("display", null);
 
-        onHover.select(".tooltip-country").text(d.country_name)
-            .transition()
-            .duration(200)
-
+    function positionTooltip(e, d) {
+        let coords = d3.pointer(e);
         // reposition the tooltip to the left if country is close to the tight edge of the container 
-        if ((x(i.gdp_per_capita) > 0.5 * xSize) && (y(i.total_cases) > 0.5 * ySize)) {
-            onHover.attr("transform", "translate(" + (scaleX(i.gdp_per_capita) - 150) + "," + (scaleY(i.total_cases) - 60) + ")");
-        } else if ((x(i.gdp_per_capita) > 0.5 * xSize) && (y(i.total_cases) < 0.5 * ySize)) {
-            onHover.attr("transform", "translate(" + (scaleX(i.gdp_per_capita) - 150) + "," + scaleY(i.total_cases) + ")");
-        } else if ((y(i.gdp_per_capita) < 0.5 * xSize) && (scaleY(i.total_cases) > 0.5 * ySize)) {
-            onHover.attr("transform", "translate(" + (scaleX(i.gdp_per_capita)) + "," + (scaleY(i.total_cases) - 60) + ")");
-        } else if ((scaleX(i.gdp_per_capita) < 0.5 * xSize) && (scaleY(i.total_cases) < 0.5 * ySize)) {
-            onHover.attr("transform", "translate(" + scaleX(i.gdp_per_capita) + "," + scaleY(i.total_cases) + ")");
+        if ((x(d[year]['gdp_per_capita']) > 0.5 * width) && (y(d[year][key]) > 0.5 * height)) {
+            onHover.attr("transform", `translate(${coords[0]-200}, ${coords[1]-60})`)
+        } else if ((x(d[year]['gdp_per_capita']) > 0.5 * width) && (y(d[year][key]) < 0.5 * height)) {
+            onHover.attr("transform", `translate(${coords[0]-200}, ${coords[1]})`)
+        } else if ((x(d[year]['gdp_per_capita']) < 0.5 * width) && (y(d[year][key]) > 0.5 * height)) {
+            onHover.attr("transform", `translate(${coords[0]}, ${coords[1]-60})`)
+        } else if ((x(d[year]['gdp_per_capita']) < 0.5 * width) && (y(d[year][key]) < 0.5 * height)) {
+            onHover.attr("transform", `translate(${coords[0]}, ${coords[1]})`)
         }
 
+    }
 
+    function showTooltip(e, d) {
 
+        d3.select(this).raise()
+        onHover.style("display", null);
+
+        onHover.select(".tooltip-country").text(d.country_name)
+        onHover.select(".tooltip-population").text(d[year]['population'])
+        onHover.select(".tooltip-gdp").text(d[year]['gdp_per_capita'].toFixed(1))
+        onHover.select(".tooltip-mortality").text(d[year][key])
+
+        positionTooltip(e, d);
+
+    }
+
+    function mouseMove(e, d) {
+        positionTooltip(e, d)
     }
 
     function hideTooltip(e, d) {
         d3.select(this).lower()
-        onHover.attr("display", "none");
+        onHover.style("display", "none");
 
     }
 
@@ -244,7 +304,7 @@ function createChart() {
         if (data_changed) {
             // find min/max values for both axis
 
-            const extentY = findMinMax(data);
+            const extentY = findMinMax(combo, key);
             const minY = extentY[0];
             const maxY = extentY[1];
             // define the new domain for y axis 
@@ -256,8 +316,6 @@ function createChart() {
                 .call(yAxis);
 
             svg.selectAll(".yLabel").text("Child Mortality (per 1000)");
-
-
         }
 
         // Add dots
@@ -271,22 +329,28 @@ function createChart() {
 
         circles
             .transition()
-            .duration(200)
-            .attr("cx", (d, i) => { console.log("yoyo"); return x(gdp_per_capita[i][year]); })
-            .attr("cy", (d, i) => { return y(parseFloat(d[year])); })
-            .attr("r", (d, i) => {
-                if ((d[year].length != 0) && (gdp_per_capita[i][year].length != 0) && (population[i][year].length != 0)) {
-                    return r(parseInt(population[i][year]));
-                } else {
+            .duration(1000)
+            .attr("cx", d => { return x(d[year]['gdp_per_capita']); })
+            .attr("cy", d => { return y(parseFloat(d[year][key])); })
+            .attr("r", d => {
+
+                if ((isNaN(d[year][key])) || (isNaN(d[year]['gdp_per_capita'])) || (isNaN(d[year]['population']))) {
                     return 0;
+                } else {
+                    return r(parseInt(d[year]['population']));
                 }
             })
             .attr("fill", "#4D908E")
             .attr("stroke", "black")
             .attr("opacity", 0.5)
 
+
         circles.on("mouseover", showTooltip)
             .on("mouseleave", hideTooltip)
+            .on("mousemove", mouseMove)
+
+        // change the text label in the centre of the chart
+        svg.select(".year").transition().duration(500).text(year).attr("opacity", 0.1).attr("fill", "black")
 
 
     }
@@ -324,25 +388,22 @@ function findGDPerCapita() {
 
 function combineData() {
     const combo = []
-    population.forEach(c => {
+    population.forEach((c, index) => {
         let el = []
 
-        Object.keys(c).forEach((key, index) => {
+        Object.keys(c).forEach(key => {
             if (key.length == 4) {
                 let year = []
-                year.push(["population", c[key]]);
-                year.push(["gdp_per_capita", gdp_per_capita[index][key]]);
-                year.push(["mortality", mortality[index][key]]);
-                year.push(["life_expectancy", life_exp[index][key]]);
-                year.push(["young_births", young_births[index][key]]);
-
-
+                year.push(["population", parseInt(c[key])]);
+                year.push(["gdp_per_capita", parseFloat(gdp_per_capita[index][key])]);
+                year.push(["mortality", parseFloat(mortality[index][key])]);
+                year.push(["life_expectancy", parseFloat(life_exp[index][key])]);
+                year.push(["young_births", parseFloat(young_births[index][key])]);
 
                 el.push([key, Object.fromEntries(year)]);
             } else {
                 el.push([key, c[key]]);
             }
-
         })
         combo.push(Object.fromEntries(el))
     })
@@ -352,18 +413,6 @@ function combineData() {
 }
 
 
-// reference: https://medium.datadriveninvestor.com/getting-started-with-d3-js-maps-e721ba6d8560
-const promises = []
-let population;
-let mortality;
-let gdp;
-let life_exp;
-let young_births;
-let gdp_per_capita;
-let data_changed = true;
-let yData;
-let bubbleUpdate;
-let combo;
 
 
 promises.push(d3.csv("data/mortality.csv"))
@@ -385,17 +434,13 @@ let fulfilled = Promise.all(promises).then((data) => {
     gdp_per_capita = findGDPerCapita();
 
     combo = combineData();
-    console.log(combo);
-
-
-
 
     const sliderUpdate = createSlider();
     bubbleUpdate = createChart();
 
 
     sliderUpdate();
-    bubbleUpdate(yData, 1960);
+    bubbleUpdate(combo, 1960);
 
 
 
