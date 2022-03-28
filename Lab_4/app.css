@@ -20,7 +20,7 @@ header {
     display: grid;
     grid-template-columns: 7fr 2fr;
     height: 100%;
-    gap: 10px 10px; /* gap between grid rows/ columns */
+    gap: 10px 0px; /* gap between grid rows/ columns */
     margin: 10px;
 }
 
@@ -50,6 +50,12 @@ header {
     margin-right: 1px;
     border-radius: 5px;
     background-color: #f9c74f;
+
+  }
+
+  .doughnuts * {
+    background-color: #43AA8B;
+    margin-left: 0px;
 
   }
 
