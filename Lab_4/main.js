@@ -16,10 +16,18 @@ let bubbleUpdate;
 let combo;
 let year = 1960;
 let key = 'mortality';
-let key_name = 'Mortality';
-let y_label = { mortality: 'Child Mortality (under 5s) per 1000', life_expectancy: "Female Life Expectancy", young_births: "" }
+let key_name = { mortality: 'Mortality', life_expectancy: 'Life Expectancy', young_births: 'Births' }
+let y_label = { mortality: 'Child Mortality (under 5s) per 1000', life_expectancy: "Female Life Expectancy", young_births: "Adolescent Births" }
 
 // colour palette: https://coolors.co/palette/f94144-f3722c-f8961e-f9844a-f9c74f-90be6d-43aa8b-4d908e-577590-277da1
+
+// -------------------------------------------- Radio Button Function -------------------------------------------
+
+function dataChanged(data_type) {
+    key = data_type;
+    bubbleUpdate(combo, year);
+}
+
 
 // -------------------------------------------- SLider Function ---------------------------------------------------------------------
 
@@ -74,8 +82,8 @@ function createSlider() {
         // format the slider 
         d3.select('.parameter-value').attr("font-family", "Montserrat").select('text').attr('font-size', 15)
         d3.select('.track').attr('stroke-width', 8).attr("stroke", "black")
-        d3.select('.track-inset').attr("stroke", "#277da1")
-        d3.select(".handle").attr("fill", "#277da1").attr("stroke", "black").attr("stroke-width", 2)
+        d3.select('.track-inset').attr("stroke", "#5D7565")
+        d3.select(".handle").attr("fill", "#84B082").attr("stroke", "black").attr("stroke-width", 2)
 
     }
     return update;
@@ -224,13 +232,13 @@ function createChart() {
         .attr("font-size", "12px")
         .attr("font-weight", "bold");
 
-
     // add tooltip text/ placeholder text
     onHover.append("text")
         .attr("x", 18)
         .attr("y", 18)
-        .text(`${key_name}:`)
-        .attr("font-size", "12px");
+        .text(`${key_name[key]}:`)
+        .attr("font-size", "12px")
+        .attr("class", "tooltip-data")
     onHover.append("text")
         .attr("class", "tooltip-mortality")
         .attr("x", 119)
@@ -263,11 +271,11 @@ function createChart() {
         let coords = d3.pointer(e);
         // reposition the tooltip to the left if country is close to the tight edge of the container 
         if ((x(d[year]['gdp_per_capita']) > 0.5 * width) && (y(d[year][key]) > 0.5 * height)) {
-            onHover.attr("transform", `translate(${coords[0]-200}, ${coords[1]-60})`)
+            onHover.attr("transform", `translate(${coords[0] - 200}, ${coords[1] - 60})`)
         } else if ((x(d[year]['gdp_per_capita']) > 0.5 * width) && (y(d[year][key]) < 0.5 * height)) {
-            onHover.attr("transform", `translate(${coords[0]-200}, ${coords[1]})`)
+            onHover.attr("transform", `translate(${coords[0] - 200}, ${coords[1]})`)
         } else if ((x(d[year]['gdp_per_capita']) < 0.5 * width) && (y(d[year][key]) > 0.5 * height)) {
-            onHover.attr("transform", `translate(${coords[0]}, ${coords[1]-60})`)
+            onHover.attr("transform", `translate(${coords[0]}, ${coords[1] - 60})`)
         } else if ((x(d[year]['gdp_per_capita']) < 0.5 * width) && (y(d[year][key]) < 0.5 * height)) {
             onHover.attr("transform", `translate(${coords[0]}, ${coords[1]})`)
         }
@@ -278,7 +286,6 @@ function createChart() {
 
         d3.select(this).raise()
         onHover.style("display", null);
-
         onHover.select(".tooltip-country").text(d.country_name)
         onHover.select(".tooltip-population").text(d[year]['population'])
         onHover.select(".tooltip-gdp").text(d[year]['gdp_per_capita'].toFixed(1))
@@ -307,15 +314,23 @@ function createChart() {
             const extentY = findMinMax(combo, key);
             const minY = extentY[0];
             const maxY = extentY[1];
-            // define the new domain for y axis 
-            y.domain([maxY, minY]);
+            if (key == 'life_expectancy') {
+                // define the new domain for y axis 
+                y.domain([minY, maxY]);
+            } else {
+                // define the new domain for y axis 
+                y.domain([maxY, minY]);
+
+            }
+
 
             svg.selectAll(".yAxis")
                 .transition()
                 .duration(1000)
                 .call(yAxis);
 
-            svg.selectAll(".yLabel").text("Child Mortality (per 1000)");
+            svg.selectAll(".yLabel").text(y_label[key]);
+            svg.select(".tooltip-data").text(`${key_name[key]}:`);
         }
 
         // Add dots
@@ -329,9 +344,7 @@ function createChart() {
 
         circles
             .transition()
-            .duration(1000)
-            .attr("cx", d => { return x(d[year]['gdp_per_capita']); })
-            .attr("cy", d => { return y(parseFloat(d[year][key])); })
+            .duration(100)
             .attr("r", d => {
 
                 if ((isNaN(d[year][key])) || (isNaN(d[year]['gdp_per_capita'])) || (isNaN(d[year]['population']))) {
@@ -340,17 +353,23 @@ function createChart() {
                     return r(parseInt(d[year]['population']));
                 }
             })
-            .attr("fill", "#4D908E")
+            .transition()
+            .duration(1000)
+            .attr("cx", d => { return x(d[year]['gdp_per_capita']); })
+            .attr("cy", d => { return y(parseFloat(d[year][key])); })
+
+            .attr("fill", "#5D7565")
             .attr("stroke", "black")
             .attr("opacity", 0.5)
 
 
         circles.on("mouseover", showTooltip)
             .on("mouseleave", hideTooltip)
-            .on("mousemove", mouseMove)
+            .on("mousemove", mouseMove);
 
         // change the text label in the centre of the chart
         svg.select(".year").transition().duration(500).text(year).attr("opacity", 0.1).attr("fill", "black")
+        svg.select(".year").lower()
 
 
     }

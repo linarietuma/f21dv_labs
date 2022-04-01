@@ -25,6 +25,8 @@ header {
 }
 
 
+
+
 .doughnuts {
     display: grid;
     grid-template-rows: 1fr 1fr 1fr;
@@ -49,14 +51,18 @@ header {
     margin-bottom: 1px;
     margin-right: 1px;
     border-radius: 5px;
-    background-color: #f9c74f;
+    
+
 
   }
 
   .doughnuts * {
-    background-color: #43AA8B;
+    background-color: #E1AFAA;
     margin-left: 0px;
+  }
 
+  label {
+    font-weight: 12px;
   }
 
   .selection-controls {
@@ -71,6 +77,45 @@ header {
     stroke-width: 3px;
     opacity: 1;
     
+  }
+
+  .radio {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5px 5px; /* gap between grid rows/ columns */
+    margin: 0 10px 0 10px;
+    background-color: white;
+
+  }
+
+  .radio label {
+    background-color: #353A47;
+    text-align: center;
+    border: 2px solid #444;
+    color: white;
+    font-style: bold;
+  }
+
+  .radio label:hover {
+    opacity: 0.85;
+  }
+
+
+  .radio input[type="radio"]:checked + label {
+    background-color: #B06277;
+
+  }
+
+  /* make the radio button invisible */
+  .radio input[type="radio"] {
+    opacity: 0;
+    position: fixed;
+    width: 0;
+  }
+
+  .slider-year {
+    border: 2px solid #444;
+
   }
 
 

@@ -35,7 +35,17 @@
 
                 </div>
 
-                <div class="dropdown"></div>
+                <div class="radio">
+                    <input type="radio" id="radioMortality" name="radioData" value="mortality" onClick="dataChanged('mortality')" checked>
+                    <label for="radioMortality">Child Mortality</label>
+                
+                    <input type="radio" id="radioLifeExp" name="radioData" value="life_expectancy" onClick="dataChanged('life_expectancy')">
+                    <label for="radioLifeExp">Female Life Expectancy</label>
+                
+                    <input type="radio" id="radioBirths" name="radioData" value="young_births" onClick="dataChanged('young_births')">
+                    <label for="radioBirths">Adolescent Births</label> 
+
+                </div>
 
 
             </div>
