@@ -3,6 +3,7 @@ html, body {
     margin:0px;
     height: 88vh;
     min-height: 650px; 
+    min-width: 950px; 
 }
 
 h1 {
@@ -23,9 +24,6 @@ header {
     gap: 10px 0px; /* gap between grid rows/ columns */
     margin: 10px;
 }
-
-
-
 
 .doughnuts {
     display: grid;
@@ -51,14 +49,21 @@ header {
     margin-bottom: 1px;
     margin-right: 1px;
     border-radius: 5px;
-    
-
-
   }
 
-  .doughnuts * {
-    background-color: #E1AFAA;
+  .d1, .d2, .d3 {
+    box-sizing: border-box;
+    /* background-color: #E1AFAA; */
     margin-left: 0px;
+    border: 2px solid #444;
+  }
+
+  .d1:hover, .d2:hover, .d3:hover {
+    cursor: pointer;
+  }
+
+  .d-selected {
+    border: 4px solid #B06277;
   }
 
   label {
@@ -98,12 +103,12 @@ header {
 
   .radio label:hover {
     opacity: 0.85;
+    cursor: pointer;
   }
 
 
   .radio input[type="radio"]:checked + label {
     background-color: #B06277;
-
   }
 
   /* make the radio button invisible */
@@ -115,8 +120,45 @@ header {
 
   .slider-year {
     border: 2px solid #444;
-
   }
 
+  .first_quartile {
+    fill: #5D7565;
+    cursor: pointer;
+  }
+
+  .second_quartile {
+    fill: #885A5A;
+    cursor: pointer;
+  }
+
+  .third_quartile {
+    fill: #353A47;
+    cursor: pointer;
+  }
+
+  .fourth_quartile {
+    fill: #E1AFAA;
+    cursor: pointer;
+  }
+
+  .pie {
+    transition: 200ms;
+  }
+
+  .pie:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+  }
+
+.invisible {
+  transition: 300ms;
+  opacity: 0 !important;
+}
+
+.visible {
+  transition: 300ms;
+  opacity: 0.5 !important;
+}
 
 
