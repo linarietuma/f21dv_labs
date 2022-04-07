@@ -21,6 +21,7 @@ let year = 1960; // currently selected year on the slider
 let key = 'mortality'; // currently selected data source (radio buttons)
 let key_name = { mortality: 'Mortality', life_expectancy: 'Life Expectancy', young_births: 'Young Births' }
 let y_label = { mortality: 'Child Mortality (under 5s) per 1000', life_expectancy: "Female Life Expectancy", young_births: "Adolescent Births (Ages 15-19) per 1000" }
+let clicked_bubble = [];
 
 // colour palette: https://coolors.co/palette/f94144-f3722c-f8961e-f9844a-f9c74f-90be6d-43aa8b-4d908e-577590-277da1
 
@@ -224,6 +225,7 @@ function createChart() {
         .attr("cx", 0)
         .attr("cy", 0)
         .attr("r", 0)
+        .classed("visible", true)
 
 
     // ------------- Tooltip ----------------
@@ -360,6 +362,7 @@ function createChart() {
     function showTooltip(e, d) {
         // bring forward the selected bubble
         d3.select(this).raise()
+        
         onHover.style("display", null); // make the tooltip visible
 
         // update the tooltip text
@@ -377,6 +380,21 @@ function createChart() {
         // bring backwards the selected element (ensures smaller bubbles don't get blocked)
         d3.select(this).lower()
         onHover.style("display", "none"); // hide the tooltip
+    }
+
+    // highlight clicked bubble
+    function clickBubble(e, d) {
+        if (clicked_bubble.includes(d.country_code)) {
+            
+            let index = clicked_bubble.indexOf(d.country_code)
+            clicked_bubble.splice(index, 1);
+
+            d3.select('.bubbleArea').select(`#${d.country_code}`).classed("bubble_clicked", false);
+  
+        } else {
+            clicked_bubble.push(d.country_code)
+            d3.select('.bubbleArea').select(`#${d.country_code}`).classed("bubble_clicked", true);
+        }
     }
 
     // bubble chart update function
@@ -419,6 +437,7 @@ function createChart() {
             .transition()
             .duration(100)
             .attr("r", d => { // if any of the data points for the given country, for the given year are undefined, set radius to 0
+                
                 if ((isNaN(d[year][key])) || (isNaN(d[year]['gdp_per_capita'])) || (isNaN(d[year]['population']))) {
                     return 0;
                 } else {
@@ -431,9 +450,12 @@ function createChart() {
             .attr("cy", d => { return y(d[year][key]); })
             .attr("stroke", "black")
             .attr("opacity", 0.5)
+            .attr("id", d => d.country_code)
+            
 
         // determine the formatting of the bubble based on its membership to a quartile 
-        circles.classed("first_quartile", d => {
+        circles.classed("bubble_clicked", d => { return clicked_bubble.includes(d.country_code)})
+        .classed("first_quartile", d => {
             if (d[year][key] < minY + (maxY - minY) * 0.25) {
                 return true;
             } else {
@@ -461,11 +483,14 @@ function createChart() {
                     return false;
                 };
             })
+            .classed("visible", true);
+
 
         // add action listener functions
         circles.on("mouseover", showTooltip)
             .on("mouseleave", hideTooltip)
-            .on("mousemove", positionTooltip);
+            .on("mousemove", positionTooltip)
+            .on("click", clickBubble)
 
         // change the text label in the centre of the chart
         svg.select(".year").transition().duration(500).text(year).attr("opacity", 0.1).attr("fill", "black")
@@ -510,9 +535,16 @@ function createDoughnut(DOM, key, index) {
         .attr("height", height)
         .append("g")
         .attr("transform", "translate(" + width / 2 + "," + (height / 2 + margin / 2) + ")");
+    
+        svg.append("rect")
+        .attr("height", ySize)
+        .attr("width", xSize)
+        .attr("fill", "transparent")
+        .attr("transform", "translate(" + (-xSize/2)+ "," + (-ySize /2) + ")")
+        .on('click', () => { dataChanged(key) }) // possible to change data source by clicking on the doughnut chart container
 
     // initial selection
-    d3.select(DOM).classed("d-selected", () => { if (key == 'mortality') { return true } else { return false; } });
+    d3.select(DOM).classed("d-selected", () => {return (key == 'mortality') ? true : false });
 
     // find the world average
     let sum = doughnut_data[year]["world_sum"][index];
@@ -522,8 +554,6 @@ function createDoughnut(DOM, key, index) {
     svg.append("text").text(avg.toFixed(1)).attr("x", -25).attr("y", 0).attr("font-weight", "bold").attr("font-size", 25).attr("class", "world_avg")
     svg.append("text").text("World Avg").attr("font-size", 10).attr("x", -25).attr("y", 13).attr("class", "world_avg_label")
 
-    // add action listener to the DOM element
-    d3.select(".doughnuts").select(DOM).on('click', () => { dataChanged(key) })
 
     // create the donut chart
     let path = svg.selectAll("path")
@@ -553,7 +583,6 @@ function createDoughnut(DOM, key, index) {
             let clicked = classes[d.index]
             // find which quartile/arc has not been clicked
             let not_clicked = classes.filter(x => { return x !== clicked; })
- 
             onClick(not_clicked, clicked);
         })
         // save the current angle 
@@ -626,13 +655,16 @@ function onClick(input, clicked) {
         input.forEach(key => {
             d3.selectAll('.bubbleArea').selectAll(key).classed("visible", true).classed("invisible", false);
         })
+ 
         // otherwise, hide other quartiles besides the clicked one
     } else {
+
         // maintain the clicked quartile visible
         d3.selectAll('.bubbleArea').selectAll(clicked).classed("visible", true);
         // make other quartiles invisible
         input.forEach(key => {
             d3.selectAll('.bubbleArea').selectAll(key).classed("visible", false).classed("invisible", true);
+            
         })
     }
 }
