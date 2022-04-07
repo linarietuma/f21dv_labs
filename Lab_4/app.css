@@ -1,9 +1,9 @@
 html, body {
-    font-family: Montserrat;
-    margin:0px;
-    height: 88vh;
-    min-height: 650px; 
-    min-width: 950px; 
+  font-family: Montserrat;
+  margin: 0px;
+  height: 88vh;
+  min-height: 650px;
+  min-width: 950px;
 }
 
 h1 {
@@ -17,148 +17,162 @@ header {
   align-items: center;
 }
 
-.grid { 
-    display: grid;
-    grid-template-columns: 7fr 2fr;
-    height: 100%;
-    gap: 10px 0px; /* gap between grid rows/ columns */
-    margin: 10px;
+.grid {
+  display: grid;
+  grid-template-columns: 7fr 2fr;
+  height: 100%;
+  gap: 10px 0px;
+  /* gap between grid rows/ columns */
+  margin: 10px;
 }
 
 .doughnuts {
-    display: grid;
-    grid-template-rows: 1fr 1fr 1fr;
-    height: 100%;
-    gap: 7px 7px;
-
-  }
-
-  .bubbles {
-    display: grid;
-    grid-template-rows: 1fr 6fr;
-    height: 100%;
-    gap: 7px 7px;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  height: 100%;
+  gap: 7px 7px;
 
 }
 
-.selection-controls *,  .doughnuts * {
-    display: flex;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 1px;
-    margin-right: 1px;
-    border-radius: 5px;
-  }
+.bubbles {
+  display: grid;
+  grid-template-rows: 1fr 6fr;
+  height: 100%;
+  gap: 7px 7px;
 
-  .d1, .d2, .d3 {
-    box-sizing: border-box;
-    /* background-color: #E1AFAA; */
-    margin-left: 0px;
-    border: 2px solid #444;
-  }
+}
 
-  .d1:hover, .d2:hover, .d3:hover {
-    cursor: pointer;
-  }
+.selection-controls *, .doughnuts * {
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1px;
+  margin-right: 1px;
+  border-radius: 5px;
+}
 
-  .d-selected {
-    border: 4px solid #B06277;
-  }
+.d1, .d2, .d3 {
+  box-sizing: border-box;
+  /* background-color: #E1AFAA; */
+  margin-left: 0px;
+  border: 2px solid #444;
+}
 
-  label {
-    font-weight: 12px;
-  }
+.d1:hover, .d2:hover, .d3:hover {
+  cursor: pointer;
+}
 
-  .selection-controls {
-    display: grid;
-    grid-template-columns: 3fr 2fr;
-    height: 100%;
-    gap: 10px 10px; /* gap between grid rows/ columns */
-    margin: 0 10px 0 10px;
-  }
+.d-selected {
+  border: 4px solid #B06277;
+}
 
-  circle:hover {
-    stroke-width: 3px;
-    opacity: 1;
-    
-  }
+label {
+  font-weight: 12px;
+}
 
-  .radio {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 5px 5px; /* gap between grid rows/ columns */
-    margin: 0 10px 0 10px;
-    background-color: white;
+.selection-controls {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  height: 100%;
+  gap: 10px 10px;
+  /* gap between grid rows/ columns */
+  margin: 0 10px 0 10px;
+}
 
-  }
+circle:hover {
+  stroke-width: 3px;
+  opacity: 1 !important;
+}
 
-  .radio label {
-    background-color: #353A47;
-    text-align: center;
-    border: 2px solid #444;
-    color: white;
-    font-style: bold;
-  }
+.radio {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 5px 5px;
+  /* gap between grid rows/ columns */
+  margin: 0 10px 0 10px;
+  background-color: white;
 
-  .radio label:hover {
-    opacity: 0.85;
-    cursor: pointer;
-  }
+}
+
+.radio label {
+  background-color: #353A47;
+  text-align: center;
+  border: 2px solid #444;
+  color: white;
+  font-style: bold;
+}
+
+.radio label:hover {
+  opacity: 0.85;
+  cursor: pointer;
+}
 
 
-  .radio input[type="radio"]:checked + label {
-    background-color: #B06277;
-  }
+.radio input[type="radio"]:checked+label {
+  background-color: #B06277;
+}
 
-  /* make the radio button invisible */
-  .radio input[type="radio"] {
-    opacity: 0;
-    position: fixed;
-    width: 0;
-  }
+/* make the radio button invisible */
+.radio input[type="radio"] {
+  opacity: 0;
+  position: fixed;
+  width: 0;
+}
 
-  .slider-year {
-    border: 2px solid #444;
-  }
+.slider-year {
+  border: 2px solid #444;
+}
 
-  .first_quartile {
-    fill: #5D7565;
-    cursor: pointer;
-  }
+.first_quartile {
+  fill: #5D7565;
+  cursor: pointer;
+}
 
-  .second_quartile {
-    fill: #885A5A;
-    cursor: pointer;
-  }
+.second_quartile {
+  fill: #885A5A;
+  cursor: pointer;
+}
 
-  .third_quartile {
-    fill: #353A47;
-    cursor: pointer;
-  }
+.third_quartile {
+  fill: #353A47;
+  cursor: pointer;
+}
 
-  .fourth_quartile {
-    fill: #E1AFAA;
-    cursor: pointer;
-  }
+.fourth_quartile {
+  fill: #E1AFAA;
+  cursor: pointer;
+}
 
-  .pie {
-    transition: 200ms;
-  }
+.pie {
+  transition: 200ms;
+}
 
-  .pie:hover {
-    transform: scale(1.05);
-    cursor: pointer;
-  }
+.pie:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+
+
+.bubble_clicked {
+  fill: #DD1259 !important;
+  opacity: 0.85;
+  stroke-width: 2px;
+
+}
 
 .invisible {
-  transition: 300ms;
+  transition: opacity 300ms;
   opacity: 0 !important;
+  pointer-events: none;
 }
 
 .visible {
-  transition: 300ms;
+  transition: opacity 300ms;
   opacity: 0.5 !important;
+  pointer-events: auto;
 }
+
 
 
