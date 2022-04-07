@@ -362,7 +362,7 @@ function createChart() {
     function showTooltip(e, d) {
         // bring forward the selected bubble
         d3.select(this).raise()
-        
+
         onHover.style("display", null); // make the tooltip visible
 
         // update the tooltip text
@@ -385,12 +385,12 @@ function createChart() {
     // highlight clicked bubble
     function clickBubble(e, d) {
         if (clicked_bubble.includes(d.country_code)) {
-            
+
             let index = clicked_bubble.indexOf(d.country_code)
             clicked_bubble.splice(index, 1);
 
             d3.select('.bubbleArea').select(`#${d.country_code}`).classed("bubble_clicked", false);
-  
+
         } else {
             clicked_bubble.push(d.country_code)
             d3.select('.bubbleArea').select(`#${d.country_code}`).classed("bubble_clicked", true);
@@ -437,7 +437,7 @@ function createChart() {
             .transition()
             .duration(100)
             .attr("r", d => { // if any of the data points for the given country, for the given year are undefined, set radius to 0
-                
+
                 if ((isNaN(d[year][key])) || (isNaN(d[year]['gdp_per_capita'])) || (isNaN(d[year]['population']))) {
                     return 0;
                 } else {
@@ -451,38 +451,14 @@ function createChart() {
             .attr("stroke", "black")
             .attr("opacity", 0.5)
             .attr("id", d => d.country_code)
-            
+
 
         // determine the formatting of the bubble based on its membership to a quartile 
-        circles.classed("bubble_clicked", d => { return clicked_bubble.includes(d.country_code)})
-        .classed("first_quartile", d => {
-            if (d[year][key] < minY + (maxY - minY) * 0.25) {
-                return true;
-            } else {
-                return false;
-            };
-            })
-            .classed("second_quartile", d => {
-                if ((d[year][key] >= minY + (maxY - minY) * 0.25) && (d[year][key] < minY + (maxY - minY) * 0.5)) {
-                    return true;
-                } else {
-                    return false;
-                };
-            })
-            .classed("third_quartile", d => {
-                if ((d[year][key] >= minY + (maxY - minY) * 0.5) && (d[year][key] < minY + (maxY - minY) * 0.75)) {
-                    return true;
-                } else {
-                    return false;
-                };
-            })
-            .classed("fourth_quartile", d => {
-                if (d[year][key] >= minY + (maxY - minY) * 0.75) {
-                    return true;
-                } else {
-                    return false;
-                };
-            })
+        circles.classed("bubble_clicked", d => { return clicked_bubble.includes(d.country_code) })
+            .classed("first_quartile", d => { return (d[year][key] < minY + (maxY - minY) * 0.25) ? true : false })
+            .classed("second_quartile", d => { return ((d[year][key] >= minY + (maxY - minY) * 0.25) && (d[year][key] < minY + (maxY - minY) * 0.5)) ? true : false })
+            .classed("third_quartile", d => { return ((d[year][key] >= minY + (maxY - minY) * 0.5) && (d[year][key] < minY + (maxY - minY) * 0.75)) ? true : false })
+            .classed("fourth_quartile", d => { return (d[year][key] >= minY + (maxY - minY) * 0.75) ? true : false })
             .classed("visible", true);
 
 
@@ -535,16 +511,16 @@ function createDoughnut(DOM, key, index) {
         .attr("height", height)
         .append("g")
         .attr("transform", "translate(" + width / 2 + "," + (height / 2 + margin / 2) + ")");
-    
-        svg.append("rect")
+
+    svg.append("rect")
         .attr("height", ySize)
         .attr("width", xSize)
         .attr("fill", "transparent")
-        .attr("transform", "translate(" + (-xSize/2)+ "," + (-ySize /2) + ")")
+        .attr("transform", "translate(" + (-xSize / 2) + "," + (-ySize / 2) + ")")
         .on('click', () => { dataChanged(key) }) // possible to change data source by clicking on the doughnut chart container
 
     // initial selection
-    d3.select(DOM).classed("d-selected", () => {return (key == 'mortality') ? true : false });
+    d3.select(DOM).classed("d-selected", () => { return (key == 'mortality') ? true : false });
 
     // find the world average
     let sum = doughnut_data[year]["world_sum"][index];
@@ -590,7 +566,7 @@ function createDoughnut(DOM, key, index) {
         .transition()
         .duration(1000)
         .attrTween("d", d => {
-           
+
             const i = d3.interpolate(d.endAngle, d.startAngle);
             return function (t) {
                 // update the starting angle
@@ -618,7 +594,7 @@ function createDoughnut(DOM, key, index) {
             .attrTween("d", (d, i) => {
 
                 // Code reference: https://bl.ocks.org/mbostock/1346410
-                 // update the current arcs with the new data
+                // update the current arcs with the new data
                 const j = d3.interpolate(current_angle[i], d);
                 // update the current angle
                 current_angle[i] = j(0)
@@ -655,7 +631,7 @@ function onClick(input, clicked) {
         input.forEach(key => {
             d3.selectAll('.bubbleArea').selectAll(key).classed("visible", true).classed("invisible", false);
         })
- 
+
         // otherwise, hide other quartiles besides the clicked one
     } else {
 
@@ -664,7 +640,7 @@ function onClick(input, clicked) {
         // make other quartiles invisible
         input.forEach(key => {
             d3.selectAll('.bubbleArea').selectAll(key).classed("visible", false).classed("invisible", true);
-            
+
         })
     }
 }
@@ -733,7 +709,7 @@ function combineData(population, gdp_per_capita, mortality, life_exp, young_birt
 // ---------------------------------------------- Doughnut Data Function ----------------------------------------------------------------------------
 // process data for the doughnut chart 
 function doughnutData() {
-
+    // data types
     const data_type = ["mortality", "life_expectancy", "young_births"];
     let minMax = [[10000, 0], [10000, 0], [10000, 0]];
     let quartile_data = []; // data for the doughnut charts will go here
@@ -754,7 +730,7 @@ function doughnutData() {
                     // prepare the data array
                     quartile_data.push([key, Object.fromEntries(year)]);
                 }
-
+                // find min/max values for each data type
                 data_type.forEach((dt, index) => {
                     if (!isNaN(c[key][dt])) {
                         let value = c[key][dt]
@@ -785,7 +761,6 @@ function doughnutData() {
                     if (!isNaN(value)) {
                         quartile_data[key]['world_sum'][index] += value;
                     }
-
                     // value in the bottom quartile
                     if (value < min + (max - min) * 0.25) {
                         quartile_data[key][dt][0] += 1
@@ -806,12 +781,11 @@ function doughnutData() {
             }
         })
     });
-
     return quartile_data;
 }
 
 
-
+// read in the data
 promises.push(d3.csv("data/mortality.csv"))
 promises.push(d3.csv("data/population.csv"))
 promises.push(d3.csv("data/gdp.csv")) // gdp in current US dollars
@@ -829,7 +803,6 @@ let fulfilled = Promise.all(promises).then((data) => {
 
     combo = combineData(population, gdp_per_capita, data[0], data[3], data[4]);
     doughnut_data = doughnutData();
-
 
     const sliderUpdate = createSlider();
     bubbleUpdate = createChart();
