@@ -34,9 +34,9 @@ function dataChanged(data_type) {
     // update the bubble chart
     bubbleUpdate(combo, year);
     // change the formatting of the selected doughnut chart svg
-    d3.select(".d1").classed("d-selected", () => { if (key == 'mortality') { return true } else { return false; } })
-    d3.select(".d2").classed("d-selected", () => { if (key == 'life_expectancy') { return true } else { return false; } })
-    d3.select(".d3").classed("d-selected", () => { if (key == 'young_births') { return true } else { return false; } })
+    d3.select(".d1").classed("d-selected", () => { return (key == 'mortality') ? true : false })
+    d3.select(".d2").classed("d-selected", () => { return (key == 'life_expectancy') ? true : false })
+    d3.select(".d3").classed("d-selected", () => { return (key == 'young_births') ? true : false })
     // change the selection of the radio button (relevant if data changed by clicking on the doughnut charts)
     document.getElementById(`${data_type}`).checked = true;
 }
