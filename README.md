@@ -15,7 +15,7 @@ The second lab introduces dynamic elements in D3 and D3 integration with CSS. Th
 
 ## Lab 3
 
-![dashboard1](README.md/Lab_3/img/dash.png)
+![](./Lab_3/img/dash.png)
 
 The third lab combines the skills and concepts learnt in the first two labs into a single coherent data story - a Covid-19 Dashboard. The dashboard investigates how the Covid-19 pandemic evolved across time and countries.
 
@@ -23,7 +23,7 @@ The [public dataset](https://github.com/owid/covid-19-data/tree/master/public/da
 
 ## Lab 4
 
-![dashboard2](README.md/Lab_4/img/dash.png)
+![](./Lab_4/img/dash.png)
 
 Similarly to the third lab, lab 4 aims to communicate an in-depth coherent visualisation story. Dashboard for lab 4 focuses on the world's development in the last 60 years in 3 key areas - child mortality, female life expectancy and adolescent birth (mother's age at childbirth is between 15 and 19). The aim of this interactive dashboard is to communicate the wast improvements in these fundamental indicators across countries, despite having a sense of little progress in the moment. 
 
